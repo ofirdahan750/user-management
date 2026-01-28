@@ -61,7 +61,7 @@
   &__card-title {
     font-size: 1.5rem;
     font-weight: 600;
-    color: var(--color-text-primary);
+    color: var(--color-text-secondary);
     margin: 0;
   }
 
@@ -93,8 +93,9 @@
   }
 
   &__info-value {
-    color: var(--color-text-primary);
+    color: var(--color-text-secondary);
     font-size: 1rem;
+    font-weight: 500;
   }
 
   &__status {
