@@ -61,6 +61,8 @@ export const LABELS = {
   
   // Tooltips
   TOOLTIP_TOGGLE_THEME: 'Toggle theme',
+  TOOLTIP_SWITCH_TO_DARK_MODE: 'Switch to dark mode',
+  TOOLTIP_SWITCH_TO_LIGHT_MODE: 'Switch to light mode',
   TOOLTIP_SHOW_PASSWORD: 'Show password',
   TOOLTIP_HIDE_PASSWORD: 'Hide password',
   TOOLTIP_USER_MENU: 'User menu',

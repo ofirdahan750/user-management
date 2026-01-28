@@ -60,6 +60,12 @@ export class HeaderComponent {
     this.themeService.toggleTheme();
   }
 
+  getThemeTooltip(): string {
+    return this.currentTheme() === 'light' 
+      ? this.labels.TOOLTIP_SWITCH_TO_DARK_MODE 
+      : this.labels.TOOLTIP_SWITCH_TO_LIGHT_MODE;
+  }
+
   toggleMobileMenu(): void {
     this.mobileMenuOpen.update(value => !value);
   }

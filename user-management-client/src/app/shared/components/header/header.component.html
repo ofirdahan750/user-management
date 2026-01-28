@@ -41,8 +41,8 @@
 
     <div class="header__actions">
       <app-icon-button
-        [icon]="currentTheme() === 'light' ? icons.DARK_MODE : icons.LIGHT_MODE"
-        [tooltip]="labels.TOOLTIP_TOGGLE_THEME"
+        [icon]="currentTheme() === 'light' ? icons.LIGHT_MODE : icons.DARK_MODE"
+        [tooltip]="getThemeTooltip()"
         [ariaLabel]="ariaLabels.TOGGLE_THEME"
         [clickHandler]="toggleTheme.bind(this)"
         class="header__theme-toggle header__theme-toggle--desktop"
@@ -50,15 +50,14 @@
 
       <!-- Mobile theme toggle for non-authenticated users -->
       @if (!(isAuthenticated$ | async)) {
-        <button 
-          mat-icon-button
+        <app-icon-button
+          [icon]="currentTheme() === 'light' ? icons.LIGHT_MODE : icons.DARK_MODE"
+          [tooltip]="getThemeTooltip()"
+          [ariaLabel]="ariaLabels.TOGGLE_THEME"
+          [clickHandler]="toggleTheme.bind(this)"
+          [color]="'primary'"
           class="header__theme-toggle header__theme-toggle--mobile"
-          (click)="toggleTheme()"
-          [matTooltip]="labels.TOOLTIP_TOGGLE_THEME"
-          [attr.aria-label]="ariaLabels.TOGGLE_THEME"
-        >
-          <mat-icon>{{ currentTheme() === 'light' ? icons.DARK_MODE : icons.LIGHT_MODE }}</mat-icon>
-        </button>
+        ></app-icon-button>
       }
 
       @if (isAuthenticated$ | async) {
@@ -177,9 +176,10 @@
             class="header__mobile-theme-toggle"
             (click)="toggleTheme()"
             [attr.aria-label]="ariaLabels.TOGGLE_THEME"
+            [matTooltip]="getThemeTooltip()"
           >
-            <mat-icon>{{ currentTheme() === 'light' ? icons.DARK_MODE : icons.LIGHT_MODE }}</mat-icon>
-            <span>{{ labels.TOOLTIP_TOGGLE_THEME }}</span>
+            <mat-icon>{{ currentTheme() === 'light' ? icons.LIGHT_MODE : icons.DARK_MODE }}</mat-icon>
+            <span>{{ getThemeTooltip() }}</span>
           </button>
         </div>
       </nav>

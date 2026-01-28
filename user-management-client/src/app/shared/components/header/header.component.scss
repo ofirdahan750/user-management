@@ -129,7 +129,37 @@
       
       @media (min-width: 768px) {
         display: none;
+        visibility: hidden;
+        opacity: 0;
+        pointer-events: none;
+        width: 0;
+        height: 0;
+        overflow: hidden;
       }
+    }
+  }
+  
+  // Ensure mobile theme toggle icon is bright - same as desktop
+  app-icon-button.header__theme-toggle--mobile {
+    display: inline-flex;
+    
+    @media (min-width: 768px) {
+      display: none;
+      visibility: hidden;
+      opacity: 0;
+      pointer-events: none;
+      width: 0;
+      height: 0;
+      overflow: hidden;
+    }
+  }
+  
+  // Ensure app-icon-button component respects parent display
+  app-icon-button.header__theme-toggle--desktop {
+    display: none;
+    
+    @media (min-width: 768px) {
+      display: inline-flex;
     }
   }
 
