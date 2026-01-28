@@ -1,3 +1,5 @@
+@use '../../../../assets/styles/mixins/typography' as typography-mixins;
+
 // Mobile-first approach
 .header {
   position: sticky;
@@ -43,7 +45,7 @@
   }
 
   &__logo {
-    font-size: 1.125rem;
+    @include typography-mixins.font-size(18);
     font-weight: 700;
     color: var(--color-primary);
     text-decoration: none;
@@ -53,11 +55,11 @@
     flex-shrink: 0;
     
     @media (min-width: 480px) {
-      font-size: 1.25rem;
+      @include typography-mixins.font-size(20);
     }
     
     @media (min-width: 768px) {
-      font-size: 1.5rem;
+      @include typography-mixins.font-size(24);
       margin-right: 2rem;
     }
     
@@ -92,7 +94,7 @@
     padding: 0.5rem 0.75rem;
     border-radius: 0.25rem;
     transition: background-color 0.2s, color 0.2s;
-    font-size: 0.875rem;
+    @include typography-mixins.font-size(14);
     white-space: nowrap;
 
     &:hover {
@@ -145,7 +147,7 @@
     @media (min-width: 768px) {
       display: inline;
       margin-left: 0.5rem;
-      font-size: 0.875rem;
+      @include typography-mixins.font-size(14);
     }
   }
 
@@ -155,13 +157,13 @@
     
     .header__user-name-full {
       font-weight: 600;
-      font-size: 0.875rem;
+      @include typography-mixins.font-size(14);
       color: var(--color-text-primary);
       margin-bottom: 0.25rem;
     }
     
     .header__user-email {
-      font-size: 0.75rem;
+      @include typography-mixins.font-size(12);
       color: var(--color-text-secondary);
     }
   }
@@ -226,7 +228,7 @@
   }
 
   &__mobile-logo {
-    font-size: 1.25rem;
+    @include typography-mixins.font-size(20);
     font-weight: 700;
     color: var(--color-primary);
     text-decoration: none;
@@ -235,7 +237,7 @@
 
   &__mobile-title {
     margin: 0;
-    font-size: 1.125rem;
+    @include typography-mixins.font-size(18);
     font-weight: 600;
     color: var(--color-text-primary);
   }
@@ -254,7 +256,7 @@
   }
 
   &__mobile-user-icon {
-    font-size: 2.5rem;
+    @include typography-mixins.font-size(40);
     width: 2.5rem;
     height: 2.5rem;
     color: var(--color-primary);
@@ -267,7 +269,7 @@
 
   &__mobile-user-name {
     font-weight: 600;
-    font-size: 0.875rem;
+    @include typography-mixins.font-size(14);
     color: var(--color-text-primary);
     margin-bottom: 0.25rem;
     white-space: nowrap;
@@ -276,7 +278,7 @@
   }
 
   &__mobile-user-email {
-    font-size: 0.75rem;
+    @include typography-mixins.font-size(12);
     color: var(--color-text-secondary);
     white-space: nowrap;
     overflow: hidden;
@@ -302,7 +304,7 @@
     background: none;
     width: 100%;
     text-align: left;
-    font-size: 0.9375rem;
+    @include typography-mixins.font-size(15);
     cursor: pointer;
 
     &:hover {
@@ -322,7 +324,7 @@
     }
 
     mat-icon {
-      font-size: 1.5rem;
+      @include typography-mixins.font-size(24);
       width: 1.5rem;
       height: 1.5rem;
       color: inherit;
@@ -344,7 +346,7 @@
     border: none;
     background: none;
     color: var(--color-text-primary);
-    font-size: 0.9375rem;
+    @include typography-mixins.font-size(15);
     cursor: pointer;
     border-radius: 0.25rem;
     transition: background-color 0.2s;
@@ -354,7 +356,7 @@
     }
 
     mat-icon {
-      font-size: 1.5rem;
+      @include typography-mixins.font-size(24);
       width: 1.5rem;
       height: 1.5rem;
       color: inherit;

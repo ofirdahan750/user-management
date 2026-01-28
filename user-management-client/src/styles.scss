@@ -7,6 +7,7 @@
 @use 'assets/styles/variables/spacing';
 @use 'assets/styles/mixins/responsive';
 @use 'assets/styles/mixins/flexbox';
+@use 'assets/styles/mixins/typography' as typography-mixins;
 @use 'assets/styles/functions/rem';
 
 // Angular Material Theme
