@@ -142,8 +142,8 @@ export class EmailHelperService {
    * @returns Email if available, null otherwise
    */
   getAndClearTemporaryEmail(): string | null {
-    const email = this.temporaryEmail;
-    this.temporaryEmail = ''; // Clear after retrieval
-    return email || null;
+    const email: string = this.temporaryEmail;
+    this.temporaryEmail = ''; // Clear immediately after retrieval
+    return email;
   }
 }
