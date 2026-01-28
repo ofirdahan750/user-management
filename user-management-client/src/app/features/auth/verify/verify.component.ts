@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '@core/services/auth.service';
 import { ToastNotificationService } from '@core/services/toast-notification.service';
 import { Routes } from '@core/enums/routes.enum';
@@ -24,8 +24,8 @@ import { SubmitButtonComponent } from '@shared/ui/buttons/submit-button/submit-b
     RouterModule,
     MatCardModule,
     MatIconModule,
-    MatProgressSpinnerModule,
     MatButtonModule,
+    MatProgressSpinnerModule,
     LinkButtonComponent,
     BackLinkComponent,
     SubmitButtonComponent
@@ -41,16 +41,20 @@ export class VerifyComponent {
   private route = inject(ActivatedRoute);
   private toastService = inject(ToastNotificationService);
 
-  public status = signal<VerificationStatus>(VerificationStatus.LOADING);
+  public status = signal<VerificationStatus>(VerificationStatus.PENDING);
   public countdown = signal<number>(5);
   public email = signal<string>('');
   public token = signal<string>('');
+  public isVerifying = signal<boolean>(false);
 
   public readonly labels = LABELS;
   public readonly routes = Routes;
   public readonly MESSAGES = MESSAGES;
   public readonly icons = ICONS;
   public readonly VerificationStatus = VerificationStatus;
+
+  readonly verifyClickHandler = () => this.onVerifyClick();
+  readonly resendClickHandler = () => this.resendVerification();
 
   constructor() {
     effect(() => {
@@ -72,12 +76,11 @@ export class VerifyComponent {
     const emailParam = this.route.snapshot.queryParams['email'];
 
     if (tokenParam && emailParam) {
-      // Has token - verify automatically
       this.email.set(emailParam);
       this.token.set(tokenParam);
+      this.status.set(VerificationStatus.LOADING);
       this.verifyEmail(tokenParam, emailParam);
     } else if (emailParam) {
-      // Came from registration - show message with verification link
       this.email.set(emailParam);
       this.status.set(VerificationStatus.PENDING);
     } else {
@@ -86,16 +89,25 @@ export class VerifyComponent {
   }
 
   verifyEmail(token: string, email: string): void {
+    this.isVerifying.set(true);
     this.authService.verifyEmail(token, email).subscribe({
       next: () => {
+        this.isVerifying.set(false);
         this.status.set(VerificationStatus.SUCCESS);
         this.toastService.showSuccess(MESSAGES.VERIFICATION_SUCCESS);
       },
       error: () => {
+        this.isVerifying.set(false);
         this.status.set(VerificationStatus.ERROR);
         this.toastService.showError(MESSAGES.VERIFICATION_ERROR);
       }
     });
+  }
+
+  onVerifyClick(): void {
+    const t = this.token();
+    const e = this.email();
+    if (t && e) this.verifyEmail(t, e);
   }
 
   resendVerification(): void {
@@ -132,7 +144,7 @@ export class VerifyComponent {
     const url = this.getVerificationUrl();
     if (url && navigator.clipboard) {
       navigator.clipboard.writeText(`${window.location.origin}${url}`).then(() => {
-        this.toastService.showSuccess('Verification link copied to clipboard!');
+        this.toastService.showSuccess(MESSAGES.VERIFICATION_LINK_COPIED);
       });
     }
   }

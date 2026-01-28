@@ -4,12 +4,13 @@ import { Store } from '@ngrx/store';
 import { map, take } from 'rxjs/operators';
 import { Routes } from '@core/enums/routes.enum';
 import { selectIsAuthenticated } from '@core/store/auth/auth.selectors';
+import { AppState } from '@core/store';
 
-export const authGuard: CanActivateFn = (
+export const  authGuard: CanActivateFn = (
   route: ActivatedRouteSnapshot,
   state: RouterStateSnapshot
 ) => {
-  const store = inject(Store);
+  const store: Store<AppState> = inject(Store);
   const router = inject(Router);
 
   return store.select(selectIsAuthenticated).pipe(

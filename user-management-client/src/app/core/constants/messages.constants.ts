@@ -8,7 +8,7 @@ export const MESSAGES = {
   LOGIN_SUCCESS: 'Login successful!',
   LOGIN_ERROR: 'Invalid email or password.',
   ACCOUNT_NOT_VERIFIED: 'Please verify your email before logging in.',
-  ACCOUNT_LOCKED: 'Your account has been locked. Please contact support.',
+  ACCOUNT_LOCKED: 'Your account has been locked due to multiple failed login attempts. Please contact support at support@example.com or try again later.',
   
   // Verification
   VERIFICATION_SUCCESS: 'Email verified successfully!',
@@ -21,7 +21,7 @@ export const MESSAGES = {
   PASSWORD_RESET_REQUEST_SUCCESS: 'Check your email for reset instructions.',
   PASSWORD_RESET_SUCCESS: 'Password reset successful!',
   PASSWORD_RESET_ERROR: 'Password reset failed. Token expired or invalid.',
-  USER_NOT_FOUND: 'User not found.',
+  USER_NOT_FOUND: 'No account was found with this email address.',
   
   // Profile
   PROFILE_UPDATE_SUCCESS: 'Profile updated successfully!',
@@ -41,6 +41,8 @@ export const MESSAGES = {
   PASSWORD_MISMATCH: 'Passwords do not match.',
   INVALID_PHONE: 'Please enter a valid phone number.',
   INVALID_DATE: 'Please enter a valid date.',
+  INVALID_DATE_AGE: 'Invalid age. You must be between 13 and 120 years old.',
+  INVALID_DATE_FUTURE: 'Birth date cannot be in the future.',
   TERMS_REQUIRED: 'You must accept the terms and conditions.',
   
   // Password Strength
@@ -78,6 +80,7 @@ export const MESSAGES = {
   // Demo Mode
   DEMO_MODE_TITLE: 'Demo Mode:',
   DEMO_MODE_DESCRIPTION: 'Email sending is disabled in this demo environment. Use the button below to reset your password directly.',
+  DEMO_MODE_DESCRIPTION_VERIFY: 'Email sending is disabled in this demo environment. Use the button below to verify your email directly.',
   
   // Resend
   DIDNT_RECEIVE_EMAIL: "Didn't receive email? You can resend in",

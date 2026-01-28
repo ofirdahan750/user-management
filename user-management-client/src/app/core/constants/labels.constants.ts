@@ -67,6 +67,8 @@ export const LABELS = {
   TOOLTIP_EDIT_PROFILE: 'Edit your profile',
   TOOLTIP_ACCOUNT_VERIFIED: 'Your account is verified',
   TOOLTIP_ACCOUNT_NOT_VERIFIED: 'Your account is not verified. Please verify your email.',
+  TOOLTIP_VERIFY_EMAIL: 'Go to verify your email',
+  VERIFY_EMAIL_LINK: 'Verify email',
   TOOLTIP_SAVE_CHANGES: 'Save your changes',
   TOOLTIP_CANCEL_CHANGES: 'Cancel and discard changes',
   TOOLTIP_SUBMIT_FORM: 'Submit form',
@@ -76,6 +78,7 @@ export const LABELS = {
   TOOLTIP_NAVIGATE_PROFILE: 'Go to profile',
   TOOLTIP_NAVIGATE_LOGIN: 'Go to login',
   TOOLTIP_NAVIGATE_REGISTER: 'Go to registration',
+  TOOLTIP_CHANGE_PASSWORD: 'Change your password',
   
   // 404 Page
   GO_TO_DASHBOARD: 'Go to Dashboard',

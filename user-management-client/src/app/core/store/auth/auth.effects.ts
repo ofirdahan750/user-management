@@ -27,8 +27,8 @@ export class AuthEffects {
   login$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.login),
-      switchMap(({ credentials }) =>
-        this.authService.login(credentials).pipe(
+      switchMap(({ credentials, rememberMe = false }) =>
+        this.authService.login(credentials, rememberMe).pipe(
           switchMap((loginResponse) =>
             this.authService.getAccountInfo().pipe(
               map((user) => {
@@ -141,6 +141,7 @@ export class AuthEffects {
       tap(() => {
         this.authService.logout();
         this.localStorage.removeItem(StorageKeys.USER);
+        this.localStorage.removeItem(StorageKeys.REMEMBER_ME);
         this.store.dispatch(LoadingActions.hideLoading());
         this.store.dispatch(AuthActions.logoutSuccess());
         this.router.navigate([Routes.LOGIN]);

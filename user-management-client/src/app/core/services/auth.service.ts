@@ -58,13 +58,13 @@ export class AuthService {
       );
   }
 
-  login(credentials: LoginRequest): Observable<LoginResponse> {
+  login(credentials: LoginRequest, rememberMe: boolean = false): Observable<LoginResponse> {
     return this.http.post<{ statusCode: number; statusMessage?: string; data: LoginResponse }>(`${API_ENDPOINTS.BASE_URL}${API_ENDPOINTS.AUTH.LOGIN}`, credentials)
       .pipe(
         map(response => response.data),
         switchMap(response => {
-          this.tokenStorage.saveToken(response.token);
-          this.tokenStorage.saveRefreshToken(response.refreshToken);
+          this.tokenStorage.saveToken(response.token, rememberMe);
+          this.tokenStorage.saveRefreshToken(response.refreshToken, rememberMe);
           
           // Get full user profile after login
           return this.getAccountInfo().pipe(
@@ -102,6 +102,7 @@ export class AuthService {
   logout(): void {
     this.tokenStorage.clear();
     this.localStorage.removeItem(StorageKeys.USER);
+    this.localStorage.removeItem(StorageKeys.REMEMBER_ME);
     this.currentUser.set(null);
     this.currentUserSubject.next(null);
     this.isAuthenticatedSubject.next(false);

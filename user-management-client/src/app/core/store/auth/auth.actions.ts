@@ -3,7 +3,7 @@ import { UserProfile, ProfileUpdate } from '@core/models/user.model';
 import { LoginRequest, RegisterRequest } from '@core/models/auth.model';
 
 // Login Actions
-export const login = createAction('[Auth] Login', props<{ credentials: LoginRequest }>());
+export const login = createAction('[Auth] Login', props<{ credentials: LoginRequest; rememberMe?: boolean }>());
 export const loginSuccess = createAction('[Auth] Login Success', props<{ user: UserProfile }>());
 export const loginFailure = createAction('[Auth] Login Failure', props<{ error: string }>());
 

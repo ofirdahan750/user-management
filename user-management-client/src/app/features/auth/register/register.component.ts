@@ -23,11 +23,6 @@ import { MESSAGES } from '@core/constants/messages.constants';
 import { ARIA_LABELS } from '@core/constants/aria-labels.constants';
 import { ICONS } from '@core/constants/icons.constants';
 import { PLACEHOLDERS } from '@core/constants/placeholders.constants';
-import { TextInputComponent } from '@shared/ui/form-fields/text-input/text-input.component';
-import { EmailInputComponent } from '@shared/ui/form-fields/email-input/email-input.component';
-import { PasswordInputComponent } from '@shared/ui/form-fields/password-input/password-input.component';
-import { PhoneInputComponent } from '@shared/ui/form-fields/phone-input/phone-input.component';
-import { DateInputComponent } from '@shared/ui/form-fields/date-input/date-input.component';
 import { SubmitButtonComponent } from '@shared/ui/buttons/submit-button/submit-button.component';
 import * as AuthActions from '@core/store/auth/auth.actions';
 import * as LoadingActions from '@core/store/loading/loading.actions';
@@ -48,11 +43,6 @@ import * as LoadingActions from '@core/store/loading/loading.actions';
     MatDatepickerModule,
     MatNativeDateModule,
     MatTooltipModule,
-    TextInputComponent,
-    EmailInputComponent,
-    PasswordInputComponent,
-    PhoneInputComponent,
-    DateInputComponent,
     SubmitButtonComponent
   ],
   templateUrl: './register.component.html',

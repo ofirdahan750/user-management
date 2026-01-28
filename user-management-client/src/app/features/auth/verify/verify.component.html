@@ -10,27 +10,45 @@
         }
         @case (VerificationStatus.PENDING) {
           <div class="verify__content">
-            <mat-icon class="verify__icon verify__icon--info">{{ icons.INFO }}</mat-icon>
-            <h2 class="verify__title">{{ MESSAGES.REGISTRATION_SUCCESS }}</h2>
-            <p class="verify__message">
-              Click the button below to verify your email address.
-            </p>
+            <div class="verify__demo-notice">
+              <mat-icon class="verify__demo-icon">{{ icons.INFO }}</mat-icon>
+              <p class="verify__demo-text">
+                <strong>{{ MESSAGES.DEMO_MODE_TITLE }}</strong> {{ MESSAGES.DEMO_MODE_DESCRIPTION_VERIFY }}
+              </p>
+            </div>
             @if (token()) {
-              <a
-                [href]="getVerificationUrl()"
-                mat-raised-button
+              <div class="verify__token-actions">
+                <app-submit-button
+                  [label]="MESSAGES.VERIFY_NOW"
+                  [isLoading]="isVerifying()"
+                  [clickHandler]="verifyClickHandler"
+                  type="button"
+                  variant="raised"
+                  color="primary"
+                  class="verify__button"
+                ></app-submit-button>
+                <button
+                  mat-raised-button
+                  color="accent"
+                  (click)="copyVerificationLink()"
+                  class="verify__copy-button"
+                  [attr.aria-label]="labels.COPY_LINK"
+                >
+                  <mat-icon>{{ icons.COPY }}</mat-icon>
+                  {{ labels.COPY_LINK }}
+                </button>
+              </div>
+            } @else {
+              <p class="verify__message">{{ MESSAGES.REGISTRATION_SUCCESS }}</p>
+              <app-submit-button
+                [label]="labels.RESEND_VERIFICATION"
+                [tooltip]="labels.RESEND_VERIFICATION"
+                [clickHandler]="resendClickHandler"
+                type="button"
+                variant="raised"
                 color="primary"
                 class="verify__button"
-              >
-                Verify Email
-              </a>
-              <button
-                mat-button
-                (click)="copyVerificationLink()"
-                class="verify__copy-button"
-              >
-                Copy Link
-              </button>
+              ></app-submit-button>
             }
             <app-back-link
               [route]="routes.LOGIN"
@@ -44,7 +62,7 @@
             <mat-icon class="verify__icon verify__icon--success">{{ icons.CHECK_CIRCLE }}</mat-icon>
             <h2 class="verify__title">{{ MESSAGES.VERIFICATION_SUCCESS }}</h2>
             <p class="verify__message">
-              {{ MESSAGES.VERIFICATION_REDIRECT }} {{ countdown() }} {{ MESSAGES.SECONDS_SHORT }}
+              {{ MESSAGES.VERIFICATION_REDIRECT }} {{ countdown() }} {{ MESSAGES.SECONDS }}
             </p>
             <app-link-button
               [route]="routes.LOGIN"
@@ -63,15 +81,17 @@
             <p class="verify__message">
               {{ labels.RESEND_VERIFICATION }}
             </p>
-            <app-submit-button
-              [label]="labels.RESEND_VERIFICATION"
-              [tooltip]="labels.RESEND_VERIFICATION"
-              (click)="resendVerification()"
-              type="button"
-              variant="raised"
-              color="primary"
-              class="verify__button"
-            ></app-submit-button>
+            @if (email()) {
+              <app-submit-button
+                [label]="labels.RESEND_VERIFICATION"
+                [tooltip]="labels.RESEND_VERIFICATION"
+                [clickHandler]="resendClickHandler"
+                type="button"
+                variant="raised"
+                color="primary"
+                class="verify__button"
+              ></app-submit-button>
+            }
             <app-back-link
               [route]="routes.LOGIN"
               [tooltip]="labels.TOOLTIP_NAVIGATE_LOGIN"

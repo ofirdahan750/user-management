@@ -73,6 +73,29 @@
                 <span class="profile__info-value">{{ user.lastLoginDate | dateFormat }}</span>
               </div>
             </div>
+            @if (!user.isVerified) {
+              <div class="profile__verify-section">
+                <a
+                  [routerLink]="routes.VERIFY"
+                  [queryParams]="{ email: user.email }"
+                  [matTooltip]="labels.TOOLTIP_VERIFY_EMAIL"
+                  class="profile__verify-link"
+                >
+                  <mat-icon>{{ icons.EMAIL }}</mat-icon>
+                  {{ labels.VERIFY_EMAIL_LINK }}
+                </a>
+              </div>
+            }
+            <div class="profile__change-password-section">
+              <a
+                [routerLink]="routes.FORGOT_PASSWORD"
+                [matTooltip]="labels.TOOLTIP_CHANGE_PASSWORD"
+                class="profile__change-password-link"
+              >
+                <mat-icon>{{ icons.LOCK }}</mat-icon>
+                {{ labels.CHANGE_PASSWORD }}
+              </a>
+            </div>
           }
 
           <div class="profile__actions">

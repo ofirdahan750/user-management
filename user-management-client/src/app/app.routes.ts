@@ -20,8 +20,7 @@ export const routes: Routes = [
   },
   {
     path: 'verify',
-    loadComponent: () => import('./features/auth/verify/verify.component').then(m => m.VerifyComponent),
-    canActivate: [noAuthGuard]
+    loadComponent: () => import('./features/auth/verify/verify.component').then(m => m.VerifyComponent)
   },
   {
     path: 'forgot-password',

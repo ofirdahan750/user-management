@@ -6,6 +6,7 @@ import { map } from 'rxjs/operators';
 import { passwordStrengthValidator } from '@shared/validators/password-strength.validator';
 import { passwordMatchValidator } from '@shared/validators/password-match.validator';
 import { israeliPhoneValidator } from '@shared/validators/israeli-phone.validator';
+import { defaultDateAgeValidator } from '@shared/validators/date-age.validator';
 import { LocalStorageService } from '@core/services/local-storage.service';
 import { StorageKeys } from '@core/enums/storage-keys.enum';
 import { selectIsLoading } from '@core/store/loading/loading.selectors';
@@ -29,7 +30,7 @@ export class FormService {
       confirmPassword: ['', [Validators.required]],
       firstName: ['', [Validators.required]],
       lastName: ['', [Validators.required]],
-      birthDate: [''],
+      birthDate: ['', [defaultDateAgeValidator()]],
       phoneNumber: ['', [israeliPhoneValidator()]],
       terms: [false, [Validators.requiredTrue]]
     }, { validators: passwordMatchValidator() });
@@ -82,7 +83,7 @@ export class FormService {
       lastName: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       phoneNumber: ['', [israeliPhoneValidator()]],
-      birthDate: ['']
+      birthDate: ['', [defaultDateAgeValidator()]]
     });
   }
 

@@ -318,7 +318,8 @@ app.post('/api/auth/resend-verification', (req, res) => {
 
     res.json({
       statusCode: 200,
-      statusMessage: 'Verification email sent'
+      statusMessage: 'Verification email sent',
+      data: { verificationToken }
     });
   } catch (error) {
     console.error('Resend verification error:', error);

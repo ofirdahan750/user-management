@@ -13,7 +13,7 @@ export class EmailHelperService {
   private toastService = inject(ToastNotificationService);
   
   // Temporary email storage for navigation (cleared after use)
-  private temporaryEmail: string | null = null;
+  private temporaryEmail: string  = '';
 
   /**
    * Shows verification link after registration
@@ -133,7 +133,7 @@ export class EmailHelperService {
    * Sets temporary email for navigation (cleared after retrieval)
    * @param email Email to store temporarily
    */
-  setTemporaryEmail(email: string): void {
+  setTemporaryEmail(email: string = ''): void {
     this.temporaryEmail = email;
   }
 
@@ -143,7 +143,7 @@ export class EmailHelperService {
    */
   getAndClearTemporaryEmail(): string | null {
     const email = this.temporaryEmail;
-    this.temporaryEmail = null; // Clear immediately after retrieval
-    return email;
+    this.temporaryEmail = ''; // Clear after retrieval
+    return email || null;
   }
 }

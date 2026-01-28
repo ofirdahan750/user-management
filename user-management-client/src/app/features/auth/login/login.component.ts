@@ -38,12 +38,12 @@ import * as LoadingActions from '@core/store/loading/loading.actions';
     MatIconModule,
     EmailInputComponent,
     PasswordInputComponent,
-    SubmitButtonComponent
+    SubmitButtonComponent,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent {
   private formService = inject(FormService);
@@ -53,11 +53,11 @@ export class LoginComponent {
   private localStorage = inject(LocalStorageService);
   private emailHelper = inject(EmailHelperService);
 
-  public loginForm: FormGroup;
-  public combinedLoading$: Observable<boolean>;
+  loginForm: FormGroup;
+  combinedLoading$: Observable<boolean>;
 
-  public readonly labels = LABELS;
-  public readonly routes = Routes;
+  readonly labels = LABELS;
+  readonly routes = Routes;
 
   get loginIDControl(): FormControl {
     return this.loginForm.get('loginID') as FormControl;
@@ -86,9 +86,13 @@ export class LoginComponent {
     }
 
     this.store.dispatch(LoadingActions.showLoading());
-    this.store.dispatch(AuthActions.login({ credentials: { loginID, password } }));
-    
-    const returnUrl = (this.route.snapshot.queryParams['returnUrl'] as string | undefined) ?? Routes.DASHBOARD;
+    this.store.dispatch(AuthActions.login({ 
+      credentials: { loginID, password },
+      rememberMe: rememberMe || false
+    }));
+
+    const returnUrl =
+      (this.route.snapshot.queryParams['returnUrl'] as string | undefined) ?? Routes.DASHBOARD;
     if (returnUrl !== Routes.DASHBOARD) {
       // Store return URL for navigation after login success
     }
@@ -115,5 +119,4 @@ export class LoginComponent {
     }
     this.router.navigate([Routes.REGISTER]);
   }
-
 }

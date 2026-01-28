@@ -33,7 +33,13 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
               errorMessage = apiError?.errorMessage || apiError?.message || ERROR_MESSAGES.BAD_REQUEST;
               break;
             case 401:
-              errorMessage = apiError?.errorMessage || MESSAGES.UNAUTHORIZED;
+              // Check if it's an account locked scenario
+              const errorMsg = (apiError?.errorMessage || apiError?.message || '').toLowerCase();
+              if (errorMsg.includes('locked') || errorMsg.includes('lockout')) {
+                errorMessage = MESSAGES.ACCOUNT_LOCKED;
+              } else {
+                errorMessage = apiError?.errorMessage || MESSAGES.UNAUTHORIZED;
+              }
               break;
             case 403:
               errorMessage = apiError?.errorMessage || MESSAGES.UNAUTHORIZED;
@@ -44,6 +50,9 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
             case 409:
               errorMessage = apiError?.errorMessage || MESSAGES.DUPLICATE_EMAIL;
               break;
+            case 423: // Account Locked status code
+              errorMessage = MESSAGES.ACCOUNT_LOCKED;
+              break;
             case 429:
               errorMessage = apiError?.errorMessage || ERROR_MESSAGES.TOO_MANY_REQUESTS;
               break;
@@ -51,7 +60,13 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
               errorMessage = apiError?.errorMessage || ERROR_MESSAGES.SERVER_ERROR;
               break;
             default:
-              errorMessage = apiError?.errorMessage || apiError?.message || MESSAGES.ERROR;
+              // Check for account locked in error message
+              const defaultErrorMsg = (apiError?.errorMessage || apiError?.message || '').toLowerCase();
+              if (defaultErrorMsg.includes('locked') || defaultErrorMsg.includes('lockout')) {
+                errorMessage = MESSAGES.ACCOUNT_LOCKED;
+              } else {
+                errorMessage = apiError?.errorMessage || apiError?.message || MESSAGES.ERROR;
+              }
           }
         }
 
