@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 import { of } from 'rxjs';
 import { map, catchError, switchMap, tap } from 'rxjs/operators';
 import { AuthService } from '@core/services/auth.service';
@@ -99,10 +100,22 @@ export class AuthEffects {
               verificationToken: response.verificationToken 
             });
           }),
-          catchError((error) => {
+          catchError((error: HttpErrorResponse | Error | unknown) => {
             this.store.dispatch(LoadingActions.hideLoading());
-            const apiError: ApiError | null = isApiError(error.error) ? error.error : null;
-            const errorMessage = getErrorMessage(apiError, MESSAGES.REGISTRATION_ERROR);
+            let errorMessage: string;
+            
+            if (error instanceof HttpErrorResponse) {
+              const apiError: ApiError | null = isApiError(error.error) ? error.error : null;
+              // Check if it's a duplicate email error (409)
+              if (error.status === 409 || (apiError && apiError.errorMessage?.toLowerCase().includes('already registered'))) {
+                errorMessage = MESSAGES.DUPLICATE_EMAIL;
+              } else {
+                errorMessage = getErrorMessage(apiError, MESSAGES.REGISTRATION_ERROR);
+              }
+            } else {
+              errorMessage = MESSAGES.REGISTRATION_ERROR;
+            }
+            
             return of(AuthActions.registerFailure({ error: errorMessage }));
           })
         )

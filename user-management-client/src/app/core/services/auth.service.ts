@@ -1,5 +1,5 @@
 import { Injectable, signal, computed } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, BehaviorSubject, throwError, of } from 'rxjs';
 import { map, catchError, tap, switchMap } from 'rxjs/operators';
 import { RegisterRequest, RegisterResponse } from '@core/models/auth.model';
@@ -201,7 +201,11 @@ export class AuthService {
     );
   }
 
-  private handleError = (error: unknown): Observable<never> => {
+  private handleError = (error: HttpErrorResponse | Error | unknown): Observable<never> => {
+    // Pass through HttpErrorResponse as-is so effects can access error.error
+    if (error instanceof HttpErrorResponse) {
+      return throwError(() => error);
+    }
     if (error instanceof Error) {
       return throwError(() => error);
     }
