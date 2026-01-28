@@ -137,4 +137,23 @@ export class RegisterComponent implements OnInit {
         return '';
     }
   }
+
+  getBirthDateErrorMessage(): string {
+    const control = this.registerForm.get('birthDate');
+    if (!control || !control.errors) {
+      return '';
+    }
+
+    if (control.hasError('invalidDate')) {
+      return MESSAGES.INVALID_DATE;
+    }
+    if (control.hasError('futureDate')) {
+      return MESSAGES.INVALID_DATE_FUTURE;
+    }
+    if (control.hasError('minAge') || control.hasError('maxAge')) {
+      return MESSAGES.INVALID_DATE_AGE;
+    }
+
+    return '';
+  }
 }

@@ -134,6 +134,9 @@
               />
               <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
+              @if (registerForm.get('birthDate')?.invalid && (registerForm.get('birthDate')?.touched || registerForm.get('birthDate')?.dirty) && getBirthDateErrorMessage()) {
+                <mat-error>{{ getBirthDateErrorMessage() }}</mat-error>
+              }
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="register__field">
@@ -153,12 +156,14 @@
             </mat-form-field>
           </div>
 
-          <mat-checkbox formControlName="terms" class="register__terms">
-            {{ labels.TERMS_AND_CONDITIONS }}
-          </mat-checkbox>
-          @if (registerForm.get('terms')?.hasError('required') && registerForm.get('terms')?.touched) {
-            <div class="register__error">{{ MESSAGES.TERMS_REQUIRED }}</div>
-          }
+          <div class="register__terms-wrapper">
+            <mat-checkbox formControlName="terms" class="register__terms">
+              {{ labels.TERMS_AND_CONDITIONS }}
+            </mat-checkbox>
+            <div class="register__error" [class.register__error--hidden]="!(registerForm.get('terms')?.hasError('required') && registerForm.get('terms')?.touched)">
+              {{ MESSAGES.TERMS_REQUIRED }}
+            </div>
+          </div>
 
           <app-submit-button
             [label]="labels.SUBMIT"

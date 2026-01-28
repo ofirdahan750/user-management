@@ -89,6 +89,13 @@
     }
   }
 
+  &__terms-wrapper {
+    height: 3.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
   &__terms {
     font-size: 0.875rem;
   }
@@ -96,7 +103,15 @@
   &__error {
     color: var(--color-error);
     font-size: 0.75rem;
-    margin-top: -0.5rem;
+    margin-top: 0.25rem;
+    height: 1.25rem;
+    line-height: 1.25rem;
+    transition: opacity 0.2s;
+
+    &--hidden {
+      visibility: hidden;
+      opacity: 0;
+    }
   }
 
   &__submit {
