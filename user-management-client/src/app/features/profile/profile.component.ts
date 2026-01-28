@@ -180,7 +180,7 @@ export class ProfileComponent {
 
   private checkForChanges(): void {
     const currentValues = this.profileForm.value;
-    const hasChanges = Object.keys(this.originalValues).some(key => {
+    const hasChanges = (Object.keys(this.originalValues) as Array<keyof typeof this.originalValues>).some(key => {
       const original = this.originalValues[key];
       const current = currentValues[key];
       
