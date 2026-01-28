@@ -74,6 +74,14 @@ export class FormService {
     }, { validators: passwordMatchValidator() });
   }
 
+  createChangePasswordForm(): FormGroup {
+    return this.fb.group({
+      currentPassword: ['', [Validators.required]],
+      password: ['', [Validators.required, passwordStrengthValidator()]],
+      confirmPassword: ['', [Validators.required]]
+    }, { validators: passwordMatchValidator() });
+  }
+
   /**
    * Creates a profile update form with user information fields
    */

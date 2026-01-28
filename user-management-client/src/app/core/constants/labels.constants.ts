@@ -28,6 +28,8 @@ export const LABELS = {
   RESET_PASSWORD: 'Reset Password',
   ENTER_EMAIL: 'Enter your email address',
   BACK_TO_LOGIN: 'Back to login',
+  BACK_TO_PROFILE: 'Back to Profile',
+  CURRENT_PASSWORD: 'Current Password',
   NEW_PASSWORD: 'New Password',
   CONFIRM_NEW_PASSWORD: 'Confirm New Password',
   COPY_LINK: 'Copy Link',

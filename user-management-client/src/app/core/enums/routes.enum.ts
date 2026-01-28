@@ -4,6 +4,7 @@ export enum Routes {
   VERIFY = '/verify',
   FORGOT_PASSWORD = '/forgot-password',
   RESET_PASSWORD = '/reset-password',
+  CHANGE_PASSWORD = '/change-password',
   DASHBOARD = '/dashboard',
   PROFILE = '/profile',
   NOT_FOUND = '/not-found',

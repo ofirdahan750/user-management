@@ -174,6 +174,15 @@ export class AuthService {
     );
   }
 
+  changePassword(currentPassword: string, newPassword: string): Observable<void> {
+    return this.http.put<void>(
+      `${API_ENDPOINTS.BASE_URL}${API_ENDPOINTS.USER.CHANGE_PASSWORD}`,
+      { currentPassword, newPassword }
+    ).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   isAuthenticatedCheck(): boolean {
     return this.isAuthenticated();
   }

@@ -587,6 +587,61 @@ app.put('/api/user/profile', authenticateToken, async (req, res) => {
   }
 });
 
+// Change Password (for authenticated users)
+app.put('/api/user/change-password', authenticateToken, async (req, res) => {
+  try {
+    const user = req.user;
+    const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({
+        statusCode: 400,
+        errorMessage: 'Current password and new password are required'
+      });
+    }
+
+    // Find user again to ensure we have the latest password hash
+    const userFromDb = users.find(u => u.UID === user.UID);
+    if (!userFromDb) {
+      return res.status(404).json({
+        statusCode: 404,
+        errorMessage: 'User not found'
+      });
+    }
+
+    // Verify current password
+    const isCurrentPasswordValid = await bcrypt.compare(currentPassword, userFromDb.password);
+    if (!isCurrentPasswordValid) {
+      return res.status(401).json({
+        statusCode: 401,
+        errorMessage: 'Current password is incorrect'
+      });
+    }
+
+    // Password validation
+    if (newPassword.length < 8 || !/[A-Z]/.test(newPassword) || !/[a-z]/.test(newPassword) || !/\d/.test(newPassword)) {
+      return res.status(400).json({
+        statusCode: 400,
+        errorMessage: 'Password must be at least 8 characters with uppercase, lowercase, and digit'
+      });
+    }
+
+    // Update password
+    userFromDb.password = await bcrypt.hash(newPassword, 10);
+
+    res.json({
+      statusCode: 200,
+      statusMessage: 'Password changed successfully'
+    });
+  } catch (error) {
+    console.error('Change password error:', error);
+    res.status(500).json({
+      statusCode: 500,
+      errorMessage: 'Internal server error'
+    });
+  }
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

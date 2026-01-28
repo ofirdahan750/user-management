@@ -23,6 +23,10 @@ export const MESSAGES = {
   PASSWORD_RESET_ERROR: 'Password reset failed. Token expired or invalid.',
   USER_NOT_FOUND: 'No account was found with this email address.',
   
+  // Change Password
+  PASSWORD_CHANGE_SUCCESS: 'Password changed successfully!',
+  PASSWORD_CHANGE_ERROR: 'Failed to change password. Please check your current password.',
+  
   // Profile
   PROFILE_UPDATE_SUCCESS: 'Profile updated successfully!',
   PROFILE_UPDATE_ERROR: 'Failed to update profile.',

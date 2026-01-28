@@ -13,6 +13,7 @@ export const API_ENDPOINTS = {
   USER: {
     PROFILE: '/user/profile',
     UPDATE_PROFILE: '/user/profile',
-    ACCOUNT_INFO: '/user/account-info'
+    ACCOUNT_INFO: '/user/account-info',
+    CHANGE_PASSWORD: '/user/change-password'
   }
 } as const;
