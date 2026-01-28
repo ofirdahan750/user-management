@@ -1,6 +1,6 @@
-@use '../../../../assets/styles/mixins/links' as *;
-@use '../../../../assets/styles/mixins/flexbox' as *;
-@use '../../../../assets/styles/functions/rem' as *;
+@use '../../../../../assets/styles/mixins/links' as *;
+@use '../../../../../assets/styles/mixins/flexbox' as *;
+@use '../../../../../assets/styles/functions/rem' as *;
 
 .back-link {
   @include link-secondary;

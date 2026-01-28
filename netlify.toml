@@ -1,0 +1,13 @@
+# Netlify – פרונט אנד בלבד (user-management-client)
+# הבקאנד (user-management-backend) מנוהל בנפרד, למשל ב-Koyeb
+
+[build]
+  base     = "user-management-client"
+  command  = "npm run build"
+  publish  = "dist/browser"
+
+# SPA – הכוונה ל-index.html בכל route
+[[redirects]]
+  from    = "/*"
+  to      = "/index.html"
+  status  = 200
