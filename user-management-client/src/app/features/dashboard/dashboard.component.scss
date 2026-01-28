@@ -1,4 +1,4 @@
-@use '../../../../assets/styles/mixins/typography' as typography-mixins;
+@use '../../../../assets/styles/mixins/typography' as *;
 
 .dashboard {
   min-height: 100vh;
@@ -11,17 +11,17 @@
   }
 
   &__title {
-    @include typography-mixins.font-size(28);
+    @include typography(28); // 1.75rem
     font-weight: 700;
     color: var(--color-text-primary);
     margin-bottom: 1.5rem;
     
     @media (min-width: 480px) {
-      @include typography-mixins.font-size(32);
+      @include typography(32); // 2rem
     }
     
     @media (min-width: 768px) {
-      @include typography-mixins.font-size(40);
+      @include typography(40); // 2.5rem
       margin-bottom: 2rem;
     }
   }
@@ -54,14 +54,14 @@
   }
 
   &__card-icon {
-    @include typography-mixins.font-size(32);
+    @include font-size(32); // 2rem
     width: 2rem;
     height: 2rem;
     color: var(--color-primary);
   }
 
   &__card-title {
-    @include typography-mixins.font-size(24);
+    @include typography(24); // 1.5rem
     font-weight: 600;
     color: var(--color-text-secondary);
     margin: 0;
@@ -89,18 +89,14 @@
   }
 
   &__info-label {
+    @include typography(14); // 0.875rem
     font-weight: 600;
     color: var(--color-text-secondary);
-    @include typography-mixins.font-size(14);
   }
 
   &__info-value {
+    @include typography(16); // 1rem
     color: var(--color-text-secondary);
-<<<<<<< HEAD
-    @include typography-mixins.font-size(16);
-=======
-    font-size: 1rem;
->>>>>>> d575b514e17680778a250a7c14a6a1fd5989b63f
     font-weight: 500;
   }
 
@@ -109,13 +105,13 @@
   }
 
   &__status-badge {
+    @include typography(14); // 0.875rem
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem 1rem;
     border-radius: 1.5rem;
     font-weight: 600;
-    @include typography-mixins.font-size(14);
 
     &--verified {
       background-color: rgba(76, 175, 80, 0.1);
@@ -128,7 +124,7 @@
     }
 
     mat-icon {
-      @include typography-mixins.font-size(20);
+      @include font-size(20); // 1.25rem
       width: 1.25rem;
       height: 1.25rem;
     }
