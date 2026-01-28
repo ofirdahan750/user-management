@@ -1,6 +1,7 @@
 import { Component, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { URLS } from '@core/constants/urls.constants';
 
 @Component({
   selector: 'app-footer',
@@ -16,6 +17,5 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 })
 export class FooterComponent {
   public readonly currentYear = new Date().getFullYear();
-  public readonly linkedInUrl = 'https://www.linkedin.com/in/ofir-dahan-8ba3a318a/';
-  public readonly githubUrl = 'https://github.com/ofirdahan750/user-management';
+  public readonly URLS = URLS;
 }
