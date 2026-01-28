@@ -22,6 +22,7 @@ import { selectIsAuthenticated, selectUser } from '@core/store/auth/auth.selecto
 import * as AuthActions from '@core/store/auth/auth.actions';
 import { IconButtonComponent } from '@shared/ui/buttons/icon-button/icon-button.component';
 import { LinkButtonComponent } from '@shared/ui/buttons/link-button/link-button.component';
+import { AppState } from '@core/store';
 
 @Component({
   selector: 'app-header',
@@ -45,9 +46,9 @@ import { LinkButtonComponent } from '@shared/ui/buttons/link-button/link-button.
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HeaderComponent {
-  private store = inject(Store);
-  private themeService = inject(ThemeService);
-  private router = inject(Router);
+  private store:Store<AppState> = inject(Store);
+  private themeService:ThemeService = inject(ThemeService);
+  private router:Router = inject(Router);
 
   isAuthenticated$: Observable<boolean> = this.store.select(selectIsAuthenticated);
   currentUser$: Observable<UserProfile | null> = this.store.select(selectUser);
