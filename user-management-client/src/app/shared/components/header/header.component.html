@@ -48,6 +48,19 @@
         class="header__theme-toggle header__theme-toggle--desktop"
       ></app-icon-button>
 
+      <!-- Mobile theme toggle for non-authenticated users -->
+      @if (!(isAuthenticated$ | async)) {
+        <button 
+          mat-icon-button
+          class="header__theme-toggle header__theme-toggle--mobile"
+          (click)="toggleTheme()"
+          [matTooltip]="labels.TOOLTIP_TOGGLE_THEME"
+          [attr.aria-label]="ariaLabels.TOGGLE_THEME"
+        >
+          <mat-icon>{{ currentTheme() === 'light' ? icons.DARK_MODE : icons.LIGHT_MODE }}</mat-icon>
+        </button>
+      }
+
       @if (isAuthenticated$ | async) {
         <button 
           mat-icon-button

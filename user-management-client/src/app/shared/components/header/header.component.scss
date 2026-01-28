@@ -117,6 +117,14 @@
         display: inline-flex;
       }
     }
+
+    &--mobile {
+      display: inline-flex;
+      
+      @media (min-width: 768px) {
+        display: none;
+      }
+    }
   }
 
   &__user-menu {
