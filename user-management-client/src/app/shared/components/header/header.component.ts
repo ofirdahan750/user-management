@@ -12,6 +12,9 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatDividerModule } from '@angular/material/divider';
 import { ThemeService } from '@core/services/theme.service';
 import { Routes } from '@core/enums/routes.enum';
+import { Theme } from '@core/enums/theme.enum';
+import { MaterialColor } from '@core/enums/material-color.enum';
+import { UserProfile } from '@core/models/user.model';
 import { LABELS } from '@core/constants/labels.constants';
 import { ARIA_LABELS } from '@core/constants/aria-labels.constants';
 import { ICONS } from '@core/constants/icons.constants';
@@ -47,7 +50,7 @@ export class HeaderComponent {
   private router = inject(Router);
 
   public isAuthenticated$: Observable<boolean> = this.store.select(selectIsAuthenticated);
-  public currentUser$: Observable<any> = this.store.select(selectUser);
+  public currentUser$: Observable<UserProfile | null> = this.store.select(selectUser);
   public currentTheme = computed(() => this.themeService.currentTheme());
   public mobileMenuOpen = signal(false);
 
@@ -55,13 +58,15 @@ export class HeaderComponent {
   public readonly labels = LABELS;
   public readonly ariaLabels = ARIA_LABELS;
   public readonly icons = ICONS;
+  public readonly Theme = Theme;
+  public readonly MaterialColor = MaterialColor;
 
   toggleTheme(): void {
     this.themeService.toggleTheme();
   }
 
   getThemeTooltip(): string {
-    return this.currentTheme() === 'light' 
+    return this.currentTheme() === Theme.LIGHT 
       ? this.labels.TOOLTIP_SWITCH_TO_DARK_MODE 
       : this.labels.TOOLTIP_SWITCH_TO_LIGHT_MODE;
   }

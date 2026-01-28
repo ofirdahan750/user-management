@@ -17,7 +17,7 @@
                 autocomplete="given-name"
               />
               <mat-icon matPrefix>{{ icons.PERSON }}</mat-icon>
-              @if (registerForm.get('firstName')?.hasError('required') && registerForm.get('firstName')?.touched) {
+              @if (hasFirstNameRequiredError) {
                 <mat-error>{{ MESSAGES.REQUIRED_FIELD }}</mat-error>
               }
             </mat-form-field>
@@ -31,7 +31,7 @@
                 autocomplete="family-name"
               />
               <mat-icon matPrefix>{{ icons.PERSON }}</mat-icon>
-              @if (registerForm.get('lastName')?.hasError('required') && registerForm.get('lastName')?.touched) {
+              @if (hasLastNameRequiredError) {
                 <mat-error>{{ MESSAGES.REQUIRED_FIELD }}</mat-error>
               }
             </mat-form-field>
@@ -47,10 +47,10 @@
               autocomplete="email"
             />
             <mat-icon matPrefix>{{ icons.EMAIL }}</mat-icon>
-            @if (registerForm.get('email')?.hasError('required') && registerForm.get('email')?.touched) {
+            @if (hasEmailRequiredError) {
               <mat-error>{{ MESSAGES.REQUIRED_FIELD }}</mat-error>
             }
-            @if (registerForm.get('email')?.hasError('email') && registerForm.get('email')?.touched) {
+            @if (hasEmailFormatError) {
               <mat-error>{{ MESSAGES.INVALID_EMAIL }}</mat-error>
             }
           </mat-form-field>
@@ -75,13 +75,13 @@
             >
               <mat-icon>{{ hidePassword() ? icons.VISIBILITY_OFF : icons.VISIBILITY }}</mat-icon>
             </button>
-            @if (registerForm.get('password')?.hasError('required') && registerForm.get('password')?.touched) {
+            @if (hasPasswordRequiredError) {
               <mat-error>{{ MESSAGES.REQUIRED_FIELD }}</mat-error>
             }
-            @if (registerForm.get('password')?.hasError('minLength') || registerForm.get('password')?.hasError('uppercase') || registerForm.get('password')?.hasError('lowercase') || registerForm.get('password')?.hasError('digit')) {
+            @if (hasPasswordValidationError) {
               <mat-error>{{ MESSAGES.INVALID_PASSWORD }}</mat-error>
             }
-            @if (registerForm.get('password')?.value && registerForm.get('password')?.dirty) {
+            @if (hasPasswordValue) {
               <div 
                 class="register__strength" 
                 [ngClass]="{
@@ -115,10 +115,10 @@
             >
               <mat-icon>{{ hideConfirmPassword() ? icons.VISIBILITY_OFF : icons.VISIBILITY }}</mat-icon>
             </button>
-            @if (registerForm.get('confirmPassword')?.hasError('required') && registerForm.get('confirmPassword')?.touched) {
+            @if (hasConfirmPasswordRequiredError) {
               <mat-error>{{ MESSAGES.REQUIRED_FIELD }}</mat-error>
             }
-            @if (registerForm.hasError('passwordMismatch') && registerForm.get('confirmPassword')?.touched) {
+            @if (hasPasswordMismatchError) {
               <mat-error>{{ MESSAGES.PASSWORD_MISMATCH }}</mat-error>
             }
           </mat-form-field>
@@ -134,7 +134,7 @@
               />
               <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
-              @if (registerForm.get('birthDate')?.invalid && (registerForm.get('birthDate')?.touched || registerForm.get('birthDate')?.dirty) && getBirthDateErrorMessage()) {
+              @if (hasBirthDateError) {
                 <mat-error>{{ getBirthDateErrorMessage() }}</mat-error>
               }
             </mat-form-field>
@@ -150,7 +150,7 @@
                 [attr.placeholder]="placeholders.PHONE_NUMBER"
               />
               <mat-icon matPrefix>{{ icons.PHONE }}</mat-icon>
-              @if (registerForm.get('phoneNumber')?.hasError('invalidPhone') && registerForm.get('phoneNumber')?.touched) {
+              @if (hasPhoneNumberError) {
                 <mat-error>{{ MESSAGES.INVALID_PHONE }}</mat-error>
               }
             </mat-form-field>
@@ -160,7 +160,7 @@
             <mat-checkbox formControlName="terms" class="register__terms">
               {{ labels.TERMS_AND_CONDITIONS }}
             </mat-checkbox>
-            <div class="register__error" [class.register__error--hidden]="!(registerForm.get('terms')?.hasError('required') && registerForm.get('terms')?.touched)">
+            <div class="register__error" [ngClass]="{'register__error--hidden': !hasTermsRequiredError}">
               {{ MESSAGES.TERMS_REQUIRED }}
             </div>
           </div>

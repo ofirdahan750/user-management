@@ -91,8 +91,8 @@ export class LoginComponent {
       rememberMe: rememberMe || false
     }));
 
-    const returnUrl =
-      (this.route.snapshot.queryParams['returnUrl'] as string | undefined) ?? Routes.DASHBOARD;
+    const returnUrlParam = this.route.snapshot.queryParams['returnUrl'];
+    const returnUrl = (typeof returnUrlParam === 'string' && returnUrlParam) ? returnUrlParam : Routes.DASHBOARD;
     if (returnUrl !== Routes.DASHBOARD) {
       // Store return URL for navigation after login success
     }

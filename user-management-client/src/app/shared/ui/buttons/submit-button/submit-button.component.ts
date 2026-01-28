@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MaterialColor } from '@core/enums/material-color.enum';
+import { MaterialButtonColor, MaterialButtonVariant, ButtonType } from '@core/types/button.types';
 import { ICONS } from '@core/constants/icons.constants';
 import { LABELS } from '@core/constants/labels.constants';
 
@@ -24,9 +26,9 @@ export class SubmitButtonComponent {
   @Input() label: string = 'Submit';
   @Input() isLoading: boolean = false;
   @Input() disabled: boolean = false;
-  @Input() type: 'button' | 'submit' = 'submit';
-  @Input() color: 'primary' | 'accent' | 'warn' = 'primary';
-  @Input() variant: 'raised' | 'flat' | 'stroked' = 'raised';
+  @Input() type: ButtonType = 'submit';
+  @Input() color: MaterialButtonColor = MaterialColor.PRIMARY;
+  @Input() variant: MaterialButtonVariant = 'raised';
   @Input() tooltip: string = '';
   @Input() clickHandler?: () => void;
 

@@ -9,6 +9,7 @@ import { AuthService } from '@core/services/auth.service';
 import { ToastNotificationService } from '@core/services/toast-notification.service';
 import { Routes } from '@core/enums/routes.enum';
 import { VerificationStatus } from '@core/enums/verification-status.enum';
+import { MaterialColor } from '@core/enums/material-color.enum';
 import { LABELS } from '@core/constants/labels.constants';
 import { MESSAGES } from '@core/constants/messages.constants';
 import { ICONS } from '@core/constants/icons.constants';
@@ -52,6 +53,7 @@ export class VerifyComponent {
   public readonly MESSAGES = MESSAGES;
   public readonly icons = ICONS;
   public readonly VerificationStatus = VerificationStatus;
+  public readonly MaterialColor = MaterialColor;
 
   readonly verifyClickHandler = () => this.onVerifyClick();
   readonly resendClickHandler = () => this.resendVerification();

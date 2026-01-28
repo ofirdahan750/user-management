@@ -12,7 +12,7 @@
       <div class="not-found__actions">
         <button 
           mat-raised-button 
-          color="primary" 
+          [color]="MaterialColor.PRIMARY" 
           (click)="navigateToHome()"
           class="not-found__button">
           <mat-icon>{{ icons.ARROW_FORWARD }}</mat-icon>
@@ -21,7 +21,7 @@
         
         <button 
           mat-raised-button 
-          color="accent" 
+          [color]="MaterialColor.ACCENT" 
           (click)="navigateToLogin()"
           class="not-found__button">
           <mat-icon>{{ icons.ARROW_BACK }}</mat-icon>

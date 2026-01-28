@@ -11,6 +11,7 @@ import { EmailHelperService } from '@core/services/email-helper.service';
 import { Routes } from '@core/enums/routes.enum';
 import { StorageKeys } from '@core/enums/storage-keys.enum';
 import { MESSAGES } from '@core/constants/messages.constants';
+import { ApiError, isApiError, getErrorMessage } from '@core/types/api-error.types';
 import * as AuthActions from './auth.actions';
 import * as LoadingActions from '@core/store/loading/loading.actions';
 
@@ -56,7 +57,8 @@ export class AuthEffects {
           ),
           catchError((error) => {
             this.store.dispatch(LoadingActions.hideLoading());
-            const errorMessage = error.error?.errorMessage || MESSAGES.LOGIN_ERROR;
+            const apiError: ApiError | null = isApiError(error.error) ? error.error : null;
+            const errorMessage = getErrorMessage(apiError, MESSAGES.LOGIN_ERROR);
             return of(AuthActions.loginFailure({ error: errorMessage }));
           })
         )
@@ -99,7 +101,8 @@ export class AuthEffects {
           }),
           catchError((error) => {
             this.store.dispatch(LoadingActions.hideLoading());
-            const errorMessage = error.error?.errorMessage || MESSAGES.REGISTRATION_ERROR;
+            const apiError: ApiError | null = isApiError(error.error) ? error.error : null;
+            const errorMessage = getErrorMessage(apiError, MESSAGES.REGISTRATION_ERROR);
             return of(AuthActions.registerFailure({ error: errorMessage }));
           })
         )
@@ -163,7 +166,8 @@ export class AuthEffects {
           }),
           catchError((error) => {
             this.store.dispatch(LoadingActions.hideLoading());
-            const errorMessage = error.error?.errorMessage || MESSAGES.PROFILE_UPDATE_ERROR;
+            const apiError: ApiError | null = isApiError(error.error) ? error.error : null;
+            const errorMessage = getErrorMessage(apiError, MESSAGES.PROFILE_UPDATE_ERROR);
             return of(AuthActions.updateProfileFailure({ error: errorMessage }));
           })
         )
@@ -202,7 +206,8 @@ export class AuthEffects {
           }),
           catchError((error) => {
             this.store.dispatch(LoadingActions.hideLoading());
-            const errorMessage = error.error?.errorMessage || MESSAGES.VERIFICATION_ERROR;
+            const apiError: ApiError | null = isApiError(error.error) ? error.error : null;
+            const errorMessage = getErrorMessage(apiError, MESSAGES.VERIFICATION_ERROR);
             return of(AuthActions.verifyEmailFailure({ error: errorMessage }));
           })
         )
@@ -243,7 +248,8 @@ export class AuthEffects {
           }),
           catchError((error) => {
             this.store.dispatch(LoadingActions.hideLoading());
-            const errorMessage = error.error?.errorMessage || MESSAGES.ERROR;
+            const apiError: ApiError | null = isApiError(error.error) ? error.error : null;
+            const errorMessage = getErrorMessage(apiError, MESSAGES.ERROR);
             return of(AuthActions.requestPasswordResetFailure({ error: errorMessage }));
           })
         )
@@ -283,7 +289,8 @@ export class AuthEffects {
           }),
           catchError((error) => {
             this.store.dispatch(LoadingActions.hideLoading());
-            const errorMessage = error.error?.errorMessage || MESSAGES.PASSWORD_RESET_ERROR;
+            const apiError: ApiError | null = isApiError(error.error) ? error.error : null;
+            const errorMessage = getErrorMessage(apiError, MESSAGES.PASSWORD_RESET_ERROR);
             return of(AuthActions.resetPasswordFailure({ error: errorMessage }));
           })
         )

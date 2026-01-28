@@ -74,11 +74,108 @@ export class RegisterComponent implements OnInit {
     this.registerForm = this.formService.createRegisterForm();
     this.combinedLoading$ = this.formService.getCombinedLoading$();
 
-    this.registerForm.get('password')?.valueChanges.subscribe(password => {
-      if (password) {
-        this.passwordStrength.set(getPasswordStrength(password));
-      }
-    });
+    const passwordControl = this.registerForm.get('password');
+    if (passwordControl) {
+      passwordControl.valueChanges.subscribe(password => {
+        if (password) {
+          this.passwordStrength.set(getPasswordStrength(password));
+        }
+      });
+    }
+  }
+  
+  // Getters for form controls to avoid optional chaining in template
+  get firstNameControl() {
+    return this.registerForm.get('firstName');
+  }
+  
+  get lastNameControl() {
+    return this.registerForm.get('lastName');
+  }
+  
+  get emailControl() {
+    return this.registerForm.get('email');
+  }
+  
+  get passwordControl() {
+    return this.registerForm.get('password');
+  }
+  
+  get confirmPasswordControl() {
+    return this.registerForm.get('confirmPassword');
+  }
+  
+  get birthDateControl() {
+    return this.registerForm.get('birthDate');
+  }
+  
+  get phoneNumberControl() {
+    return this.registerForm.get('phoneNumber');
+  }
+  
+  get termsControl() {
+    return this.registerForm.get('terms');
+  }
+  
+  // Error checkers
+  get hasFirstNameRequiredError(): boolean {
+    const control = this.firstNameControl;
+    return control ? control.hasError('required') && control.touched : false;
+  }
+  
+  get hasLastNameRequiredError(): boolean {
+    const control = this.lastNameControl;
+    return control ? control.hasError('required') && control.touched : false;
+  }
+  
+  get hasEmailRequiredError(): boolean {
+    const control = this.emailControl;
+    return control ? control.hasError('required') && control.touched : false;
+  }
+  
+  get hasEmailFormatError(): boolean {
+    const control = this.emailControl;
+    return control ? control.hasError('email') && control.touched : false;
+  }
+  
+  get hasPasswordRequiredError(): boolean {
+    const control = this.passwordControl;
+    return control ? control.hasError('required') && control.touched : false;
+  }
+  
+  get hasPasswordValidationError(): boolean {
+    const control = this.passwordControl;
+    return control ? (control.hasError('minLength') || control.hasError('uppercase') || control.hasError('lowercase') || control.hasError('digit')) : false;
+  }
+  
+  get hasPasswordValue(): boolean {
+    const control = this.passwordControl;
+    return control ? !!control.value && control.dirty : false;
+  }
+  
+  get hasConfirmPasswordRequiredError(): boolean {
+    const control = this.confirmPasswordControl;
+    return control ? control.hasError('required') && control.touched : false;
+  }
+  
+  get hasPasswordMismatchError(): boolean {
+    const control = this.confirmPasswordControl;
+    return this.registerForm.hasError('passwordMismatch') && (control ? control.touched : false);
+  }
+  
+  get hasBirthDateError(): boolean {
+    const control = this.birthDateControl;
+    return control ? control.invalid && (control.touched || control.dirty) && !!this.getBirthDateErrorMessage() : false;
+  }
+  
+  get hasPhoneNumberError(): boolean {
+    const control = this.phoneNumberControl;
+    return control ? control.hasError('invalidPhone') && control.touched : false;
+  }
+  
+  get hasTermsRequiredError(): boolean {
+    const control = this.termsControl;
+    return control ? control.hasError('required') && control.touched : false;
   }
 
   ngOnInit(): void {
@@ -96,15 +193,23 @@ export class RegisterComponent implements OnInit {
 
     const formValue = this.registerForm.value as RegisterFormValue;
 
+    const profile: { firstName: string; lastName: string; birthDate?: string; phoneNumber?: string } = {
+      firstName: formValue.firstName,
+      lastName: formValue.lastName
+    };
+    
+    if (formValue.birthDate) {
+      profile.birthDate = new Date(formValue.birthDate).toISOString();
+    }
+    
+    if (formValue.phoneNumber) {
+      profile.phoneNumber = formValue.phoneNumber;
+    }
+
     const registerData = {
       email: formValue.email,
       password: formValue.password,
-      profile: {
-        firstName: formValue.firstName,
-        lastName: formValue.lastName,
-        birthDate: formValue.birthDate ? new Date(formValue.birthDate).toISOString() : undefined,
-        phoneNumber: formValue.phoneNumber || undefined
-      }
+      profile
     };
 
     this.store.dispatch(LoadingActions.showLoading());

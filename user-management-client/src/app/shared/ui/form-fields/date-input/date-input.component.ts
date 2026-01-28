@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDatepickerModule, MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 
 @Component({
@@ -38,7 +38,7 @@ export class DateInputComponent implements ControlValueAccessor {
   private onChange = (value: Date | null) => {};
   private onTouched = () => {};
 
-  onDateChange(event: any): void {
+  onDateChange(event: MatDatepickerInputEvent<Date>): void {
     const value = event.value;
     this.onChange(value);
   }

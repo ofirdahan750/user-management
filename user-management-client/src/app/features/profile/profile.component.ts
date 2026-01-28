@@ -20,6 +20,7 @@ import { PhoneInputComponent } from '@shared/ui/form-fields/phone-input/phone-in
 import { DateInputComponent } from '@shared/ui/form-fields/date-input/date-input.component';
 import { SubmitButtonComponent } from '@shared/ui/buttons/submit-button/submit-button.component';
 import { Routes } from '@core/enums/routes.enum';
+import { UserProfile, ProfileUpdate } from '@core/models/user.model';
 import { LABELS } from '@core/constants/labels.constants';
 import { MESSAGES } from '@core/constants/messages.constants';
 import { ICONS } from '@core/constants/icons.constants';
@@ -62,9 +63,14 @@ export class ProfileComponent {
 
   public profileForm: FormGroup;
   public hasUnsavedChanges = signal<boolean>(false);
-  public originalValues: Record<string, unknown> = {};
+  public originalValues: { firstName: string; lastName: string; birthDate: Date | ''; phoneNumber: string } = {
+    firstName: '',
+    lastName: '',
+    birthDate: '',
+    phoneNumber: ''
+  };
   public combinedLoading$: Observable<boolean>;
-  public currentUser$: Observable<any>;
+  public currentUser$: Observable<UserProfile | null>;
 
   public readonly labels = LABELS;
   public readonly routes = Routes;
@@ -95,7 +101,10 @@ export class ProfileComponent {
   constructor() {
     this.profileForm = this.formService.createProfileForm();
     // Disable email field as it shouldn't be editable
-    this.profileForm.get('email')?.disable();
+    const emailControl = this.profileForm.get('email');
+    if (emailControl) {
+      emailControl.disable();
+    }
     
     this.combinedLoading$ = this.formService.getCombinedLoading$();
     this.currentUser$ = this.store.select(selectUser);
@@ -109,7 +118,7 @@ export class ProfileComponent {
           this.originalValues = {
             firstName: user.firstName,
             lastName: user.lastName,
-            birthDate: user.birthDate ? new Date(user.birthDate) : null,
+            birthDate: user.birthDate ? new Date(user.birthDate) : '',
             phoneNumber: user.phoneNumber || ''
           };
 
@@ -117,7 +126,7 @@ export class ProfileComponent {
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
-            birthDate: user.birthDate ? new Date(user.birthDate) : null,
+            birthDate: user.birthDate ? new Date(user.birthDate) : '',
             phoneNumber: user.phoneNumber || ''
           });
         }
@@ -136,12 +145,18 @@ export class ProfileComponent {
 
     const formValue = this.profileForm.value;
 
-    const updateData = {
+    const updateData: ProfileUpdate = {
       firstName: formValue.firstName,
-      lastName: formValue.lastName,
-      birthDate: formValue.birthDate ? new Date(formValue.birthDate).toISOString() : undefined,
-      phoneNumber: formValue.phoneNumber || undefined
+      lastName: formValue.lastName
     };
+    
+    if (formValue.birthDate) {
+      updateData.birthDate = new Date(formValue.birthDate).toISOString();
+    }
+    
+    if (formValue.phoneNumber) {
+      updateData.phoneNumber = formValue.phoneNumber;
+    }
 
     this.store.dispatch(LoadingActions.showLoading());
     this.store.dispatch(AuthActions.updateProfile({ data: updateData }));

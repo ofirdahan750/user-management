@@ -11,6 +11,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { DateFormatPipe } from '@shared/pipes/date-format.pipe';
 import { NameCapitalizePipe } from '@shared/pipes/name-capitalize.pipe';
 import { Routes } from '@core/enums/routes.enum';
+import { MaterialColor } from '@core/enums/material-color.enum';
+import { UserProfile } from '@core/models/user.model';
 import { LABELS } from '@core/constants/labels.constants';
 import { ICONS } from '@core/constants/icons.constants';
 import { selectUser } from '@core/store/auth/auth.selectors';
@@ -36,7 +38,7 @@ import { selectUser } from '@core/store/auth/auth.selectors';
 export class DashboardComponent {
   private store = inject(Store);
 
-  public currentUser$: Observable<any> = this.store.select(selectUser);
+  public currentUser$: Observable<UserProfile | null> = this.store.select(selectUser);
   public welcomeMessage$: Observable<string> = this.currentUser$.pipe(
     map(user => user ? `${LABELS.WELCOME}, ${user.firstName}!` : '')
   );
@@ -44,4 +46,5 @@ export class DashboardComponent {
   public readonly routes = Routes;
   public readonly labels = LABELS;
   public readonly icons = ICONS;
+  public readonly MaterialColor = MaterialColor;
 }

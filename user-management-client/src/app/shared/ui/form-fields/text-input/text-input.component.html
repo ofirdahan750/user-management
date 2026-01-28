@@ -6,7 +6,7 @@
     [formControl]="control!"
     [attr.aria-label]="ariaLabel || label"
     [attr.autocomplete]="autocomplete"
-    [attr.autofocus]="autofocus ? '' : null"
+    [attr.autofocus]="autofocus ? '' : false"
     (input)="onInput($event)"
     (blur)="onBlur()"
   />

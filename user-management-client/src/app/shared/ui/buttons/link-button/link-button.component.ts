@@ -4,6 +4,8 @@ import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MaterialColor } from '@core/enums/material-color.enum';
+import { MaterialButtonColor, MaterialButtonVariant } from '@core/types/button.types';
 
 @Component({
   selector: 'app-link-button',
@@ -25,7 +27,7 @@ export class LinkButtonComponent {
   @Input() label: string = '';
   @Input() icon: string = '';
   @Input() tooltip: string = '';
-  @Input() variant: 'raised' | 'flat' | 'stroked' = 'flat';
-  @Input() color: 'primary' | 'accent' | 'warn' = 'primary';
+  @Input() variant: MaterialButtonVariant = 'flat';
+  @Input() color: MaterialButtonColor = MaterialColor.PRIMARY;
   @Input() showIcon: boolean = true;
 }

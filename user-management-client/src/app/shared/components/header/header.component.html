@@ -41,7 +41,7 @@
 
     <div class="header__actions">
       <app-icon-button
-        [icon]="currentTheme() === 'light' ? icons.LIGHT_MODE : icons.DARK_MODE"
+        [icon]="currentTheme() === Theme.LIGHT ? icons.LIGHT_MODE : icons.DARK_MODE"
         [tooltip]="getThemeTooltip()"
         [ariaLabel]="ariaLabels.TOGGLE_THEME"
         [clickHandler]="toggleTheme.bind(this)"
@@ -51,11 +51,11 @@
       <!-- Mobile theme toggle for non-authenticated users -->
       @if (!(isAuthenticated$ | async)) {
         <app-icon-button
-          [icon]="currentTheme() === 'light' ? icons.LIGHT_MODE : icons.DARK_MODE"
+          [icon]="currentTheme() === Theme.LIGHT ? icons.LIGHT_MODE : icons.DARK_MODE"
           [tooltip]="getThemeTooltip()"
           [ariaLabel]="ariaLabels.TOGGLE_THEME"
           [clickHandler]="toggleTheme.bind(this)"
-          [color]="'primary'"
+          [color]="MaterialColor.PRIMARY"
           class="header__theme-toggle header__theme-toggle--mobile"
         ></app-icon-button>
       }
@@ -104,7 +104,7 @@
           [route]="routes.REGISTER"
           [label]="labels.REGISTER"
           variant="raised"
-          color="primary"
+          [color]="MaterialColor.PRIMARY"
           [showIcon]="false"
           [tooltip]="labels.TOOLTIP_NAVIGATE_REGISTER"
           class="header__register-btn"
@@ -117,7 +117,7 @@
   @if (isAuthenticated$ | async) {
     <div 
       class="header__mobile-menu"
-      [class.header__mobile-menu--open]="mobileMenuOpen()"
+      [ngClass]="{'header__mobile-menu--open': mobileMenuOpen()}"
       (click)="closeMobileMenu()"
     >
       <nav class="header__mobile-nav" (click)="$event.stopPropagation()">
@@ -178,7 +178,7 @@
             [attr.aria-label]="ariaLabels.TOGGLE_THEME"
             [matTooltip]="getThemeTooltip()"
           >
-            <mat-icon>{{ currentTheme() === 'light' ? icons.LIGHT_MODE : icons.DARK_MODE }}</mat-icon>
+            <mat-icon>{{ currentTheme() === Theme.LIGHT ? icons.LIGHT_MODE : icons.DARK_MODE }}</mat-icon>
             <span>{{ getThemeTooltip() }}</span>
           </button>
         </div>

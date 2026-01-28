@@ -46,7 +46,7 @@ export class ResetPasswordComponent {
   public isLoading = signal<boolean>(false);
   public hidePassword = signal<boolean>(true);
   public hideConfirmPassword = signal<boolean>(true);
-  public token = signal<string | null>(null);
+  public token = signal<string>('');
 
   public readonly labels = LABELS;
   public readonly routes = Routes;
@@ -56,7 +56,7 @@ export class ResetPasswordComponent {
 
   constructor() {
     const tokenParam = this.route.snapshot.queryParams['token'];
-    if (!tokenParam) {
+    if (!tokenParam || typeof tokenParam !== 'string') {
       this.toastService.showError(MESSAGES.PASSWORD_RESET_ERROR);
       this.router.navigate([Routes.FORGOT_PASSWORD]);
       return;
@@ -65,6 +65,36 @@ export class ResetPasswordComponent {
     this.token.set(tokenParam);
     this.resetPasswordForm = this.formService.createResetPasswordForm();
   }
+  
+  // Getters for form controls to avoid optional chaining in template
+  get passwordControl() {
+    return this.resetPasswordForm.get('password');
+  }
+  
+  get confirmPasswordControl() {
+    return this.resetPasswordForm.get('confirmPassword');
+  }
+  
+  // Error checkers
+  get hasPasswordRequiredError(): boolean {
+    const control = this.passwordControl;
+    return control ? control.hasError('required') && control.touched : false;
+  }
+  
+  get hasPasswordValidationError(): boolean {
+    const control = this.passwordControl;
+    return control ? (control.hasError('minLength') || control.hasError('uppercase') || control.hasError('lowercase') || control.hasError('digit')) : false;
+  }
+  
+  get hasConfirmPasswordRequiredError(): boolean {
+    const control = this.confirmPasswordControl;
+    return control ? control.hasError('required') && control.touched : false;
+  }
+  
+  get hasPasswordMismatchError(): boolean {
+    const control = this.confirmPasswordControl;
+    return this.resetPasswordForm.hasError('passwordMismatch') && (control ? control.touched : false);
+  }
 
   onSubmit(): void {
     if (!this.formService.validateForm(this.resetPasswordForm)) {
@@ -72,7 +102,7 @@ export class ResetPasswordComponent {
     }
 
     const token = this.token();
-    if (!token) {
+    if (!token || token === '') {
       return;
     }
 

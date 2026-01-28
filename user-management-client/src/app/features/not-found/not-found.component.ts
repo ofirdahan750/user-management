@@ -5,6 +5,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Routes } from '@core/enums/routes.enum';
+import { MaterialColor } from '@core/enums/material-color.enum';
 import { LABELS } from '@core/constants/labels.constants';
 import { MESSAGES } from '@core/constants/messages.constants';
 import { ICONS } from '@core/constants/icons.constants';
@@ -31,6 +32,7 @@ export class NotFoundComponent {
   public readonly messages = MESSAGES;
   public readonly icons = ICONS;
   public readonly routes = Routes;
+  public readonly MaterialColor = MaterialColor;
 
   navigateToHome(): void {
     this.router.navigate([Routes.DASHBOARD]);

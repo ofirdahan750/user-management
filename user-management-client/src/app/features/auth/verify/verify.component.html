@@ -24,12 +24,12 @@
                   [clickHandler]="verifyClickHandler"
                   type="button"
                   variant="raised"
-                  color="primary"
+                  [color]="MaterialColor.PRIMARY"
                   class="verify__button"
                 ></app-submit-button>
                 <button
                   mat-raised-button
-                  color="accent"
+                  [color]="MaterialColor.ACCENT"
                   (click)="copyVerificationLink()"
                   class="verify__copy-button"
                   [attr.aria-label]="labels.COPY_LINK"

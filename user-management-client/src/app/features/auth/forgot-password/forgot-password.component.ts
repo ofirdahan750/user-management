@@ -1,7 +1,7 @@
 // Angular Core
 import { Component, ViewEncapsulation, ChangeDetectionStrategy, inject, signal, ChangeDetectorRef, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 
 // Angular Material
@@ -9,6 +9,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 // RxJS
 import { interval, Subscription } from 'rxjs';
@@ -18,6 +19,7 @@ import { take } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { Actions, ofType } from '@ngrx/effects';
 import { selectUser } from '@core/store/auth/auth.selectors';
+import { UserProfile } from '@core/models/user.model';
 
 // Services
 import { FormService } from '@core/services/form.service';
@@ -27,6 +29,7 @@ import { EmailHelperService } from '@core/services/email-helper.service';
 // Enums
 import { Routes } from '@core/enums/routes.enum';
 import { Timeouts } from '@core/enums/timeouts.enum';
+import { MaterialColor } from '@core/enums/material-color.enum';
 
 // Types
 import { ForgotPasswordFormValue } from '@core/types/form.types';
@@ -54,6 +57,7 @@ import * as AuthActions from '@core/store/auth/auth.actions';
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
+    MatButtonModule,
     SubmitButtonComponent,
     BackLinkComponent
   ],
@@ -78,12 +82,22 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
   public countdown = signal<number>(0);
   public canResend = signal<boolean>(false);
   
-  private countdownSubscription?: Subscription;
+  private countdownSubscription: Subscription | '' = '';
 
   public readonly labels = LABELS;
   public readonly routes = Routes;
   public readonly MESSAGES = MESSAGES;
   public readonly icons = ICONS;
+  public readonly MaterialColor = MaterialColor;
+  
+  // Getters for Material button colors (Material buttons require string literals)
+  get primaryColor(): string {
+    return MaterialColor.PRIMARY;
+  }
+  
+  get accentColor(): string {
+    return MaterialColor.ACCENT;
+  }
 
   constructor() {
     this.forgotPasswordForm = this.formService.createForgotPasswordForm();
@@ -96,7 +110,7 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
     // If no email from temporary storage, try to get from current user if authenticated
     if (!email) {
       this.store.select(selectUser).pipe(take(1)).subscribe(user => {
-        if (user?.email) {
+        if (user && user.email) {
           email = user.email;
           this.forgotPasswordForm.patchValue({ email });
           this.cdr.markForCheck();
@@ -107,9 +121,24 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
       this.cdr.markForCheck();
     }
   }
+  
+  // Getters for form controls to avoid optional chaining in template
+  get emailControl(): FormControl {
+    return this.forgotPasswordForm.get('email') as FormControl;
+  }
+  
+  get hasEmailRequiredError(): boolean {
+    const control = this.emailControl;
+    return control.hasError('required') && control.touched;
+  }
+  
+  get hasEmailFormatError(): boolean {
+    const control = this.emailControl;
+    return control.hasError('email') && control.touched;
+  }
 
   ngOnDestroy(): void {
-    if (this.countdownSubscription) {
+    if (this.countdownSubscription !== '') {
       this.countdownSubscription.unsubscribe();
     }
   }
@@ -131,7 +160,7 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
       if (action.type === '[Auth] Request Password Reset Success') {
         const successAction = action as ReturnType<typeof AuthActions.requestPasswordResetSuccess>;
         // Only show success screen if we have a resetToken
-        if (successAction.resetToken) {
+        if (successAction.resetToken && successAction.resetToken !== '') {
           this.resetToken.set(successAction.resetToken);
           this.isSuccess.set(true);
           this.isLoading.set(false);
@@ -156,7 +185,7 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
 
   startCountdown(): void {
     // Stop existing countdown if any
-    if (this.countdownSubscription) {
+    if (this.countdownSubscription !== '') {
       this.countdownSubscription.unsubscribe();
     }
 
@@ -170,7 +199,7 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       } else {
         this.canResend.set(true);
-        if (this.countdownSubscription) {
+        if (this.countdownSubscription !== '') {
           this.countdownSubscription.unsubscribe();
         }
         this.cdr.markForCheck();
