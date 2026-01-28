@@ -96,7 +96,11 @@
 
   &__info-value {
     color: var(--color-text-secondary);
+<<<<<<< HEAD
     @include typography-mixins.font-size(16);
+=======
+    font-size: 1rem;
+>>>>>>> d575b514e17680778a250a7c14a6a1fd5989b63f
     font-weight: 500;
   }
 
