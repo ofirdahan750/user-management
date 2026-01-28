@@ -38,9 +38,9 @@ export class PhoneInputComponent implements ControlValueAccessor {
   @Input() autocomplete: string = 'tel';
   @Input() ariaLabel: string = '';
 
-  public readonly icons = ICONS;
-  public readonly placeholders = PLACEHOLDERS;
-  public readonly MESSAGES = MESSAGES;
+  readonly icons = ICONS;
+  readonly placeholders = PLACEHOLDERS;
+  readonly MESSAGES = MESSAGES;
 
   constructor() {
     if (!this.placeholder) {

@@ -13,6 +13,6 @@ import { URLS } from '@core/constants/urls.constants';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FooterComponent {
-  readonly URLS = URLS;
+  readonly URLS = URLS; 
   readonly currentYear: number = new Date().getFullYear();
 }

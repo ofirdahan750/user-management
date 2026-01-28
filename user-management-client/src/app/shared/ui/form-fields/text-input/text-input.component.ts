@@ -40,8 +40,8 @@ export class TextInputComponent implements ControlValueAccessor {
   @Input() ariaLabel: string = '';
   @Input() autofocus: boolean = false;
 
-  public readonly icons = ICONS;
-  public readonly MESSAGES = MESSAGES;
+  readonly icons = ICONS;
+  readonly MESSAGES = MESSAGES;
 
   private onChange = (value: string) => {};
   private onTouched = () => {};

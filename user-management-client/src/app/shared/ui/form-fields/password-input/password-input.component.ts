@@ -44,11 +44,11 @@ export class PasswordInputComponent implements ControlValueAccessor {
   @Input() showStrengthIndicator: boolean = false;
   @Input() ariaLabel: string = '';
 
-  public hidePassword = signal<boolean>(true);
-  public readonly ariaLabels = ARIA_LABELS;
-  public readonly icons = ICONS;
-  public readonly MESSAGES = MESSAGES;
-  public readonly labels = LABELS;
+  hidePassword = signal<boolean>(true);
+  readonly ariaLabels = ARIA_LABELS;
+  readonly icons = ICONS;
+  readonly MESSAGES = MESSAGES;
+  readonly labels = LABELS;
 
   private onChange = (value: string) => {};
   private onTouched = () => {};

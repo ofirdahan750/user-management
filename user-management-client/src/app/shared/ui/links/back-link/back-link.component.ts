@@ -27,6 +27,6 @@ export class BackLinkComponent {
   @Input() label: string = '';
   @Input() tooltip: string = '';
 
-  public readonly icons = ICONS;
-  public readonly labels = LABELS;
+  readonly icons = ICONS;
+  readonly labels = LABELS;
 }
