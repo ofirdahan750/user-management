@@ -32,8 +32,8 @@ export class SubmitButtonComponent {
   @Input() tooltip: string = '';
   @Input() clickHandler?: () => void;
 
-  public readonly icons = ICONS;
-  public readonly labels = LABELS;
+  readonly icons = ICONS;
+  readonly labels = LABELS;
 
   get tooltipText(): string {
     if (this.tooltip) {

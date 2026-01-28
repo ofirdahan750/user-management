@@ -17,9 +17,9 @@ import { ToastType } from '@core/enums/toast-type.enum';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ToastNotificationComponent {
-  public readonly ariaLabels = ARIA_LABELS;
-  public readonly icons = ICONS;
-  public readonly ToastType = ToastType;
+  readonly ariaLabels = ARIA_LABELS;
+  readonly icons = ICONS;
+  readonly ToastType = ToastType;
   
   constructor(public toastService: ToastNotificationService) {}
   

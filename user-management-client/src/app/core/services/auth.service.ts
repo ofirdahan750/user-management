@@ -18,13 +18,13 @@ import { ERROR_MESSAGES } from '@core/constants/error-messages.constants';
 })
 export class AuthService {
   private currentUserSubject = new BehaviorSubject<UserProfile | null>(null);
-  public currentUser$ = this.currentUserSubject.asObservable();
+  currentUser$ = this.currentUserSubject.asObservable();
   
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
-  public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
+  isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
-  public currentUser = signal<UserProfile | null>(null);
-  public isAuthenticated = computed(() => this.currentUser() !== null);
+  currentUser = signal<UserProfile | null>(null);
+  isAuthenticated = computed(() => this.currentUser() !== null);
 
   constructor(
     private http: HttpClient,

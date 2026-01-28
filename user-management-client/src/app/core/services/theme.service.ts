@@ -10,7 +10,7 @@ export class ThemeService {
   private readonly themeKey = StorageKeys.THEME;
   private readonly defaultTheme = Theme.LIGHT;
   
-  public readonly currentTheme = signal<Theme>(Theme.LIGHT);
+  readonly currentTheme = signal<Theme>(Theme.LIGHT);
 
   constructor(private localStorageService: LocalStorageService) {
     // Initialize theme after service is ready

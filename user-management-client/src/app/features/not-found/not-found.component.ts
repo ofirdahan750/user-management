@@ -28,11 +28,11 @@ import { ICONS } from '@core/constants/icons.constants';
 export class NotFoundComponent {
   private router = inject(Router);
   
-  public readonly labels = LABELS;
-  public readonly messages = MESSAGES;
-  public readonly icons = ICONS;
-  public readonly routes = Routes;
-  public readonly MaterialColor = MaterialColor;
+  readonly labels = LABELS;
+  readonly messages = MESSAGES;
+  readonly icons = ICONS;
+  readonly routes = Routes;
+  readonly MaterialColor = MaterialColor;
 
   navigateToHome(): void {
     this.router.navigate([Routes.DASHBOARD]);

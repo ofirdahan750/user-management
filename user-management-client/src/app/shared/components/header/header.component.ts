@@ -49,17 +49,17 @@ export class HeaderComponent {
   private themeService = inject(ThemeService);
   private router = inject(Router);
 
-  public isAuthenticated$: Observable<boolean> = this.store.select(selectIsAuthenticated);
-  public currentUser$: Observable<UserProfile | null> = this.store.select(selectUser);
-  public currentTheme = computed(() => this.themeService.currentTheme());
-  public mobileMenuOpen = signal(false);
+  isAuthenticated$: Observable<boolean> = this.store.select(selectIsAuthenticated);
+  currentUser$: Observable<UserProfile | null> = this.store.select(selectUser);
+  currentTheme = computed(() => this.themeService.currentTheme());
+  mobileMenuOpen = signal(false);
 
-  public readonly routes = Routes;
-  public readonly labels = LABELS;
-  public readonly ariaLabels = ARIA_LABELS;
-  public readonly icons = ICONS;
-  public readonly Theme = Theme;
-  public readonly MaterialColor = MaterialColor;
+  readonly routes = Routes;
+  readonly labels = LABELS;
+  readonly ariaLabels = ARIA_LABELS;
+  readonly icons = ICONS;
+  readonly Theme = Theme;
+  readonly MaterialColor = MaterialColor;
 
   toggleTheme(): void {
     this.themeService.toggleTheme();

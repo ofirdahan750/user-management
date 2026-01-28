@@ -61,22 +61,22 @@ export class ProfileComponent {
   private store = inject(Store);
   private router = inject(Router);
 
-  public profileForm: FormGroup;
-  public hasUnsavedChanges = signal<boolean>(false);
-  public originalValues: { firstName: string; lastName: string; birthDate: Date | ''; phoneNumber: string } = {
+  profileForm: FormGroup;
+  hasUnsavedChanges = signal<boolean>(false);
+  originalValues: { firstName: string; lastName: string; birthDate: Date | ''; phoneNumber: string } = {
     firstName: '',
     lastName: '',
     birthDate: '',
     phoneNumber: ''
   };
-  public combinedLoading$: Observable<boolean>;
-  public currentUser$: Observable<UserProfile | null>;
+  combinedLoading$: Observable<boolean>;
+  currentUser$: Observable<UserProfile | null>;
 
-  public readonly labels = LABELS;
-  public readonly routes = Routes;
-  public readonly MESSAGES = MESSAGES;
-  public readonly icons = ICONS;
-  public readonly placeholders = PLACEHOLDERS;
+  readonly labels = LABELS;
+  readonly routes = Routes;
+  readonly MESSAGES = MESSAGES;
+  readonly icons = ICONS;
+  readonly placeholders = PLACEHOLDERS;
 
   get firstNameControl(): FormControl {
     return this.profileForm.get('firstName') as FormControl;

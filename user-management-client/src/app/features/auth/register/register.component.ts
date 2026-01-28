@@ -56,19 +56,19 @@ export class RegisterComponent implements OnInit {
   private router = inject(Router);
   private emailHelper = inject(EmailHelperService);
 
-  public registerForm: FormGroup;
-  public hidePassword = signal<boolean>(true);
-  public hideConfirmPassword = signal<boolean>(true);
-  public passwordStrength = signal<PasswordStrength>(PasswordStrength.WEAK);
-  public combinedLoading$: Observable<boolean>;
+  registerForm: FormGroup;
+  hidePassword = signal<boolean>(true);
+  hideConfirmPassword = signal<boolean>(true);
+  passwordStrength = signal<PasswordStrength>(PasswordStrength.WEAK);
+  combinedLoading$: Observable<boolean>;
 
-  public readonly labels = LABELS;
-  public readonly routes = Routes;
-  public readonly MESSAGES = MESSAGES;
-  public readonly PasswordStrength = PasswordStrength;
-  public readonly ariaLabels = ARIA_LABELS;
-  public readonly icons = ICONS;
-  public readonly placeholders = PLACEHOLDERS;
+  readonly labels = LABELS;
+  readonly routes = Routes;
+  readonly MESSAGES = MESSAGES;
+  readonly PasswordStrength = PasswordStrength;
+  readonly ariaLabels = ARIA_LABELS;
+  readonly icons = ICONS;
+  readonly placeholders = PLACEHOLDERS;
 
   constructor() {
     this.registerForm = this.formService.createRegisterForm();

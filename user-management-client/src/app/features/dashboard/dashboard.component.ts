@@ -38,13 +38,13 @@ import { selectUser } from '@core/store/auth/auth.selectors';
 export class DashboardComponent {
   private store = inject(Store);
 
-  public currentUser$: Observable<UserProfile | null> = this.store.select(selectUser);
-  public welcomeMessage$: Observable<string> = this.currentUser$.pipe(
+  currentUser$: Observable<UserProfile | null> = this.store.select(selectUser);
+  welcomeMessage$: Observable<string> = this.currentUser$.pipe(
     map(user => user ? `${LABELS.WELCOME}, ${user.firstName}!` : '')
   );
   
-  public readonly routes = Routes;
-  public readonly labels = LABELS;
-  public readonly icons = ICONS;
-  public readonly MaterialColor = MaterialColor;
+  readonly routes = Routes;
+  readonly labels = LABELS;
+  readonly icons = ICONS;
+  readonly MaterialColor = MaterialColor;
 }

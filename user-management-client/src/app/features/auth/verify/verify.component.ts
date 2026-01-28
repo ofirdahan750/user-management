@@ -42,18 +42,18 @@ export class VerifyComponent {
   private route = inject(ActivatedRoute);
   private toastService = inject(ToastNotificationService);
 
-  public status = signal<VerificationStatus>(VerificationStatus.PENDING);
-  public countdown = signal<number>(5);
-  public email = signal<string>('');
-  public token = signal<string>('');
-  public isVerifying = signal<boolean>(false);
+  status = signal<VerificationStatus>(VerificationStatus.PENDING);
+  countdown = signal<number>(5);
+  email = signal<string>('');
+  token = signal<string>('');
+  isVerifying = signal<boolean>(false);
 
-  public readonly labels = LABELS;
-  public readonly routes = Routes;
-  public readonly MESSAGES = MESSAGES;
-  public readonly icons = ICONS;
-  public readonly VerificationStatus = VerificationStatus;
-  public readonly MaterialColor = MaterialColor;
+  readonly labels = LABELS;
+  readonly routes = Routes;
+  readonly MESSAGES = MESSAGES;
+  readonly icons = ICONS;
+  readonly VerificationStatus = VerificationStatus;
+  readonly MaterialColor = MaterialColor;
 
   readonly verifyClickHandler = () => this.onVerifyClick();
   readonly resendClickHandler = () => this.resendVerification();

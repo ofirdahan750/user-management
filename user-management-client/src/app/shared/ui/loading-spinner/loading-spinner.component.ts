@@ -15,7 +15,7 @@ import { selectIsLoading } from '@core/store/loading/loading.selectors';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoadingSpinnerComponent {
-  public isLoading$: Observable<boolean>;
+  isLoading$: Observable<boolean>;
 
   constructor(private store: Store) {
     this.isLoading$ = this.store.select(selectIsLoading);

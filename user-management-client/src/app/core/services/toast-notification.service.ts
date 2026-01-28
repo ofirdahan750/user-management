@@ -6,7 +6,7 @@ import { ToastMessage } from '@core/models/toast.model';
   providedIn: 'root'
 })
 export class ToastNotificationService {
-  public messages = signal<ToastMessage[]>([]);
+  messages = signal<ToastMessage[]>([]);
 
   showSuccess(message: string, duration: number = 3000): void {
     this.addMessage(message, ToastType.SUCCESS, duration);

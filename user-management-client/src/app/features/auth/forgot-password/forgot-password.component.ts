@@ -75,20 +75,20 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
   private emailHelper = inject(EmailHelperService);
   private cdr = inject(ChangeDetectorRef);
 
-  public forgotPasswordForm: FormGroup;
-  public isLoading = signal<boolean>(false);
-  public isSuccess = signal<boolean>(false);
-  public resetToken = signal<string>('');
-  public countdown = signal<number>(0);
-  public canResend = signal<boolean>(false);
+  forgotPasswordForm: FormGroup;
+  isLoading = signal<boolean>(false);
+  isSuccess = signal<boolean>(false);
+  resetToken = signal<string>('');
+  countdown = signal<number>(0);
+  canResend = signal<boolean>(false);
   
   private countdownSubscription: Subscription | '' = '';
 
-  public readonly labels = LABELS;
-  public readonly routes = Routes;
-  public readonly MESSAGES = MESSAGES;
-  public readonly icons = ICONS;
-  public readonly MaterialColor = MaterialColor;
+  readonly labels = LABELS;
+  readonly routes = Routes;
+  readonly MESSAGES = MESSAGES;
+  readonly icons = ICONS;
+  readonly MaterialColor = MaterialColor;
   
   // Getters for Material button colors (Material buttons require string literals)
   get primaryColor(): string {

@@ -42,17 +42,17 @@ export class ResetPasswordComponent {
   private route = inject(ActivatedRoute);
   private toastService = inject(ToastNotificationService);
 
-  public resetPasswordForm!: FormGroup;
-  public isLoading = signal<boolean>(false);
-  public hidePassword = signal<boolean>(true);
-  public hideConfirmPassword = signal<boolean>(true);
-  public token = signal<string>('');
+  resetPasswordForm!: FormGroup;
+  isLoading = signal<boolean>(false);
+  hidePassword = signal<boolean>(true);
+  hideConfirmPassword = signal<boolean>(true);
+  token = signal<string>('');
 
-  public readonly labels = LABELS;
-  public readonly routes = Routes;
-  public readonly MESSAGES = MESSAGES;
-  public readonly ariaLabels = ARIA_LABELS;
-  public readonly icons = ICONS;
+  readonly labels = LABELS;
+  readonly routes = Routes;
+  readonly MESSAGES = MESSAGES;
+  readonly ariaLabels = ARIA_LABELS;
+  readonly icons = ICONS;
 
   constructor() {
     const tokenParam = this.route.snapshot.queryParams['token'];
