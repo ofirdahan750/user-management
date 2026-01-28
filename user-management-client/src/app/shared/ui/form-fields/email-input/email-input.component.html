@@ -1,0 +1,21 @@
+<mat-form-field appearance="outline" class="email-input">
+  <mat-label>{{ label }}</mat-label>
+  <input 
+    matInput 
+    type="email"
+    [formControl]="control!"
+    [attr.aria-label]="ariaLabel || label"
+    [attr.autocomplete]="autocomplete"
+    [attr.readonly]="readonly ? '' : null"
+    [attr.autofocus]="autofocus ? '' : null"
+    (input)="onInput($event)"
+    (blur)="onBlur()"
+  />
+  <mat-icon matPrefix>{{ icons.EMAIL }}</mat-icon>
+  @if (hint) {
+    <mat-hint>{{ hint }}</mat-hint>
+  }
+  @if (hasError) {
+    <mat-error>{{ errorMessage }}</mat-error>
+  }
+</mat-form-field>

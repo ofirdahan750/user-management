@@ -1,0 +1,103 @@
+<div class="profile">
+  <div class="profile__container">
+    <h1 class="profile__title">{{ labels.EDIT_PROFILE }}</h1>
+
+    <mat-card class="profile__card">
+      <mat-card-content class="profile__content">
+        <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="profile__form">
+          <div class="profile__row">
+            <app-text-input
+              [label]="labels.FIRST_NAME"
+              [control]="firstNameControl"
+              [ariaLabel]="labels.FIRST_NAME"
+              autocomplete="given-name"
+              class="profile__field"
+            ></app-text-input>
+
+            <app-text-input
+              [label]="labels.LAST_NAME"
+              [control]="lastNameControl"
+              [ariaLabel]="labels.LAST_NAME"
+              autocomplete="family-name"
+              class="profile__field"
+            ></app-text-input>
+          </div>
+
+          <app-email-input
+            [label]="labels.EMAIL"
+            [control]="emailControl"
+            [ariaLabel]="labels.EMAIL"
+            [attr.readonly]="''"
+            [hint]="labels.EMAIL_CANNOT_BE_CHANGED"
+            class="profile__field"
+          ></app-email-input>
+
+          <div class="profile__row">
+            <app-date-input
+              [label]="labels.BIRTH_DATE"
+              [control]="birthDateControl"
+              [ariaLabel]="labels.BIRTH_DATE"
+              class="profile__field"
+            ></app-date-input>
+
+            <app-phone-input
+              [label]="labels.PHONE_NUMBER"
+              [control]="phoneNumberControl"
+              [ariaLabel]="labels.PHONE_NUMBER"
+              class="profile__field"
+            ></app-phone-input>
+          </div>
+
+          @if (currentUser$ | async; as user) {
+            <div class="profile__info">
+              <div class="profile__info-item">
+                <span class="profile__info-label">{{ labels.ACCOUNT_STATUS }}:</span>
+                <span 
+                  class="profile__info-badge"
+                  [ngClass]="{
+                    'profile__info-badge--verified': user.isVerified,
+                    'profile__info-badge--unverified': !user.isVerified
+                  }"
+                  [matTooltip]="user.isVerified ? labels.TOOLTIP_ACCOUNT_VERIFIED : labels.TOOLTIP_ACCOUNT_NOT_VERIFIED"
+                >
+                  <mat-icon>{{ user.isVerified ? icons.CHECK_CIRCLE : icons.CANCEL }}</mat-icon>
+                  {{ user.isVerified ? labels.VERIFIED : labels.NOT_VERIFIED }}
+                </span>
+              </div>
+              <div class="profile__info-item">
+                <span class="profile__info-label">{{ labels.REGISTRATION_DATE }}:</span>
+                <span class="profile__info-value">{{ user.registrationDate | dateFormat }}</span>
+              </div>
+              <div class="profile__info-item">
+                <span class="profile__info-label">{{ labels.LAST_LOGIN }}:</span>
+                <span class="profile__info-value">{{ user.lastLoginDate | dateFormat }}</span>
+              </div>
+            </div>
+          }
+
+          <div class="profile__actions">
+            <button 
+              mat-button 
+              type="button"
+              (click)="cancel()"
+              [disabled]="!hasUnsavedChanges() || ((combinedLoading$ | async) || false)"
+              class="profile__cancel-btn"
+              [matTooltip]="!hasUnsavedChanges() ? labels.TOOLTIP_NO_UNSAVED_CHANGES : labels.TOOLTIP_CANCEL_CHANGES"
+              [matTooltipDisabled]="!hasUnsavedChanges()"
+            >
+              {{ labels.CANCEL }}
+            </button>
+            <app-submit-button
+              [label]="labels.SAVE_CHANGES"
+              [isLoading]="(combinedLoading$ | async) || false"
+              [disabled]="profileForm.invalid || !hasUnsavedChanges()"
+              [tooltip]="!hasUnsavedChanges() ? labels.TOOLTIP_NO_UNSAVED_CHANGES : labels.TOOLTIP_SAVE_CHANGES"
+              type="submit"
+              class="profile__submit-btn"
+            ></app-submit-button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

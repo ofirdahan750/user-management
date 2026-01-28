@@ -1,0 +1,17 @@
+<mat-form-field appearance="outline" class="phone-input">
+  <mat-label>{{ label }}</mat-label>
+  <input 
+    matInput 
+    type="tel"
+    [formControl]="control!"
+    [attr.aria-label]="ariaLabel || label"
+    [attr.autocomplete]="autocomplete"
+    [attr.placeholder]="placeholder || placeholders.PHONE_NUMBER"
+    (input)="onInput($event)"
+    (blur)="onBlur()"
+  />
+  <mat-icon matPrefix>{{ icons.PHONE }}</mat-icon>
+  @if (hasError) {
+    <mat-error>{{ errorMessage }}</mat-error>
+  }
+</mat-form-field>

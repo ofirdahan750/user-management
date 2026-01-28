@@ -1,0 +1,43 @@
+@if (variant === 'raised') {
+  <a 
+    mat-raised-button 
+    [color]="color"
+    [routerLink]="route"
+    class="link-button link-button--raised"
+    [matTooltip]="tooltip"
+    [matTooltipDisabled]="!tooltip"
+  >
+    @if (showIcon && icon) {
+      <mat-icon class="link-button__icon">{{ icon }}</mat-icon>
+    }
+    {{ label }}
+  </a>
+} @else if (variant === 'stroked') {
+  <a 
+    mat-stroked-button 
+    [color]="color"
+    [routerLink]="route"
+    class="link-button link-button--stroked"
+    [matTooltip]="tooltip"
+    [matTooltipDisabled]="!tooltip"
+  >
+    @if (showIcon && icon) {
+      <mat-icon class="link-button__icon">{{ icon }}</mat-icon>
+    }
+    {{ label }}
+  </a>
+} @else {
+  <a 
+    mat-button 
+    [color]="color"
+    [routerLink]="route"
+    class="link-button link-button--flat"
+    [matTooltip]="tooltip"
+    [matTooltipDisabled]="!tooltip"
+  >
+    @if (showIcon && icon) {
+      <mat-icon class="link-button__icon">{{ icon }}</mat-icon>
+    }
+    {{ label }}
+  </a>
+}

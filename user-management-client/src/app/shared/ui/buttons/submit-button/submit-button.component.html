@@ -1,0 +1,49 @@
+@if (variant === 'raised') {
+  <button 
+    mat-raised-button 
+    [color]="color"
+    [type]="type"
+    [disabled]="disabled || isLoading"
+    class="submit-button submit-button--raised"
+    [matTooltip]="tooltipText"
+    [matTooltipDisabled]="!tooltipText"
+    (click)="clickHandler && clickHandler()"
+  >
+    @if (isLoading) {
+      <mat-icon class="submit-button__spinner">{{ icons.HOURGLASS_EMPTY }}</mat-icon>
+    }
+    {{ label }}
+  </button>
+} @else if (variant === 'flat') {
+  <button 
+    mat-button 
+    [color]="color"
+    [type]="type"
+    [disabled]="disabled || isLoading"
+    class="submit-button submit-button--flat"
+    [matTooltip]="tooltipText"
+    [matTooltipDisabled]="!tooltipText"
+    (click)="clickHandler && clickHandler()"
+  >
+    @if (isLoading) {
+      <mat-icon class="submit-button__spinner">{{ icons.HOURGLASS_EMPTY }}</mat-icon>
+    }
+    {{ label }}
+  </button>
+} @else {
+  <button 
+    mat-stroked-button 
+    [color]="color"
+    [type]="type"
+    [disabled]="disabled || isLoading"
+    class="submit-button submit-button--stroked"
+    [matTooltip]="tooltipText"
+    [matTooltipDisabled]="!tooltipText"
+    (click)="clickHandler && clickHandler()"
+  >
+    @if (isLoading) {
+      <mat-icon class="submit-button__spinner">{{ icons.HOURGLASS_EMPTY }}</mat-icon>
+    }
+    {{ label }}
+  </button>
+}

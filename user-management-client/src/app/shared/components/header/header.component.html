@@ -1,0 +1,175 @@
+<mat-toolbar class="header">
+  <div class="header__container">
+    <div class="header__left">
+      @if (isAuthenticated$ | async) {
+        <button 
+          mat-icon-button 
+          class="header__menu-toggle"
+          (click)="toggleMobileMenu()"
+          [attr.aria-label]="labels.MENU"
+        >
+          <mat-icon>{{ icons.MENU }}</mat-icon>
+        </button>
+        <a [routerLink]="routes.HOME" class="header__logo header__logo--mobile-hidden">
+          {{ labels.APP_NAME }}
+        </a>
+      } @else {
+        <a [routerLink]="routes.HOME" class="header__logo">
+          {{ labels.APP_NAME }}
+        </a>
+      }
+    </div>
+
+    <nav class="header__nav header__nav--desktop">
+      @if (isAuthenticated$ | async) {
+        <a 
+          [routerLink]="routes.DASHBOARD" 
+          routerLinkActive="header__link--active"
+          class="header__link"
+        >
+          {{ labels.DASHBOARD }}
+        </a>
+        <a 
+          [routerLink]="routes.PROFILE" 
+          routerLinkActive="header__link--active"
+          class="header__link"
+        >
+          {{ labels.PROFILE }}
+        </a>
+      }
+    </nav>
+
+    <div class="header__actions">
+      <app-icon-button
+        [icon]="currentTheme() === 'light' ? icons.DARK_MODE : icons.LIGHT_MODE"
+        [tooltip]="labels.TOOLTIP_TOGGLE_THEME"
+        [ariaLabel]="ariaLabels.TOGGLE_THEME"
+        [clickHandler]="toggleTheme.bind(this)"
+        class="header__theme-toggle header__theme-toggle--desktop"
+      ></app-icon-button>
+
+      @if (isAuthenticated$ | async) {
+        <button 
+          mat-icon-button
+          [matMenuTriggerFor]="userMenu"
+          class="header__user-menu"
+          [matTooltip]="labels.TOOLTIP_USER_MENU"
+        >
+          <mat-icon>{{ icons.ACCOUNT_CIRCLE }}</mat-icon>
+        </button>
+        <mat-menu #userMenu="matMenu">
+          @if (currentUser$ | async; as user) {
+            <div class="header__user-info">
+              <div class="header__user-name-full">{{ user.firstName }} {{ user.lastName }}</div>
+              <div class="header__user-email">{{ user.email }}</div>
+            </div>
+          }
+          <mat-divider></mat-divider>
+          <button mat-menu-item [routerLink]="routes.DASHBOARD" (click)="closeMobileMenu()">
+            <mat-icon>{{ icons.DASHBOARD }}</mat-icon>
+            <span>{{ labels.DASHBOARD }}</span>
+          </button>
+          <button mat-menu-item [routerLink]="routes.PROFILE" (click)="closeMobileMenu()">
+            <mat-icon>{{ icons.PERSON }}</mat-icon>
+            <span>{{ labels.PROFILE }}</span>
+          </button>
+          <mat-divider></mat-divider>
+          <button mat-menu-item (click)="logout()">
+            <mat-icon>{{ icons.LOGOUT }}</mat-icon>
+            <span>{{ labels.LOGOUT }}</span>
+          </button>
+        </mat-menu>
+      } @else {
+        <app-link-button
+          [route]="routes.LOGIN"
+          [label]="labels.LOGIN"
+          variant="flat"
+          [showIcon]="false"
+          [tooltip]="labels.TOOLTIP_NAVIGATE_LOGIN"
+          class="header__login-btn"
+        ></app-link-button>
+        <app-link-button
+          [route]="routes.REGISTER"
+          [label]="labels.REGISTER"
+          variant="raised"
+          color="primary"
+          [showIcon]="false"
+          [tooltip]="labels.TOOLTIP_NAVIGATE_REGISTER"
+          class="header__register-btn"
+        ></app-link-button>
+      }
+    </div>
+  </div>
+
+  <!-- Mobile Menu Overlay -->
+  @if (isAuthenticated$ | async) {
+    <div 
+      class="header__mobile-menu"
+      [class.header__mobile-menu--open]="mobileMenuOpen()"
+      (click)="closeMobileMenu()"
+    >
+      <nav class="header__mobile-nav" (click)="$event.stopPropagation()">
+        <div class="header__mobile-header">
+          <a [routerLink]="routes.HOME" class="header__mobile-logo" (click)="closeMobileMenu()">
+            {{ labels.APP_NAME }}
+          </a>
+          <button 
+            mat-icon-button 
+            class="header__mobile-close"
+            (click)="closeMobileMenu()"
+            [attr.aria-label]="labels.CLOSE"
+          >
+            <mat-icon>{{ icons.CLOSE }}</mat-icon>
+          </button>
+        </div>
+        @if (currentUser$ | async; as user) {
+          <div class="header__mobile-user">
+            <mat-icon class="header__mobile-user-icon">{{ icons.ACCOUNT_CIRCLE }}</mat-icon>
+            <div class="header__mobile-user-info">
+              <div class="header__mobile-user-name">{{ user.firstName }} {{ user.lastName }}</div>
+              <div class="header__mobile-user-email">{{ user.email }}</div>
+            </div>
+          </div>
+        }
+        <div class="header__mobile-links">
+          <a 
+            [routerLink]="routes.DASHBOARD" 
+            routerLinkActive="header__mobile-link--active"
+            class="header__mobile-link"
+            (click)="closeMobileMenu()"
+          >
+            <mat-icon>{{ icons.DASHBOARD }}</mat-icon>
+            <span>{{ labels.DASHBOARD }}</span>
+          </a>
+          <a 
+            [routerLink]="routes.PROFILE" 
+            routerLinkActive="header__mobile-link--active"
+            class="header__mobile-link"
+            (click)="closeMobileMenu()"
+          >
+            <mat-icon>{{ icons.PERSON }}</mat-icon>
+            <span>{{ labels.PROFILE }}</span>
+          </a>
+          <button 
+            class="header__mobile-link header__mobile-link--logout"
+            (click)="logout()"
+          >
+            <mat-icon>{{ icons.LOGOUT }}</mat-icon>
+            <span>{{ labels.LOGOUT }}</span>
+          </button>
+        </div>
+        
+        <div class="header__mobile-footer">
+          <button 
+            class="header__mobile-theme-toggle"
+            (click)="toggleTheme()"
+            [attr.aria-label]="ariaLabels.TOGGLE_THEME"
+          >
+            <mat-icon>{{ currentTheme() === 'light' ? icons.DARK_MODE : icons.LIGHT_MODE }}</mat-icon>
+            <span>{{ labels.TOOLTIP_TOGGLE_THEME }}</span>
+          </button>
+        </div>
+      </nav>
+    </div>
+  }
+</mat-toolbar>

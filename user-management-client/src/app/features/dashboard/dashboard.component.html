@@ -1,0 +1,83 @@
+<div class="dashboard">
+  <div class="dashboard__container">
+        <h1 class="dashboard__title">{{ welcomeMessage$ | async }}</h1>
+
+    <div class="dashboard__grid">
+      <mat-card class="dashboard__card">
+        <mat-card-header class="dashboard__card-header">
+          <mat-icon class="dashboard__card-icon">{{ icons.PERSON }}</mat-icon>
+          <h2 class="dashboard__card-title">{{ labels.PROFILE_SUMMARY }}</h2>
+        </mat-card-header>
+        <mat-card-content class="dashboard__card-content">
+          @if (currentUser$ | async; as user) {
+            <div class="dashboard__info">
+              <div class="dashboard__info-item">
+                <span class="dashboard__info-label">{{ labels.FIRST_NAME }}:</span>
+                <span class="dashboard__info-value">{{ user.firstName | nameCapitalize }}</span>
+              </div>
+              <div class="dashboard__info-item">
+                <span class="dashboard__info-label">{{ labels.LAST_NAME }}:</span>
+                <span class="dashboard__info-value">{{ user.lastName | nameCapitalize }}</span>
+              </div>
+              <div class="dashboard__info-item">
+                <span class="dashboard__info-label">{{ labels.EMAIL }}:</span>
+                <span class="dashboard__info-value">{{ user.email }}</span>
+              </div>
+              @if (user.phoneNumber) {
+                <div class="dashboard__info-item">
+                  <span class="dashboard__info-label">{{ labels.PHONE_NUMBER }}:</span>
+                  <span class="dashboard__info-value">{{ user.phoneNumber }}</span>
+                </div>
+              }
+            </div>
+          }
+        </mat-card-content>
+        <mat-card-actions class="dashboard__card-actions">
+          <a 
+            mat-raised-button 
+            color="primary"
+            [routerLink]="routes.PROFILE"
+            class="dashboard__action-btn"
+          >
+            <mat-icon>edit</mat-icon>
+            {{ labels.EDIT_PROFILE }}
+          </a>
+        </mat-card-actions>
+      </mat-card>
+
+      <mat-card class="dashboard__card">
+        <mat-card-header class="dashboard__card-header">
+          <mat-icon class="dashboard__card-icon">{{ icons.VERIFIED }}</mat-icon>
+          <h2 class="dashboard__card-title">{{ labels.ACCOUNT_STATUS }}</h2>
+        </mat-card-header>
+        <mat-card-content class="dashboard__card-content">
+          @if (currentUser$ | async; as user) {
+            <div class="dashboard__status">
+              <span 
+                class="dashboard__status-badge"
+                [ngClass]="{
+                  'dashboard__status-badge--verified': user.isVerified,
+                  'dashboard__status-badge--unverified': !user.isVerified
+                }"
+                [matTooltip]="user.isVerified ? labels.TOOLTIP_ACCOUNT_VERIFIED : labels.TOOLTIP_ACCOUNT_NOT_VERIFIED"
+              >
+                <mat-icon>{{ user.isVerified ? icons.CHECK_CIRCLE : icons.CANCEL }}</mat-icon>
+                {{ user.isVerified ? labels.VERIFIED : labels.NOT_VERIFIED }}
+              </span>
+            </div>
+            <div class="dashboard__info">
+              <div class="dashboard__info-item">
+                <span class="dashboard__info-label">{{ labels.REGISTRATION_DATE }}:</span>
+                <span class="dashboard__info-value">{{ user.registrationDate | dateFormat }}</span>
+              </div>
+              <div class="dashboard__info-item">
+                <span class="dashboard__info-label">{{ labels.LAST_LOGIN }}:</span>
+                <span class="dashboard__info-value">{{ user.lastLoginDate | dateFormat }}</span>
+              </div>
+            </div>
+          }
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

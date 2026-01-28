@@ -1,0 +1,20 @@
+.submit-button {
+  &__spinner {
+    animation: submit-button-spin 1s linear infinite;
+  }
+
+  &--raised,
+  &--flat,
+  &--stroked {
+    // Variant styles if needed
+  }
+}
+
+@keyframes submit-button-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

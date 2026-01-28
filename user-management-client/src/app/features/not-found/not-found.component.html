@@ -1,0 +1,33 @@
+<div class="not-found">
+  <mat-card class="not-found__card">
+    <div class="not-found__content">
+      <div class="not-found__icon-wrapper">
+        <mat-icon class="not-found__icon">{{ icons.ERROR }}</mat-icon>
+      </div>
+      
+      <h1 class="not-found__title">{{ messages.PAGE_NOT_FOUND_TITLE }}</h1>
+      
+      <p class="not-found__message">{{ messages.PAGE_NOT_FOUND_MESSAGE }}</p>
+      
+      <div class="not-found__actions">
+        <button 
+          mat-raised-button 
+          color="primary" 
+          (click)="navigateToHome()"
+          class="not-found__button">
+          <mat-icon>{{ icons.ARROW_FORWARD }}</mat-icon>
+          {{ labels.GO_TO_DASHBOARD }}
+        </button>
+        
+        <button 
+          mat-raised-button 
+          color="accent" 
+          (click)="navigateToLogin()"
+          class="not-found__button">
+          <mat-icon>{{ icons.ARROW_BACK }}</mat-icon>
+          {{ labels.BACK_TO_LOGIN }}
+        </button>
+      </div>
+    </div>
+  </mat-card>
+</div>

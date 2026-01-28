@@ -1,0 +1,19 @@
+<mat-form-field appearance="outline" class="text-input">
+  <mat-label>{{ label }}</mat-label>
+  <input 
+    matInput 
+    [attr.type]="type"
+    [formControl]="control!"
+    [attr.aria-label]="ariaLabel || label"
+    [attr.autocomplete]="autocomplete"
+    [attr.autofocus]="autofocus ? '' : null"
+    (input)="onInput($event)"
+    (blur)="onBlur()"
+  />
+  @if (icon) {
+    <mat-icon matPrefix>{{ icon }}</mat-icon>
+  }
+  @if (hasError) {
+    <mat-error>{{ errorMessage }}</mat-error>
+  }
+</mat-form-field>

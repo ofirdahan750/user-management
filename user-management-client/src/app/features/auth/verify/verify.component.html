@@ -1,0 +1,85 @@
+<div class="verify">
+  <div class="verify__container">
+    <mat-card class="verify__card">
+      @switch (status()) {
+        @case (VerificationStatus.LOADING) {
+          <div class="verify__content">
+            <mat-spinner diameter="50"></mat-spinner>
+            <h2 class="verify__title">{{ MESSAGES.VERIFICATION_LOADING }}</h2>
+          </div>
+        }
+        @case (VerificationStatus.PENDING) {
+          <div class="verify__content">
+            <mat-icon class="verify__icon verify__icon--info">{{ icons.INFO }}</mat-icon>
+            <h2 class="verify__title">{{ MESSAGES.REGISTRATION_SUCCESS }}</h2>
+            <p class="verify__message">
+              Click the button below to verify your email address.
+            </p>
+            @if (token()) {
+              <a
+                [href]="getVerificationUrl()"
+                mat-raised-button
+                color="primary"
+                class="verify__button"
+              >
+                Verify Email
+              </a>
+              <button
+                mat-button
+                (click)="copyVerificationLink()"
+                class="verify__copy-button"
+              >
+                Copy Link
+              </button>
+            }
+            <app-back-link
+              [route]="routes.LOGIN"
+              [tooltip]="labels.TOOLTIP_NAVIGATE_LOGIN"
+              class="verify__link"
+            ></app-back-link>
+          </div>
+        }
+        @case (VerificationStatus.SUCCESS) {
+          <div class="verify__content">
+            <mat-icon class="verify__icon verify__icon--success">{{ icons.CHECK_CIRCLE }}</mat-icon>
+            <h2 class="verify__title">{{ MESSAGES.VERIFICATION_SUCCESS }}</h2>
+            <p class="verify__message">
+              {{ MESSAGES.VERIFICATION_REDIRECT }} {{ countdown() }} {{ MESSAGES.SECONDS_SHORT }}
+            </p>
+            <app-link-button
+              [route]="routes.LOGIN"
+              [label]="labels.LOGIN"
+              variant="raised"
+              color="primary"
+              [showIcon]="false"
+              class="verify__button"
+            ></app-link-button>
+          </div>
+        }
+        @case (VerificationStatus.ERROR) {
+          <div class="verify__content">
+            <mat-icon class="verify__icon verify__icon--error">{{ icons.ERROR }}</mat-icon>
+            <h2 class="verify__title">{{ MESSAGES.VERIFICATION_ERROR }}</h2>
+            <p class="verify__message">
+              {{ labels.RESEND_VERIFICATION }}
+            </p>
+            <app-submit-button
+              [label]="labels.RESEND_VERIFICATION"
+              [tooltip]="labels.RESEND_VERIFICATION"
+              (click)="resendVerification()"
+              type="button"
+              variant="raised"
+              color="primary"
+              class="verify__button"
+            ></app-submit-button>
+            <app-back-link
+              [route]="routes.LOGIN"
+              [tooltip]="labels.TOOLTIP_NAVIGATE_LOGIN"
+              class="verify__link"
+            ></app-back-link>
+          </div>
+        }
+      }
+    </mat-card>
+  </div>
+</div>

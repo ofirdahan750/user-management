@@ -1,0 +1,184 @@
+<div class="register">
+  <div class="register__container">
+    <mat-card class="register__card">
+      <mat-card-header class="register__header">
+        <h1 class="register__title">{{ labels.REGISTER }}</h1>
+      </mat-card-header>
+
+      <mat-card-content class="register__content">
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register__form">
+          <div class="register__row">
+            <mat-form-field appearance="outline" class="register__field">
+              <mat-label>{{ labels.FIRST_NAME }}</mat-label>
+              <input 
+                matInput 
+                formControlName="firstName"
+                [attr.aria-label]="labels.FIRST_NAME"
+                autocomplete="given-name"
+              />
+              <mat-icon matPrefix>{{ icons.PERSON }}</mat-icon>
+              @if (registerForm.get('firstName')?.hasError('required') && registerForm.get('firstName')?.touched) {
+                <mat-error>{{ MESSAGES.REQUIRED_FIELD }}</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="register__field">
+              <mat-label>{{ labels.LAST_NAME }}</mat-label>
+              <input 
+                matInput 
+                formControlName="lastName"
+                [attr.aria-label]="labels.LAST_NAME"
+                autocomplete="family-name"
+              />
+              <mat-icon matPrefix>{{ icons.PERSON }}</mat-icon>
+              @if (registerForm.get('lastName')?.hasError('required') && registerForm.get('lastName')?.touched) {
+                <mat-error>{{ MESSAGES.REQUIRED_FIELD }}</mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+          <mat-form-field appearance="outline" class="register__field">
+            <mat-label>{{ labels.EMAIL }}</mat-label>
+            <input 
+              matInput 
+              type="email"
+              formControlName="email"
+              [attr.aria-label]="labels.EMAIL"
+              autocomplete="email"
+            />
+            <mat-icon matPrefix>{{ icons.EMAIL }}</mat-icon>
+            @if (registerForm.get('email')?.hasError('required') && registerForm.get('email')?.touched) {
+              <mat-error>{{ MESSAGES.REQUIRED_FIELD }}</mat-error>
+            }
+            @if (registerForm.get('email')?.hasError('email') && registerForm.get('email')?.touched) {
+              <mat-error>{{ MESSAGES.INVALID_EMAIL }}</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="register__field">
+            <mat-label>{{ labels.PASSWORD }}</mat-label>
+            <input 
+              matInput 
+              [attr.type]="hidePassword() ? 'password' : 'text'"
+              formControlName="password"
+              [attr.aria-label]="labels.PASSWORD"
+              [attr.autocomplete]="'new-password'"
+            />
+            <mat-icon matPrefix>{{ icons.LOCK }}</mat-icon>
+            <button 
+              mat-icon-button 
+              matSuffix
+              type="button"
+              (click)="togglePasswordVisibility()"
+              [attr.aria-label]="ariaLabels.TOGGLE_PASSWORD_VISIBILITY"
+              [matTooltip]="hidePassword() ? labels.TOOLTIP_SHOW_PASSWORD : labels.TOOLTIP_HIDE_PASSWORD"
+            >
+              <mat-icon>{{ hidePassword() ? icons.VISIBILITY_OFF : icons.VISIBILITY }}</mat-icon>
+            </button>
+            @if (registerForm.get('password')?.hasError('required') && registerForm.get('password')?.touched) {
+              <mat-error>{{ MESSAGES.REQUIRED_FIELD }}</mat-error>
+            }
+            @if (registerForm.get('password')?.hasError('minLength') || registerForm.get('password')?.hasError('uppercase') || registerForm.get('password')?.hasError('lowercase') || registerForm.get('password')?.hasError('digit')) {
+              <mat-error>{{ MESSAGES.INVALID_PASSWORD }}</mat-error>
+            }
+            @if (registerForm.get('password')?.value && registerForm.get('password')?.dirty) {
+              <div 
+                class="register__strength" 
+                [ngClass]="{
+                  'register__strength--weak': passwordStrength() === PasswordStrength.WEAK,
+                  'register__strength--medium': passwordStrength() === PasswordStrength.MEDIUM,
+                  'register__strength--strong': passwordStrength() === PasswordStrength.STRONG
+                }"
+              >
+                {{ getPasswordStrengthText() }}
+              </div>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="register__field">
+            <mat-label>{{ labels.CONFIRM_PASSWORD }}</mat-label>
+            <input 
+              matInput 
+              [attr.type]="hideConfirmPassword() ? 'password' : 'text'"
+              formControlName="confirmPassword"
+              [attr.aria-label]="labels.CONFIRM_PASSWORD"
+              [attr.autocomplete]="'new-password'"
+            />
+            <mat-icon matPrefix>{{ icons.LOCK }}</mat-icon>
+            <button 
+              mat-icon-button 
+              matSuffix
+              type="button"
+              (click)="toggleConfirmPasswordVisibility()"
+              [attr.aria-label]="ariaLabels.TOGGLE_PASSWORD_VISIBILITY"
+              [matTooltip]="hideConfirmPassword() ? labels.TOOLTIP_SHOW_PASSWORD : labels.TOOLTIP_HIDE_PASSWORD"
+            >
+              <mat-icon>{{ hideConfirmPassword() ? icons.VISIBILITY_OFF : icons.VISIBILITY }}</mat-icon>
+            </button>
+            @if (registerForm.get('confirmPassword')?.hasError('required') && registerForm.get('confirmPassword')?.touched) {
+              <mat-error>{{ MESSAGES.REQUIRED_FIELD }}</mat-error>
+            }
+            @if (registerForm.hasError('passwordMismatch') && registerForm.get('confirmPassword')?.touched) {
+              <mat-error>{{ MESSAGES.PASSWORD_MISMATCH }}</mat-error>
+            }
+          </mat-form-field>
+
+          <div class="register__row">
+            <mat-form-field appearance="outline" class="register__field">
+              <mat-label>{{ labels.BIRTH_DATE }}</mat-label>
+              <input 
+                matInput 
+                [matDatepicker]="picker"
+                formControlName="birthDate"
+                [attr.aria-label]="labels.BIRTH_DATE"
+              />
+              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="register__field">
+              <mat-label>{{ labels.PHONE_NUMBER }}</mat-label>
+              <input 
+                matInput 
+                type="tel"
+                formControlName="phoneNumber"
+                [attr.aria-label]="labels.PHONE_NUMBER"
+                autocomplete="tel"
+                [attr.placeholder]="placeholders.PHONE_NUMBER"
+              />
+              <mat-icon matPrefix>{{ icons.PHONE }}</mat-icon>
+              @if (registerForm.get('phoneNumber')?.hasError('invalidPhone') && registerForm.get('phoneNumber')?.touched) {
+                <mat-error>{{ MESSAGES.INVALID_PHONE }}</mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+          <mat-checkbox formControlName="terms" class="register__terms">
+            {{ labels.TERMS_AND_CONDITIONS }}
+          </mat-checkbox>
+          @if (registerForm.get('terms')?.hasError('required') && registerForm.get('terms')?.touched) {
+            <div class="register__error">{{ MESSAGES.TERMS_REQUIRED }}</div>
+          }
+
+          <app-submit-button
+            [label]="labels.SUBMIT"
+            [isLoading]="(combinedLoading$ | async) || false"
+            [disabled]="registerForm.invalid"
+            [tooltip]="registerForm.invalid ? labels.TOOLTIP_FORM_DISABLED : ''"
+            type="submit"
+            class="register__submit"
+          ></app-submit-button>
+        </form>
+      </mat-card-content>
+
+      <mat-card-footer class="register__footer">
+        <p class="register__footer-text">
+          {{ labels.ALREADY_HAVE_ACCOUNT }}
+          <a [routerLink]="routes.LOGIN" class="register__login-link">
+            {{ labels.LOGIN_HERE }}
+          </a>
+        </p>
+      </mat-card-footer>
+    </mat-card>
+  </div>
+</div>

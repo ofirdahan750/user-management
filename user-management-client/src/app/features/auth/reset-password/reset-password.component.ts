@@ -1,0 +1,101 @@
+import { Component, ViewEncapsulation, ChangeDetectionStrategy, inject, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { AuthService } from '@core/services/auth.service';
+import { FormService } from '@core/services/form.service';
+import { ToastNotificationService } from '@core/services/toast-notification.service';
+import { Routes } from '@core/enums/routes.enum';
+import { LABELS } from '@core/constants/labels.constants';
+import { MESSAGES } from '@core/constants/messages.constants';
+import { ARIA_LABELS } from '@core/constants/aria-labels.constants';
+import { ICONS } from '@core/constants/icons.constants';
+import { IconButtonComponent } from '@shared/ui/buttons/icon-button/icon-button.component';
+import { SubmitButtonComponent } from '@shared/ui/buttons/submit-button/submit-button.component';
+
+@Component({
+  selector: 'app-reset-password',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    IconButtonComponent,
+    SubmitButtonComponent
+  ],
+  templateUrl: './reset-password.component.html',
+  styleUrl: './reset-password.component.scss',
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class ResetPasswordComponent {
+  private formService = inject(FormService);
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private toastService = inject(ToastNotificationService);
+
+  public resetPasswordForm!: FormGroup;
+  public isLoading = signal<boolean>(false);
+  public hidePassword = signal<boolean>(true);
+  public hideConfirmPassword = signal<boolean>(true);
+  public token = signal<string | null>(null);
+
+  public readonly labels = LABELS;
+  public readonly routes = Routes;
+  public readonly MESSAGES = MESSAGES;
+  public readonly ariaLabels = ARIA_LABELS;
+  public readonly icons = ICONS;
+
+  constructor() {
+    const tokenParam = this.route.snapshot.queryParams['token'];
+    if (!tokenParam) {
+      this.toastService.showError(MESSAGES.PASSWORD_RESET_ERROR);
+      this.router.navigate([Routes.FORGOT_PASSWORD]);
+      return;
+    }
+
+    this.token.set(tokenParam);
+    this.resetPasswordForm = this.formService.createResetPasswordForm();
+  }
+
+  onSubmit(): void {
+    if (!this.formService.validateForm(this.resetPasswordForm)) {
+      return;
+    }
+
+    const token = this.token();
+    if (!token) {
+      return;
+    }
+
+    this.isLoading.set(true);
+    const password = this.resetPasswordForm.value.password;
+
+    this.authService.resetPassword(token, password).subscribe({
+      next: () => {
+        this.toastService.showSuccess(MESSAGES.PASSWORD_RESET_SUCCESS);
+        this.router.navigate([Routes.LOGIN]);
+      },
+      error: () => {
+        this.toastService.showError(MESSAGES.PASSWORD_RESET_ERROR);
+        this.isLoading.set(false);
+      }
+    });
+  }
+
+  togglePasswordVisibility(): void {
+    this.hidePassword.update(value => !value);
+  }
+
+  toggleConfirmPasswordVisibility(): void {
+    this.hideConfirmPassword.update(value => !value);
+  }
+}

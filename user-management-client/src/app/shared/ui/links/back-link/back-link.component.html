@@ -1,0 +1,9 @@
+<a 
+  mat-button 
+  [routerLink]="route"
+  class="back-link"
+  [matTooltip]="tooltip || labels.TOOLTIP_NAVIGATE_LOGIN"
+>
+  <mat-icon class="back-link__icon">{{ icons.ARROW_BACK }}</mat-icon>
+  {{ label || labels.BACK_TO_LOGIN }}
+</a>

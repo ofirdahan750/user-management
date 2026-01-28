@@ -1,0 +1,13 @@
+<button 
+  mat-icon-button 
+  [color]="color"
+  [type]="type"
+  [disabled]="disabled"
+  class="icon-button"
+  [attr.aria-label]="ariaLabel || tooltip"
+  [matTooltip]="tooltip"
+  [matTooltipDisabled]="!tooltip"
+  (click)="clickHandler && clickHandler()"
+>
+  <mat-icon>{{ icon }}</mat-icon>
+</button>
