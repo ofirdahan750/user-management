@@ -1,4 +1,7 @@
 .submit-button {
+  display: block;
+  width: 100%;
+  
   &__spinner {
     animation: submit-button-spin 1s linear infinite;
   }
@@ -6,7 +9,7 @@
   &--raised,
   &--flat,
   &--stroked {
-    // Variant styles if needed
+    width: 100%;
   }
 }
 
