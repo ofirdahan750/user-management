@@ -4,7 +4,7 @@
 [build]
   base     = "user-management-client"
   command  = "npm run build"
-  publish  = "dist/browser"
+  publish  = "dist/browser/browser"
 
 # SPA – הכוונה ל-index.html בכל route
 [[redirects]]
