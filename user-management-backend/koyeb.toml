@@ -1,5 +1,7 @@
 [build]
 builder = "nixpacks"
+build_command = "npm install"
 
 [deploy]
 restart_policy = "always"
+run_command = "npm start"
