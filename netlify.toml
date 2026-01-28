@@ -1,10 +1,9 @@
 # Netlify config for frontend-only deployment (user-management-client)
-# Backend (user-management-backend) should be deployed separately (e.g., Koyeb)
 
 [build]
   base     = "user-management-client"
   command  = "npm run build"
-  publish  = "user-management-client/dist/browser"
+  publish  = "dist/browser"
 
 # SPA redirect: serve index.html for all routes
 [[redirects]]
