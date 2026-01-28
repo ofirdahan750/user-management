@@ -24,8 +24,7 @@ export const routes: Routes = [
   },
   {
     path: 'forgot-password',
-    loadComponent: () => import('./features/auth/forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent),
-    canActivate: [noAuthGuard]
+    loadComponent: () => import('./features/auth/forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent)
   },
   {
     path: 'reset-password',

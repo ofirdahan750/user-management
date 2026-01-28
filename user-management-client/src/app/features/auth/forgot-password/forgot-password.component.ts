@@ -18,6 +18,7 @@ import { take } from 'rxjs/operators';
 // NgRx
 import { Store } from '@ngrx/store';
 import { Actions, ofType } from '@ngrx/effects';
+import { selectUser } from '@core/store/auth/auth.selectors';
 
 // Services
 import { FormService } from '@core/services/form.service';
@@ -91,8 +92,18 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // Pre-fill email from temporary storage (one-time use, cleared automatically)
-    const email = this.emailHelper.getAndClearTemporaryEmail();
-    if (email) {
+    let email = this.emailHelper.getAndClearTemporaryEmail();
+    
+    // If no email from temporary storage, try to get from current user if authenticated
+    if (!email) {
+      this.store.select(selectUser).pipe(take(1)).subscribe(user => {
+        if (user?.email) {
+          email = user.email;
+          this.forgotPasswordForm.patchValue({ email });
+          this.cdr.markForCheck();
+        }
+      });
+    } else {
       this.forgotPasswordForm.patchValue({ email });
       this.cdr.markForCheck();
     }
