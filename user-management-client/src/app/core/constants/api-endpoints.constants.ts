@@ -1,7 +1,5 @@
-// For local development, use: http://localhost:3000/api
-// For Koyeb deployment, replace with your Koyeb app URL
 export const API_ENDPOINTS = {
-  BASE_URL: 'http://localhost:3000/api',
+  BASE_URL: 'https://cheerful-rois-organizationnametwo-fc78dba0.koyeb.app/api',
   AUTH: {
     REGISTER: '/auth/register',
     LOGIN: '/auth/login',
