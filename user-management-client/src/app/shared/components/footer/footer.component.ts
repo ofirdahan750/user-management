@@ -14,5 +14,5 @@ import { URLS } from '@core/constants/urls.constants';
 })
 export class FooterComponent {
   readonly URLS = URLS; 
-  readonly currentYear: number = new Date().getFullYear();
+  readonly currentYear: number = new Date().getFullYear(); // current year
 }
