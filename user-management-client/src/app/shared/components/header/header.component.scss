@@ -1,3 +1,5 @@
+@use '../../../../assets/styles/functions/rem' as *;
+
 app-header {
   .header {
     position: sticky;
@@ -43,7 +45,7 @@ app-header {
     }
 
     &__logo {
-      font-size: 1.125rem;
+      font-size: rem(18);
       font-weight: 700;
       color: var(--color-primary);
       text-decoration: none;
@@ -53,11 +55,11 @@ app-header {
       flex-shrink: 0;
 
       @media (min-width: 480px) {
-        font-size: 1.25rem;
+        font-size: rem(20);
       }
 
       @media (min-width: 768px) {
-        font-size: 1.5rem;
+        font-size: rem(24);
         margin-right: 2rem;
       }
 
@@ -94,7 +96,7 @@ app-header {
       transition:
         background-color 0.2s,
         color 0.2s;
-      font-size: 0.875rem;
+      font-size: rem(14);
       white-space: nowrap;
 
       &:hover {
@@ -177,7 +179,7 @@ app-header {
       @media (min-width: 768px) {
         display: inline;
         margin-left: 0.5rem;
-        font-size: 0.875rem;
+        font-size: rem(14);
       }
     }
 
@@ -187,13 +189,13 @@ app-header {
 
       .header__user-name-full {
         font-weight: 600;
-        font-size: 0.875rem;
+        font-size: rem(14);
         color: var(--color-text-primary);
         margin-bottom: 0.25rem;
       }
 
       .header__user-email {
-        font-size: 0.75rem;
+        font-size: rem(12);
         color: var(--color-text-secondary);
       }
     }
@@ -260,7 +262,7 @@ app-header {
     }
 
     &__mobile-logo {
-      font-size: 1.25rem;
+      font-size: rem(20);
       font-weight: 700;
       color: var(--color-primary);
       text-decoration: none;
@@ -269,7 +271,7 @@ app-header {
 
     &__mobile-title {
       margin: 0;
-      font-size: 1.125rem;
+      font-size: rem(18);
       font-weight: 600;
       color: var(--color-text-primary);
     }
@@ -288,7 +290,7 @@ app-header {
     }
 
     &__mobile-user-icon {
-      font-size: 2.5rem;
+      font-size: rem(40);
       width: 2.5rem;
       height: 2.5rem;
       color: var(--color-primary);
@@ -301,7 +303,7 @@ app-header {
 
     &__mobile-user-name {
       font-weight: 600;
-      font-size: 0.875rem;
+      font-size: rem(14);
       color: var(--color-text-primary);
       margin-bottom: 0.25rem;
       white-space: nowrap;
@@ -310,7 +312,7 @@ app-header {
     }
 
     &__mobile-user-email {
-      font-size: 0.75rem;
+      font-size: rem(12);
       color: var(--color-text-secondary);
       white-space: nowrap;
       overflow: hidden;
@@ -336,7 +338,7 @@ app-header {
       background: none;
       width: 100%;
       text-align: left;
-      font-size: 0.9375rem;
+      font-size: rem(15);
       cursor: pointer;
 
       &:hover {
@@ -356,7 +358,7 @@ app-header {
       }
 
       mat-icon {
-        font-size: 1.5rem;
+        font-size: rem(24);
         width: 1.5rem;
         height: 1.5rem;
         color: inherit;
@@ -378,7 +380,7 @@ app-header {
       border: none;
       background: none;
       color: var(--color-text-primary);
-      font-size: 0.9375rem;
+      font-size: rem(15);
       cursor: pointer;
       border-radius: 0.25rem;
       transition: background-color 0.2s;
@@ -388,7 +390,7 @@ app-header {
       }
 
       mat-icon {
-        font-size: 1.5rem;
+        font-size: rem(24);
         width: 1.5rem;
         height: 1.5rem;
         color: inherit;

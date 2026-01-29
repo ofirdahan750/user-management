@@ -32,7 +32,7 @@ import { selectIsAuthenticated, selectUserProfileList } from '@core/store/auth/a
 import * as AuthActions from '@core/store/auth/auth.actions';
 import { IconButtonComponent } from '@shared/ui/buttons/icon-button/icon-button.component';
 import { LinkButtonComponent } from '@shared/ui/buttons/link-button/link-button.component';
-import { AppState } from '@core/store';
+import { AppState } from '@core/store/root-state.model';
 
 @Component({
   selector: 'app-header',

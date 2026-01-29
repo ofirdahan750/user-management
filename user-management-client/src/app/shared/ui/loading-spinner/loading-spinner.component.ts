@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { selectIsLoading } from '@core/store/loading/loading.selectors';
-import { AppState } from '@core/store';
+import { AppState } from '@core/store/root-state.model';
 
 @Component({
   selector: 'app-loading-spinner',

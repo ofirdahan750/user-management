@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 import { AuthGuardAllowOnly } from '@core/enums/auth-guard.enum';
 import { Routes } from '@core/enums/routes.enum';
 import { selectIsAuthenticated } from '@core/store/auth/auth.selectors';
-import { AppState } from '@core/store';
+import { AppState } from '@core/store/root-state.model';
 
 // create the auth guard - allow only authenticated or guest users
 function createAuthGuard(allowOnly: AuthGuardAllowOnly): CanActivateFn {

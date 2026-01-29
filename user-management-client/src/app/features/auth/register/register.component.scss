@@ -1,3 +1,5 @@
+@use '../../../../assets/styles/functions/rem' as *;
+
 .register {
   min-height: 100vh;
   display: flex;
@@ -31,13 +33,13 @@
   }
 
   &__title {
-    font-size: 1.5rem;
+    font-size: rem(24);
     font-weight: 700;
     color: var(--color-primary-dark);
     margin: 0;
     
     @media (min-width: 480px) {
-      font-size: 2rem;
+      font-size: rem(32);
     }
   }
 
@@ -66,7 +68,7 @@
   }
 
   &__strength {
-    font-size: 0.75rem;
+    font-size: rem(12);
     font-weight: 600;
     margin-top: 0.5rem;
     padding: 0.25rem 0.5rem;
@@ -97,12 +99,12 @@
   }
 
   &__terms {
-    font-size: 0.875rem;
+    font-size: rem(14);
   }
 
   &__error {
     color: var(--color-error);
-    font-size: 0.75rem;
+    font-size: rem(12);
     margin-top: 0.25rem;
     height: 1.25rem;
     line-height: 1.25rem;
@@ -117,7 +119,7 @@
   &__submit {
     width: 100%;
     height: 3rem;
-    font-size: 1rem;
+    font-size: rem(16);
     font-weight: 600;
   }
 
@@ -134,7 +136,7 @@
   &__footer-text {
     margin: 0;
     color: var(--color-text-secondary);
-    font-size: 0.875rem;
+    font-size: rem(14);
   }
 
   &__login-link {
