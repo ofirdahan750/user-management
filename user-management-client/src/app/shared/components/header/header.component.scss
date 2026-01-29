@@ -398,3 +398,24 @@
     max-width: calc(100vw - 2rem);
   }
 }
+
+// Light mode: hamburger icon visible on white header background
+[data-theme="light"] .header .header__menu-toggle,
+[data-theme="light"] .header .header__menu-toggle .mat-icon {
+  color: var(--color-text-primary, #212121);
+}
+
+// Light mode: user name + email – light text so visible on dark menu background
+[data-theme="light"] .mat-mdc-menu-panel .header__user-info .header__user-name-full {
+  color: #ffffff !important;
+}
+[data-theme="light"] .mat-mdc-menu-panel .header__user-info .header__user-email {
+  color: #e0e0e0 !important;
+}
+
+// Light mode: desktop theme toggle (sun icon) visible on white header
+[data-theme="light"] .header app-icon-button.header__theme-toggle--desktop button,
+[data-theme="light"] .header app-icon-button.header__theme-toggle--desktop .mat-icon,
+[data-theme="light"] .header app-icon-button.header__theme-toggle--desktop .mat-mdc-button-touch-target {
+  color: #212121 !important;
+}
