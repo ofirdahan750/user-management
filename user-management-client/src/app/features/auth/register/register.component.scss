@@ -1,152 +1,153 @@
 @use '../../../../assets/styles/functions/rem' as *;
 @use '../../../../assets/styles/mixins/flexbox' as *;
 @use '../../../../assets/styles/mixins/responsive' as *;
+app-register {
+  .register {
+    min-height: 100vh;
+    @include flex-center;
+    padding: 1rem;
+    background: var(--color-background-gradient);
 
-.register {
-  min-height: 100vh;
-  @include flex-center;
-  padding: 1rem;
-  background: var(--color-background-gradient);
-
-  &__container {
-    width: 100%;
-    max-width: 40rem;
-  }
-
-  &__card {
-    padding: 1.5rem;
-    border-radius: 1rem;
-    box-shadow: var(--shadow-elevation-2);
-    
-    @include respond-to(sm) {
-      padding: 2rem;
-    }
-  }
-
-  &__header {
-    text-align: center;
-    margin-bottom: 1.5rem;
-    
-    @include respond-to(sm) {
-      margin-bottom: 2rem;
-    }
-  }
-
-  &__title {
-    font-size: rem(24);
-    font-weight: 700;
-    color: var(--color-primary-dark);
-    margin: 0;
-    
-    @include respond-to(sm) {
-      font-size: rem(32);
-    }
-  }
-
-  &__content {
-    margin-bottom: 1.5rem;
-  }
-
-  &__form {
-    @include flex-column;
-    gap: 1.5rem;
-  }
-
-  &__row {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1rem;
-
-    @include respond-to(md) {
-      grid-template-columns: 1fr 1fr;
-    }
-  }
-
-  &__field {
-    width: 100%;
-  }
-
-  &__strength {
-    font-size: rem(12);
-    font-weight: 600;
-    margin-top: 0.5rem;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    display: inline-block;
-
-    &--weak {
-      color: #f44336;
-      background-color: rgba(244, 67, 54, 0.1);
+    &__container {
+      width: 100%;
+      max-width: 40rem;
     }
 
-    &--medium {
-      color: #ff9800;
-      background-color: rgba(255, 152, 0, 0.1);
+    &__card {
+      padding: 1.5rem;
+      border-radius: 1rem;
+      box-shadow: var(--shadow-elevation-2);
+
+      @include respond-to(sm) {
+        padding: 2rem;
+      }
     }
 
-    &--strong {
-      color: #4caf50;
-      background-color: rgba(76, 175, 80, 0.1);
+    &__header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+
+      @include respond-to(sm) {
+        margin-bottom: 2rem;
+      }
     }
-  }
 
-  &__terms-wrapper {
-    height: 3.5rem;
-    @include flex-column;
-    justify-content: flex-start;
-  }
+    &__title {
+      font-size: rem(24);
+      font-weight: 700;
+      color: var(--color-primary-dark);
+      margin: 0;
 
-  &__terms {
-    font-size: rem(14);
-  }
-
-  &__error {
-    color: var(--color-error);
-    font-size: rem(12);
-    margin-top: 0.25rem;
-    height: 1.25rem;
-    line-height: 1.25rem;
-    transition: opacity 0.2s;
-
-    &--hidden {
-      visibility: hidden;
-      opacity: 0;
+      @include respond-to(sm) {
+        font-size: rem(32);
+      }
     }
-  }
 
-  &__submit {
-    width: 100%;
-    height: 3rem;
-    font-size: rem(16);
-    font-weight: 600;
-  }
+    &__content {
+      margin-bottom: 1.5rem;
+    }
 
-  &__spinner {
-    animation: spin 1s linear infinite;
-  }
+    &__form {
+      @include flex-column;
+      gap: 1.5rem;
+    }
 
-  &__footer {
-    text-align: center;
-    padding-top: 1.5rem;
-    border-top: 0.0625rem solid var(--color-border);
-  }
+    &__row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
 
-  &__footer-text {
-    margin: 0;
-    color: var(--color-text-secondary);
-    font-size: rem(14);
-  }
+      @include respond-to(md) {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
 
-  &__login-link {
-    color: var(--color-primary);
-    text-decoration: none;
-    font-weight: 600;
-    margin-left: 0.25rem;
-    transition: opacity 0.2s;
+    &__field {
+      width: 100%;
+    }
 
-    &:hover {
-      opacity: 0.8;
-      text-decoration: underline;
+    &__strength {
+      font-size: rem(12);
+      font-weight: 600;
+      margin-top: 0.5rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+      display: inline-block;
+
+      &--weak {
+        color: #f44336;
+        background-color: rgba(244, 67, 54, 0.1);
+      }
+
+      &--medium {
+        color: #ff9800;
+        background-color: rgba(255, 152, 0, 0.1);
+      }
+
+      &--strong {
+        color: #4caf50;
+        background-color: rgba(76, 175, 80, 0.1);
+      }
+    }
+
+    &__terms-wrapper {
+      height: 3.5rem;
+      @include flex-column;
+      justify-content: flex-start;
+    }
+
+    &__terms {
+      font-size: rem(14);
+    }
+
+    &__error {
+      color: var(--color-error);
+      font-size: rem(12);
+      margin-top: 0.25rem;
+      height: 1.25rem;
+      line-height: 1.25rem;
+      transition: opacity 0.2s;
+
+      &--hidden {
+        visibility: hidden;
+        opacity: 0;
+      }
+    }
+
+    &__submit {
+      width: 100%;
+      height: 3rem;
+      font-size: rem(16);
+      font-weight: 600;
+    }
+
+    &__spinner {
+      animation: spin 1s linear infinite;
+    }
+
+    &__footer {
+      text-align: center;
+      padding-top: 1.5rem;
+      border-top: 0.0625rem solid var(--color-border);
+    }
+
+    &__footer-text {
+      margin: 0;
+      color: var(--color-text-secondary);
+      font-size: rem(14);
+    }
+
+    &__login-link {
+      color: var(--color-primary);
+      text-decoration: none;
+      font-weight: 600;
+      margin-left: 0.25rem;
+      transition: opacity 0.2s;
+
+      &:hover {
+        opacity: 0.8;
+        text-decoration: underline;
+      }
     }
   }
 }
