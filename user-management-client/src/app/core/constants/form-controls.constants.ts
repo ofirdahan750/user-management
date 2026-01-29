@@ -1,3 +1,9 @@
+export const LOGIN_FORM_CONTROLS = {
+  LOGIN_ID: 'loginID',
+  PASSWORD: 'password',
+  REMEMBER_ME: 'rememberMe',
+} as const;
+
 export const FORGOT_PASSWORD_FORM_CONTROLS = {
   EMAIL: 'email',
 } as const;

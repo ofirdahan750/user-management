@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation, ChangeDetectionStrategy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormGroup, ReactiveFormsModule, FormControl } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
@@ -14,6 +14,7 @@ import { FormService } from '@core/services/form.service';
 import { LocalStorageService } from '@core/services/local-storage.service';
 import { EmailHelperService } from '@core/services/email-helper.service';
 import { Routes } from '@core/enums/routes.enum';
+import { LOGIN_FORM_CONTROLS } from '@core/constants/form-controls.constants';
 import { LoginFormValue } from '@core/types/form.types';
 import { StorageKeys } from '@core/enums/storage-keys.enum';
 import { LABELS } from '@core/constants/labels.constants';
@@ -48,6 +49,7 @@ import * as LoadingActions from '@core/store/loading/loading.actions';
 export class LoginComponent {
   readonly labels = LABELS;
   readonly routes = Routes;
+  readonly formControls = LOGIN_FORM_CONTROLS;
 
   private formService: FormService = inject(FormService); // form service
   private store: Store = inject(Store); // store for dispatching actions
@@ -58,15 +60,7 @@ export class LoginComponent {
   loginForm: FormGroup = this.formService.createLoginForm() || ({} as FormGroup); // login form
   combinedLoading$: Observable<boolean> = this.formService.getCombinedLoading$() || of(false); // combined loading observable
 
-  get loginIDControl(): FormControl {
-    // get login ID control
-    return this.loginForm.get('loginID') as FormControl; // login ID control
-  }
-
-  get passwordControl(): FormControl {
-    // get password control
-    return this.loginForm.get('password') as FormControl; // password control
-  }
+ 
 
   // on submit form
   onSubmit(): void {
@@ -91,11 +85,11 @@ export class LoginComponent {
     );
   }
 
-  // navigate with email to forgot password or register page
   navigateWithEmail(event: Event, route: string): void {
-    event.preventDefault(); // prevent default event of the link
-    const email: string = (this.loginIDControl.value as string) || ''; // get email from login ID control or empty string
-    if (email) this.emailHelper.setTemporaryEmail(email); // set temporary email if email is not empty
-    this.router.navigate([route]); // navigate to route
+    event.preventDefault();
+    const email: string =
+      (this.loginForm.get(this.formControls.LOGIN_ID)?.value as string) || '';
+    if (email) this.emailHelper.setTemporaryEmail(email);
+    this.router.navigate([route]);
   }
 }

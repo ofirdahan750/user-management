@@ -9,7 +9,10 @@ import { israeliPhoneValidator } from '@shared/validators/israeli-phone.validato
 import { defaultDateAgeValidator } from '@shared/validators/date-age.validator';
 import { LocalStorageService } from '@core/services/local-storage.service';
 import { StorageKeys } from '@core/enums/storage-keys.enum';
-import { REGISTER_FORM_CONTROLS } from '@core/constants/form-controls.constants';
+import {
+  LOGIN_FORM_CONTROLS,
+  REGISTER_FORM_CONTROLS,
+} from '@core/constants/form-controls.constants';
 import { selectIsLoading } from '@core/store/loading/loading.selectors';
 import { selectAuthLoading } from '@core/store/auth/auth.selectors';
 
@@ -42,15 +45,17 @@ export class FormService {
    */
   createLoginForm(): FormGroup {
     const form = this.fb.group({
-      loginID: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]],
-      rememberMe: [false]
+      [LOGIN_FORM_CONTROLS.LOGIN_ID]: ['', [Validators.required, Validators.email]],
+      [LOGIN_FORM_CONTROLS.PASSWORD]: ['', [Validators.required]],
+      [LOGIN_FORM_CONTROLS.REMEMBER_ME]: [false],
     });
 
-    // Load saved email if exists
     const savedEmail = this.localStorage.getItem(StorageKeys.REMEMBER_ME);
     if (savedEmail) {
-      form.patchValue({ loginID: savedEmail, rememberMe: true });
+      form.patchValue({
+        [LOGIN_FORM_CONTROLS.LOGIN_ID]: savedEmail,
+        [LOGIN_FORM_CONTROLS.REMEMBER_ME]: true,
+      });
     }
 
     return form;

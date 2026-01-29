@@ -8,6 +8,7 @@ import { of } from 'rxjs';
 import { Routes } from '@core/enums/routes.enum';
 import { StorageKeys } from '@core/enums/storage-keys.enum';
 import { LABELS } from '@core/constants/labels.constants';
+import { LOGIN_FORM_CONTROLS } from '@core/constants/form-controls.constants';
 import { LoginComponent } from './login.component';
 import { FormService } from '@core/services/form.service';
 import { LocalStorageService } from '@core/services/local-storage.service';
@@ -20,9 +21,9 @@ import * as LoadingActions from '@core/store/loading/loading.actions';
 describe('LoginComponent', () => {
   const createLoginForm = (): FormGroup =>
     new FormBuilder().group({
-      loginID: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]],
-      rememberMe: [false],
+      [LOGIN_FORM_CONTROLS.LOGIN_ID]: ['', [Validators.required, Validators.email]],
+      [LOGIN_FORM_CONTROLS.PASSWORD]: ['', [Validators.required]],
+      [LOGIN_FORM_CONTROLS.REMEMBER_ME]: [false],
     });
 
   const mockFormService = {
@@ -74,15 +75,19 @@ describe('LoginComponent', () => {
 
   it('should have loginForm with loginID and password controls', () => {
     const { component } = createFixture();
-    expect(component.loginForm.get('loginID')).toBe(component.loginIDControl);
-    expect(component.loginForm.get('password')).toBe(component.passwordControl);
+    expect(component.loginForm.get(LOGIN_FORM_CONTROLS.LOGIN_ID)).toBeTruthy();
+    expect(component.loginForm.get(LOGIN_FORM_CONTROLS.PASSWORD)).toBeTruthy();
+    expect(component.formControls).toBe(LOGIN_FORM_CONTROLS);
   });
 
   it('onSubmit should not dispatch when form is invalid', () => {
     const { component } = createFixture();
     const store = TestBed.inject(Store);
     const dispatchSpy = vi.spyOn(store, 'dispatch');
-    component.loginForm.patchValue({ loginID: '', password: '' });
+    component.loginForm.patchValue({
+      [LOGIN_FORM_CONTROLS.LOGIN_ID]: '',
+      [LOGIN_FORM_CONTROLS.PASSWORD]: '',
+    });
     component.onSubmit();
     expect(dispatchSpy).not.toHaveBeenCalled();
   });
@@ -92,9 +97,9 @@ describe('LoginComponent', () => {
     const store = TestBed.inject(Store);
     const dispatchSpy = vi.spyOn(store, 'dispatch');
     component.loginForm.patchValue({
-      loginID: 'user@test.com',
-      password: 'Pass1234',
-      rememberMe: false,
+      [LOGIN_FORM_CONTROLS.LOGIN_ID]: 'user@test.com',
+      [LOGIN_FORM_CONTROLS.PASSWORD]: 'Pass1234',
+      [LOGIN_FORM_CONTROLS.REMEMBER_ME]: false,
     });
     component.onSubmit();
     expect(dispatchSpy).toHaveBeenCalledWith(LoadingActions.showLoading());
@@ -109,9 +114,9 @@ describe('LoginComponent', () => {
   it('onSubmit should set REMEMBER_ME in localStorage when rememberMe is true', () => {
     const { component } = createFixture();
     component.loginForm.patchValue({
-      loginID: 'user@test.com',
-      password: 'Pass1234',
-      rememberMe: true,
+      [LOGIN_FORM_CONTROLS.LOGIN_ID]: 'user@test.com',
+      [LOGIN_FORM_CONTROLS.PASSWORD]: 'Pass1234',
+      [LOGIN_FORM_CONTROLS.REMEMBER_ME]: true,
     });
     component.onSubmit();
     expect(mockLocalStorage.setItem).toHaveBeenCalledWith(
@@ -123,9 +128,9 @@ describe('LoginComponent', () => {
   it('onSubmit should remove REMEMBER_ME from localStorage when rememberMe is false', () => {
     const { component } = createFixture();
     component.loginForm.patchValue({
-      loginID: 'user@test.com',
-      password: 'Pass1234',
-      rememberMe: false,
+      [LOGIN_FORM_CONTROLS.LOGIN_ID]: 'user@test.com',
+      [LOGIN_FORM_CONTROLS.PASSWORD]: 'Pass1234',
+      [LOGIN_FORM_CONTROLS.REMEMBER_ME]: false,
     });
     component.onSubmit();
     expect(mockLocalStorage.removeItem).toHaveBeenCalledWith(StorageKeys.REMEMBER_ME);
@@ -137,7 +142,7 @@ describe('LoginComponent', () => {
     const navigateSpy = vi.spyOn(router, 'navigate');
     const event = new Event('click');
     vi.spyOn(event, 'preventDefault');
-    component.loginForm.patchValue({ loginID: 'user@test.com' });
+    component.loginForm.patchValue({ [LOGIN_FORM_CONTROLS.LOGIN_ID]: 'user@test.com' });
     component.navigateWithEmail(event, Routes.FORGOT_PASSWORD);
     expect(event.preventDefault).toHaveBeenCalled();
     expect(mockEmailHelper.setTemporaryEmail).toHaveBeenCalledWith('user@test.com');
@@ -150,7 +155,7 @@ describe('LoginComponent', () => {
     const navigateSpy = vi.spyOn(router, 'navigate');
     const event = new Event('click');
     vi.spyOn(event, 'preventDefault');
-    component.loginForm.patchValue({ loginID: '' });
+    component.loginForm.patchValue({ [LOGIN_FORM_CONTROLS.LOGIN_ID]: '' });
     component.navigateWithEmail(event, Routes.REGISTER);
     expect(mockEmailHelper.setTemporaryEmail).not.toHaveBeenCalled();
     expect(navigateSpy).toHaveBeenCalledWith([Routes.REGISTER]);

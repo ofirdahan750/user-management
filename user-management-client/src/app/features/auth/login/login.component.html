@@ -9,7 +9,7 @@
         <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login__form">
           <app-email-input
             [label]="labels.EMAIL"
-            [control]="loginIDControl"
+            [control]="loginForm.get(formControls.LOGIN_ID)!"
             [ariaLabel]="labels.EMAIL"
             [autofocus]="true"
             class="login__field"
@@ -17,14 +17,14 @@
 
           <app-password-input
             [label]="labels.PASSWORD"
-            [control]="passwordControl"
+            [control]="loginForm.get(formControls.PASSWORD)!"
             [ariaLabel]="labels.PASSWORD"
             [autocomplete]="'current-password'"
             class="login__field"
           ></app-password-input>
 
           <div class="login__options">
-            <mat-checkbox formControlName="rememberMe" class="login__remember">
+            <mat-checkbox [formControlName]="formControls.REMEMBER_ME" class="login__remember">
               {{ labels.REMEMBER_ME }}
             </mat-checkbox>
             <a
