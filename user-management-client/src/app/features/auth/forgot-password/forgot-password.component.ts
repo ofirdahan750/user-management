@@ -32,6 +32,7 @@ import { ForgotPasswordFormValue } from '@core/types/form.types';
 import { LABELS } from '@core/constants/labels.constants';
 import { MESSAGES } from '@core/constants/messages.constants';
 import { ICONS } from '@core/constants/icons.constants';
+import { FORGOT_PASSWORD_FORM_CONTROLS } from '@core/constants/form-controls.constants';
 import { SubmitButtonComponent } from '@shared/ui/buttons/submit-button/submit-button.component';
 import { BackLinkComponent } from '@shared/ui/links/back-link/back-link.component';
 import * as AuthActions from '@core/store/auth/auth.actions';
@@ -62,6 +63,7 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
   readonly MESSAGES = MESSAGES;
   readonly icons = ICONS;
   readonly MaterialColor = MaterialColor;
+  readonly formControls = FORGOT_PASSWORD_FORM_CONTROLS;
 
   private formService: FormService = inject(FormService); // form service
   private router: Router = inject(Router); // router service
@@ -73,88 +75,90 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
 
   forgotPasswordForm: FormGroup = this.formService.createForgotPasswordForm() || ({} as FormGroup); // forgot password form
 
-  isLoading: WritableSignal<boolean> = signal(false);
-  isSuccess = signal<boolean>(false);
-  resetToken = signal<string>('');
-  countdown = signal<number>(0);
-  canResend = signal<boolean>(false);
+  isLoading: WritableSignal<boolean> = signal(false); // is loading signal (true when loading, false when not loading)
+  isSuccess = signal<boolean>(false); // is success signal (true when success, false when not success)
+  resetToken = signal<string>(''); // reset token signal - empty string when no reset token
+  countdown = signal<number>(0); // countdown signal - 0 when no countdown
+  canResend = signal<boolean>(false); // can resend signal (true when can resend, false when cannot resend)
 
   private countdownSubscription: Subscription = new Subscription(); // countdown subscription
 
   ngOnInit(): void {
-    // Pre-fill email from temporary storage (one-time use, cleared automatically)
-    let email = this.emailHelper.getAndClearTemporaryEmail();
+    this.prefillEmail();
+  }
 
-    // If no email from temporary storage, try to get from current user if authenticated
+  // Prefill email from temporary storage or current user if authenticated
+  private prefillEmail(): void {
+    // get and clear temporary email from email helper service
+    const email: string = this.emailHelper.getAndClearTemporaryEmail(); // get and clear temporary email from email helper service
+    // if no email, get from current user if authenticated else patch value to form
     if (!email) {
       this.store
         .select(selectUser)
         .pipe(take(1))
         .subscribe((user) => {
-          if (user && user.email) {
-            email = user.email;
-            this.forgotPasswordForm.patchValue({ email });
+          if (user?.email) {
+            this.forgotPasswordForm.patchValue({
+              [FORGOT_PASSWORD_FORM_CONTROLS.EMAIL]: user.email,
+            });
             this.cdr.markForCheck();
           }
         });
     } else {
-      this.forgotPasswordForm.patchValue({ email });
+      this.forgotPasswordForm.patchValue({
+        [FORGOT_PASSWORD_FORM_CONTROLS.EMAIL]: email,
+      });
       this.cdr.markForCheck();
     }
   }
 
   // Getters for form controls to avoid optional chaining in template
-  get emailControl(): FormControl {
-    return this.forgotPasswordForm.get('email') as FormControl;
-  }
-
   get hasEmailRequiredError(): boolean {
-    const control = this.emailControl;
-    return control.hasError('required') && control.touched;
+    const control = this.forgotPasswordForm.get(FORGOT_PASSWORD_FORM_CONTROLS.EMAIL); // get email control from form
+    return (control?.hasError('required') && control?.touched) ?? false; // return true if email is required and touched
   }
 
   get hasEmailFormatError(): boolean {
-    const control = this.emailControl;
-    return control.hasError('email') && control.touched;
+    const control = this.forgotPasswordForm.get(FORGOT_PASSWORD_FORM_CONTROLS.EMAIL); // get email control from form
+    return (control?.hasError('email') && control?.touched) ?? false; // return true if email is invalid and touched
   }
 
   ngOnDestroy(): void {
-    this.countdownSubscription.unsubscribe();
+    this.countdownSubscription.unsubscribe(); // unsubscribe from countdown subscription
   }
 
   onSubmit(): void {
-    if (!this.formService.validateForm(this.forgotPasswordForm)) {
-      return;
-    }
-
-    const formValue = this.forgotPasswordForm.value as ForgotPasswordFormValue;
-    this.isLoading.set(true);
-    this.store.dispatch(AuthActions.requestPasswordReset({ email: formValue.email }));
+    //On submit forgot password form
+    if (!this.formService.validateForm(this.forgotPasswordForm)) return; // if form is invalid, return
+    const formValue = this.forgotPasswordForm.value as ForgotPasswordFormValue; // get form values
+    this.isLoading.set(true); // set is loading to true
+    this.store.dispatch(AuthActions.requestPasswordReset({ email: formValue.email })); // dispatch request password reset action
 
     // Listen for the result
     this.actions$
       .pipe(
+        // listen for request password reset success or failure actions
         ofType(AuthActions.requestPasswordResetSuccess, AuthActions.requestPasswordResetFailure),
         take(1),
       )
       .subscribe((action) => {
-        if (action.type === '[Auth] Request Password Reset Success') {
-          const successAction = action as ReturnType<
-            typeof AuthActions.requestPasswordResetSuccess
-          >;
+        if (action.type === AuthActions.requestPasswordResetSuccess.type) {
+          // if request password reset success action
+          const successAction = // get success action
+            action as ReturnType<typeof AuthActions.requestPasswordResetSuccess>; // cast action to RequestPasswordResetSuccessAction
           // Only show success screen if we have a resetToken
           if (successAction.resetToken && successAction.resetToken !== '') {
-            this.resetToken.set(successAction.resetToken);
-            this.isSuccess.set(true);
-            this.isLoading.set(false);
-            this.startCountdown();
-            this.cdr.markForCheck();
+            this.resetToken.set(successAction.resetToken); // set reset token
+            this.isSuccess.set(true); // set is success to true
+            this.isLoading.set(false); // set is loading to false
+            this.startCountdown(); // start countdown to resend email after 60 seconds
+            this.cdr.markForCheck(); // mark for check to update the view
           } else {
             // No resetToken means email doesn't exist - treat as failure
-            this.isSuccess.set(false);
-            this.isLoading.set(false);
-            this.toastService.showError(MESSAGES.USER_NOT_FOUND);
-            this.cdr.markForCheck();
+            this.isSuccess.set(false); // set is success to false
+            this.isLoading.set(false); // set is loading to false
+            this.toastService.showError(MESSAGES.USER_NOT_FOUND); // show error toast
+            this.cdr.markForCheck(); // mark for check to update the view
           }
         } else {
           // Handle failure - keep form visible and show error
@@ -167,79 +171,68 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
   }
 
   startCountdown(): void {
-    // Stop existing countdown if any
+    // Stop existing countdown if any else unsubscribe from countdown subscription
     this.countdownSubscription.unsubscribe();
 
-    this.canResend.set(false);
-    this.countdown.set(Timeouts.RESEND_TIMEOUT_SECONDS);
+    this.canResend.set(false); // set can resend to false initially
+    this.countdown.set(Timeouts.RESEND_TIMEOUT_SECONDS); // set countdown to 60 seconds initially
 
     this.countdownSubscription = interval(Timeouts.COUNTDOWN_INTERVAL).subscribe(() => {
-      const current = this.countdown();
+      const current = this.countdown(); // get current countdown value
       if (current > 0) {
-        this.countdown.set(current - 1);
-        this.cdr.markForCheck();
+        this.countdown.set(current - 1); // decrement countdown value by 1 second
+        this.cdr.markForCheck(); // mark for check to update the view
       } else {
-        this.canResend.set(true);
-        this.countdownSubscription.unsubscribe();
-        this.cdr.markForCheck();
+        this.canResend.set(true); // set can resend to true after countdown reaches 0
+        this.countdownSubscription.unsubscribe(); // unsubscribe from countdown subscription else it will keep running indefinitely
+        this.cdr.markForCheck(); // mark for check to update the view after countdown reaches 0
       }
     });
   }
 
   resendEmail(): void {
+    //submit button to resend email
     if (this.canResend()) {
-      this.onSubmit();
+      // if can resend is true
+      this.onSubmit(); // submit forgot password form
     }
   }
 
   getResetPasswordUrl(): string {
-    const token = this.resetToken();
+    //get reset password url with token from reset token
+    const token = this.resetToken(); // get reset token from reset token signal
     if (token) {
+      // if token is not empty
       // Use Router to create proper URL with query params
       const urlTree = this.router.createUrlTree([Routes.RESET_PASSWORD], {
         queryParams: { token },
       });
-      return this.router.serializeUrl(urlTree);
+      return this.router.serializeUrl(urlTree); // return serialized url with token
+    } else {
+      // if token is empty, return empty string
+      return '';
     }
-    return '';
   }
 
   copyResetLink(): void {
-    const token = this.resetToken();
-    if (token && navigator.clipboard) {
-      const urlTree = this.router.createUrlTree([Routes.RESET_PASSWORD], {
-        queryParams: { token },
-      });
-      const fullUrl = `${window.location.origin}${this.router.serializeUrl(urlTree)}`;
-      navigator.clipboard
-        .writeText(fullUrl)
-        .then(() => {
-          this.toastService.showSuccess(MESSAGES.RESET_LINK_COPIED);
-        })
-        .catch(() => {
-          // Fallback if clipboard API fails
-          const textArea = document.createElement('textarea');
-          textArea.value = fullUrl;
-          textArea.style.position = 'fixed';
-          textArea.style.opacity = '0';
-          document.body.appendChild(textArea);
-          textArea.select();
-          try {
-            document.execCommand('copy');
-            this.toastService.showSuccess(MESSAGES.RESET_LINK_COPIED);
-          } catch {
-            // Ignore errors
-          }
-          document.body.removeChild(textArea);
-        });
+    const fullUrl = this.getResetPasswordUrl(); // get reset password url with token from reset token
+    if (fullUrl) {
+      // if full url is not empty
+      this.emailHelper.copyTextToClipboard(
+        // copy text to clipboard
+        `${window.location.origin}${fullUrl}`, // full url with origin and full url
+        MESSAGES.RESET_LINK_COPIED, // reset link copied message
+      );
     }
   }
 
   navigateToResetPassword(): void {
-    const token = this.resetToken();
+    const token = this.resetToken(); // get reset token from reset token signal
     if (token) {
+      // if token is not empty
       this.router.navigate([Routes.RESET_PASSWORD], {
-        queryParams: { token },
+        // navigate to reset password route with token
+        queryParams: { token }, // query params with token as query parameter
       });
     }
   }

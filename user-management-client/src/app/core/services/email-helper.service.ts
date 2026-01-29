@@ -65,6 +65,14 @@ export class EmailHelperService {
   }
 
   /**
+   * Copies text to clipboard and shows success toast (public API for components).
+   * Uses clipboard API with fallback for older browsers.
+   */
+  copyTextToClipboard(text: string, successMessage: string): void {
+    this.copyToClipboard(text, successMessage);
+  }
+
+  /**
    * Copies text to clipboard
    * @param text Text to copy
    * @param successMessage Success message to show
@@ -144,9 +152,9 @@ export class EmailHelperService {
    * Gets and clears temporary email (one-time use)
    * @returns Email if available, null otherwise
    */
-  getAndClearTemporaryEmail(): string | null {
+  getAndClearTemporaryEmail(): string {
     const email: string = this.temporaryEmail;
     this.temporaryEmail = ''; // Clear immediately after retrieval
-    return email;
+    return email || '';
   }
 }
