@@ -8,7 +8,7 @@ import { ICONS } from '@core/constants/icons.constants';
 import { LABELS } from '@core/constants/labels.constants';
 
 @Component({
-  selector: 'app-back-link',
+  selector: 'app-back-to-link',
   standalone: true,
   imports: [
     CommonModule,
@@ -17,12 +17,12 @@ import { LABELS } from '@core/constants/labels.constants';
     MatIconModule,
     MatTooltipModule
   ],
-  templateUrl: './back-link.component.html',
-  styleUrl: './back-link.component.scss',
+  templateUrl: './back-to-link.component.html',
+  styleUrl: './back-to-link.component.scss',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BackLinkComponent {
+export class BackToLinkComponent {
   @Input() route: string = '';
   @Input() label: string = '';
   @Input() tooltip: string = '';

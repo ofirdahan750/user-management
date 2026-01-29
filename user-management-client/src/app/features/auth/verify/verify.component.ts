@@ -24,7 +24,7 @@ import { LABELS } from '@core/constants/labels.constants';
 import { MESSAGES } from '@core/constants/messages.constants';
 import { ICONS } from '@core/constants/icons.constants';
 import { LinkButtonComponent } from '@shared/ui/buttons/link-button/link-button.component';
-import { BackLinkComponent } from '@shared/ui/links/back-link/back-link.component';
+import { BackToLinkComponent } from '@shared/ui/links/back-to-link/back-to-link.component';
 import { SubmitButtonComponent } from '@shared/ui/buttons/submit-button/submit-button.component';
 
 @Component({
@@ -38,7 +38,7 @@ import { SubmitButtonComponent } from '@shared/ui/buttons/submit-button/submit-b
     MatButtonModule,
     MatProgressSpinnerModule,
     LinkButtonComponent,
-    BackLinkComponent,
+    BackToLinkComponent,
     SubmitButtonComponent,
   ],
   templateUrl: './verify.component.html',

@@ -2,7 +2,7 @@
 @use '../../../../../assets/styles/mixins/flexbox' as *;
 @use '../../../../../assets/styles/functions/rem' as *;
 
-.back-link {
+.back-to-link {
   @include link-secondary;
   @include flex-center;
   gap: var(--spacing-xs);

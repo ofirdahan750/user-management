@@ -16,7 +16,7 @@ import { ARIA_LABELS } from '@core/constants/aria-labels.constants';
 import { ICONS } from '@core/constants/icons.constants';
 import { IconButtonComponent } from '@shared/ui/buttons/icon-button/icon-button.component';
 import { SubmitButtonComponent } from '@shared/ui/buttons/submit-button/submit-button.component';
-import { BackLinkComponent } from '@shared/ui/links/back-link/back-link.component';
+import { BackToLinkComponent } from '@shared/ui/links/back-to-link/back-to-link.component';
 
 @Component({
   selector: 'app-change-password',
@@ -30,7 +30,7 @@ import { BackLinkComponent } from '@shared/ui/links/back-link/back-link.componen
     MatIconModule,
     IconButtonComponent,
     SubmitButtonComponent,
-    BackLinkComponent
+    BackToLinkComponent
   ],
   templateUrl: './change-password.component.html',
   styleUrl: './change-password.component.scss',
