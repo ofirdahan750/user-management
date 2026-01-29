@@ -74,6 +74,7 @@ export class RegisterComponent implements OnInit {
 
   private formService: FormService = inject(FormService); // form service
   private store: Store = inject(Store); // store
+  private router: Router = inject(Router); // router
   private emailHelper: EmailHelperService = inject(EmailHelperService); // email helper service
 
   registerForm: FormGroup = this.formService.createRegisterForm() || ({} as FormGroup); // register form group
@@ -84,6 +85,16 @@ export class RegisterComponent implements OnInit {
   );
   combinedLoading$: Observable<boolean> = this.formService.getCombinedLoading$() || of(false); // combined loading observable
 
+  constructor() {
+    const passwordControl = this.registerForm.get(REGISTER_FORM_CONTROLS.PASSWORD);
+    if (passwordControl) {
+      passwordControl.valueChanges.subscribe((password) => {
+        if (password) {
+          this.passwordStrength.set(getPasswordStrength(password));
+        }
+      });
+    }
+  }
 
   ngOnInit(): void {
     const email = this.emailHelper.getAndClearTemporaryEmail();
@@ -235,17 +246,7 @@ export class RegisterComponent implements OnInit {
   get hasPhoneNumberError(): boolean {
     const control = this.registerForm.get(REGISTER_FORM_CONTROLS.PHONE_NUMBER);
     return control ? control.hasError('invalidPhone') && control.touched : false;
-  }  constructor() {
-    const passwordControl = this.registerForm.get(REGISTER_FORM_CONTROLS.PASSWORD);
-    if (passwordControl) {
-      passwordControl.valueChanges.subscribe((password) => {
-        if (password) {
-          this.passwordStrength.set(getPasswordStrength(password));
-        }
-      });
-    }
   }
-
 
   get hasTermsRequiredError(): boolean {
     const control = this.registerForm.get(REGISTER_FORM_CONTROLS.TERMS);
