@@ -85,7 +85,21 @@ export class RegisterComponent implements OnInit {
   );
   combinedLoading$: Observable<boolean> = this.formService.getCombinedLoading$() || of(false); // combined loading observable
 
-  constructor() {
+  ngOnInit(): void {
+    this.prefillEmail(); // prefill email from temporary storage(from login page)
+    this.setupPasswordStrengthListener(); // setup password strength listener
+  }
+
+  // prefill email from temporary storage(from login page)
+  private prefillEmail(): void {
+    const email: string = this.emailHelper.getAndClearTemporaryEmail() || ''; // get and clear temporary email from email helper service
+    if (email) {
+      // if email is not empty, patch value to register form
+      this.registerForm.patchValue({ [REGISTER_FORM_CONTROLS.EMAIL]: email }); // patch value to register form
+    }
+  }
+
+  private setupPasswordStrengthListener(): void {
     const passwordControl = this.registerForm.get(REGISTER_FORM_CONTROLS.PASSWORD);
     if (passwordControl) {
       passwordControl.valueChanges.subscribe((password) => {
@@ -93,13 +107,6 @@ export class RegisterComponent implements OnInit {
           this.passwordStrength.set(getPasswordStrength(password));
         }
       });
-    }
-  }
-
-  ngOnInit(): void {
-    const email = this.emailHelper.getAndClearTemporaryEmail();
-    if (email) {
-      this.registerForm.patchValue({ [REGISTER_FORM_CONTROLS.EMAIL]: email });
     }
   }
 
