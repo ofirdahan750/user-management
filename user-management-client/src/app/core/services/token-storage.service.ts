@@ -10,6 +10,7 @@ export class TokenStorageService {
   private sessionStorageService: SessionStorageService = inject(SessionStorageService);
   private localStorageService: LocalStorageService = inject(LocalStorageService);
 
+  // save the token to the token storage
   saveToken(token: string, rememberMe: boolean = false): void {
     if (rememberMe) {
       this.localStorageService.setItem(StorageKeys.TOKEN, token);
@@ -22,6 +23,7 @@ export class TokenStorageService {
     }
   }
 
+  // get the token from the token storage
   getToken(): string | null {
     // Check localStorage first (rememberMe), then sessionStorage
     return (
@@ -36,6 +38,7 @@ export class TokenStorageService {
     this.localStorageService.removeItem(StorageKeys.TOKEN);
   }
 
+  // save the refresh token to the token storage
   saveRefreshToken(token: string, rememberMe: boolean = false): void {
     if (rememberMe) {
       this.localStorageService.setItem(StorageKeys.REFRESH_TOKEN, token);
@@ -47,6 +50,7 @@ export class TokenStorageService {
       this.localStorageService.removeItem(StorageKeys.REFRESH_TOKEN);
     }
   }
+
   // get the refresh token from the token storage
   getRefreshToken(): string | null {
     // Check localStorage first (rememberMe), then sessionStorage

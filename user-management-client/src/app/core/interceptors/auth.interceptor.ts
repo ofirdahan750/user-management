@@ -6,12 +6,13 @@ import { TokenStorageService } from '@core/services/token-storage.service';
 import { AuthService } from '@core/services/auth.service';
 import { Routes } from '@core/enums/routes.enum';
 
+// create the auth interceptor - intercept the request and add the token to the request headers
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const tokenStorage = inject(TokenStorageService);
-  const authService = inject(AuthService);
-  const router = inject(Router);
+  const tokenStorage = inject(TokenStorageService);// token storage service
+  const authService = inject(AuthService);// auth service
+  const router = inject(Router);// router service
 
-  const token = tokenStorage.getToken();
+  const token = tokenStorage.getToken();// get the token from the token storage
   
   if (token) {
     req = req.clone({
