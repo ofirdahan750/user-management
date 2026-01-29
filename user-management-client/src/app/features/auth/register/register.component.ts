@@ -74,7 +74,7 @@ export class RegisterComponent implements OnInit {
   readonly formControls = REGISTER_FORM_CONTROLS;
 
   private formService: FormService = inject(FormService); // form service
-  private store: Store = inject(Store); // store
+  private store: Store = inject(Store); // store 
   private emailHelper: EmailHelperService = inject(EmailHelperService); // email helper service
 
   registerForm: FormGroup = this.formService.createRegisterForm() || ({} as FormGroup); // register form group
