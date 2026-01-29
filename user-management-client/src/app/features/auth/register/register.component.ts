@@ -8,8 +8,8 @@ import {
   OnInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
 import { MatCardModule } from '@angular/material/card';
@@ -75,7 +75,6 @@ export class RegisterComponent implements OnInit {
 
   private formService: FormService = inject(FormService); // form service
   private store: Store = inject(Store); // store
-  private router: Router = inject(Router); // router
   private emailHelper: EmailHelperService = inject(EmailHelperService); // email helper service
 
   registerForm: FormGroup = this.formService.createRegisterForm() || ({} as FormGroup); // register form group
