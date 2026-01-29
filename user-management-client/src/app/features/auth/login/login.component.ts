@@ -60,8 +60,6 @@ export class LoginComponent {
   loginForm: FormGroup = this.formService.createLoginForm() || ({} as FormGroup); // login form
   combinedLoading$: Observable<boolean> = this.formService.getCombinedLoading$() || of(false); // combined loading observable
 
- 
-
   // on submit form
   onSubmit(): void {
     if (!this.formService.validateForm(this.loginForm)) return; // if form is invalid, return
@@ -76,7 +74,7 @@ export class LoginComponent {
     }
 
     this.store.dispatch(LoadingActions.showLoading()); // show loading
-    const defaultRememberMe: boolean = false; // default remember me
+    const defaultRememberMe: boolean = false; // default remember me is false
     this.store.dispatch(
       AuthActions.login({
         credentials: { loginID, password }, // set credentials
@@ -85,11 +83,14 @@ export class LoginComponent {
     );
   }
 
+  // Navigate with email to forgot password or register page
   navigateWithEmail(event: Event, route: string): void {
     event.preventDefault();
-    const email: string =
-      (this.loginForm.get(this.formControls.LOGIN_ID)?.value as string) || '';
+    // Get email from login form
+    const email: string = (this.loginForm.get(this.formControls.LOGIN_ID)?.value as string) || '';
+    // Set temporary email from email helper (Login page) if email is not empty and navigate to route
     if (email) this.emailHelper.setTemporaryEmail(email);
+    // Navigate to route (Forgot password or Register page)
     this.router.navigate([route]);
   }
 }
