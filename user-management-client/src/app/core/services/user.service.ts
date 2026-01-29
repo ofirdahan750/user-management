@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
@@ -7,33 +7,47 @@ import { API_ENDPOINTS } from '@core/constants/api-endpoints.constants';
 import { ERROR_MESSAGES } from '@core/constants/error-messages.constants';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserService {
-  
-  constructor(private http: HttpClient) {}
+  private http: HttpClient = inject(HttpClient); // http client service
 
   getCurrentUser(): Observable<UserProfile> {
-    return this.http.get<{ statusCode: number; statusMessage?: string; data: UserProfile }>(`${API_ENDPOINTS.BASE_URL}${API_ENDPOINTS.USER.PROFILE}`)
+    return this.http
+      .get<{
+        statusCode: number;
+        statusMessage?: string;
+        data: UserProfile;
+      }>(`${API_ENDPOINTS.BASE_URL}${API_ENDPOINTS.USER.PROFILE}`)
       .pipe(
-        map(response => response.data),
-        catchError(this.handleError)
+        map((response) => response.data),
+        catchError(this.handleError),
       );
   }
 
   updateUser(profile: Partial<UserProfile>): Observable<UserProfile> {
-    return this.http.put<{ statusCode: number; statusMessage?: string; data: UserProfile }>(`${API_ENDPOINTS.BASE_URL}${API_ENDPOINTS.USER.UPDATE_PROFILE}`, profile)
+    return this.http
+      .put<{
+        statusCode: number;
+        statusMessage?: string;
+        data: UserProfile;
+      }>(`${API_ENDPOINTS.BASE_URL}${API_ENDPOINTS.USER.UPDATE_PROFILE}`, profile)
       .pipe(
-        map(response => response.data),
-        catchError(this.handleError)
+        map((response) => response.data),
+        catchError(this.handleError),
       );
   }
 
   getUserById(uid: string): Observable<UserProfile> {
-    return this.http.get<{ statusCode: number; statusMessage?: string; data: UserProfile }>(`${API_ENDPOINTS.BASE_URL}${API_ENDPOINTS.USER.PROFILE}/${uid}`)
+    return this.http
+      .get<{
+        statusCode: number;
+        statusMessage?: string;
+        data: UserProfile;
+      }>(`${API_ENDPOINTS.BASE_URL}${API_ENDPOINTS.USER.PROFILE}/${uid}`)
       .pipe(
-        map(response => response.data),
-        catchError(this.handleError)
+        map((response) => response.data),
+        catchError(this.handleError),
       );
   }
 

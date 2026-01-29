@@ -1,4 +1,4 @@
-import { Injectable, signal, effect } from '@angular/core';
+import { Injectable, inject, signal, effect } from '@angular/core';
 import { Theme } from '@core/enums/theme.enum';
 import { StorageKeys } from '@core/enums/storage-keys.enum';
 import { LocalStorageService } from '@core/services/local-storage.service';
@@ -7,16 +7,16 @@ import { LocalStorageService } from '@core/services/local-storage.service';
   providedIn: 'root'
 })
 export class ThemeService {
+  private localStorageService = inject(LocalStorageService);
   private readonly themeKey = StorageKeys.THEME;
   private readonly defaultTheme = Theme.LIGHT;
-  
+
   readonly currentTheme = signal<Theme>(Theme.LIGHT);
 
-  constructor(private localStorageService: LocalStorageService) {
-    // Initialize theme after service is ready
+  constructor() {
     const initialTheme = this.getInitialTheme();
     this.currentTheme.set(initialTheme);
-    
+
     effect(() => {
       const theme = this.currentTheme();
       this.applyTheme(theme);

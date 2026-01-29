@@ -1,4 +1,4 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, BehaviorSubject, throwError, of } from 'rxjs';
 import { map, catchError, tap, switchMap } from 'rxjs/operators';
@@ -26,11 +26,11 @@ export class AuthService {
   currentUser = signal<UserProfile | null>(null);
   isAuthenticated = computed(() => this.currentUser() !== null);
 
-  constructor(
-    private http: HttpClient,
-    private tokenStorage: TokenStorageService,
-    private localStorage: LocalStorageService
-  ) {
+  private http = inject(HttpClient);
+  private tokenStorage = inject(TokenStorageService);
+  private localStorage = inject(LocalStorageService);
+
+  constructor() {
     this.initializeAuth();
   }
 
