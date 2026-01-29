@@ -1,9 +1,10 @@
-import { Component, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ViewEncapsulation, ChangeDetectionStrategy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { selectIsLoading } from '@core/store/loading/loading.selectors';
+import { AppState } from '@core/store';
 
 @Component({
   selector: 'app-loading-spinner',
@@ -12,12 +13,10 @@ import { selectIsLoading } from '@core/store/loading/loading.selectors';
   templateUrl: './loading-spinner.component.html',
   styleUrl: './loading-spinner.component.scss',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoadingSpinnerComponent {
-  isLoading$: Observable<boolean>;
-
-  constructor(private store: Store) {
-    this.isLoading$ = this.store.select(selectIsLoading);
-  }
+  private store: Store<AppState> = inject(Store);
+  
+  isLoading$: Observable<boolean> = this.store.select(selectIsLoading); // isLoading state
 }
