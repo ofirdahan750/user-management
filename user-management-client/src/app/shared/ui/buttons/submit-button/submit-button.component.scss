@@ -3,21 +3,12 @@
   width: 100%;
   
   &__spinner {
-    animation: submit-button-spin 1s linear infinite;
+    animation: spin 1s linear infinite;
   }
 
   &--raised,
   &--flat,
   &--stroked {
     width: 100%;
-  }
-}
-
-@keyframes submit-button-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
   }
 }

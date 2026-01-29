@@ -1,49 +1,38 @@
-// Angular Core
-import { Component, ViewEncapsulation, ChangeDetectionStrategy, inject, signal, ChangeDetectorRef, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  ViewEncapsulation,
+  ChangeDetectionStrategy,
+  inject,
+  signal,
+  ChangeDetectorRef,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-
-// Angular Material
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-
-// RxJS
 import { interval, Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-
-// NgRx
 import { Store } from '@ngrx/store';
 import { Actions, ofType } from '@ngrx/effects';
 import { selectUser } from '@core/store/auth/auth.selectors';
-import { UserProfile } from '@core/models/user.model';
-
-// Services
 import { FormService } from '@core/services/form.service';
 import { ToastNotificationService } from '@core/services/toast-notification.service';
 import { EmailHelperService } from '@core/services/email-helper.service';
-
-// Enums
 import { Routes } from '@core/enums/routes.enum';
 import { Timeouts } from '@core/enums/timeouts.enum';
 import { MaterialColor } from '@core/enums/material-color.enum';
-
-// Types
 import { ForgotPasswordFormValue } from '@core/types/form.types';
-
-// Constants
 import { LABELS } from '@core/constants/labels.constants';
 import { MESSAGES } from '@core/constants/messages.constants';
 import { ICONS } from '@core/constants/icons.constants';
-
-// Components
 import { SubmitButtonComponent } from '@shared/ui/buttons/submit-button/submit-button.component';
 import { BackLinkComponent } from '@shared/ui/links/back-link/back-link.component';
-
-// Actions
 import * as AuthActions from '@core/store/auth/auth.actions';
 
 @Component({
@@ -59,12 +48,12 @@ import * as AuthActions from '@core/store/auth/auth.actions';
     MatIconModule,
     MatButtonModule,
     SubmitButtonComponent,
-    BackLinkComponent
+    BackLinkComponent,
   ],
   templateUrl: './forgot-password.component.html',
   styleUrl: './forgot-password.component.scss',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ForgotPasswordComponent implements OnInit, OnDestroy {
   private formService = inject(FormService);
@@ -81,7 +70,7 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
   resetToken = signal<string>('');
   countdown = signal<number>(0);
   canResend = signal<boolean>(false);
-  
+
   private countdownSubscription: Subscription | '' = '';
 
   readonly labels = LABELS;
@@ -89,12 +78,12 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
   readonly MESSAGES = MESSAGES;
   readonly icons = ICONS;
   readonly MaterialColor = MaterialColor;
-  
+
   // Getters for Material button colors (Material buttons require string literals)
   get primaryColor(): string {
     return MaterialColor.PRIMARY;
   }
-  
+
   get accentColor(): string {
     return MaterialColor.ACCENT;
   }
@@ -106,32 +95,35 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Pre-fill email from temporary storage (one-time use, cleared automatically)
     let email = this.emailHelper.getAndClearTemporaryEmail();
-    
+
     // If no email from temporary storage, try to get from current user if authenticated
     if (!email) {
-      this.store.select(selectUser).pipe(take(1)).subscribe(user => {
-        if (user && user.email) {
-          email = user.email;
-          this.forgotPasswordForm.patchValue({ email });
-          this.cdr.markForCheck();
-        }
-      });
+      this.store
+        .select(selectUser)
+        .pipe(take(1))
+        .subscribe((user) => {
+          if (user && user.email) {
+            email = user.email;
+            this.forgotPasswordForm.patchValue({ email });
+            this.cdr.markForCheck();
+          }
+        });
     } else {
       this.forgotPasswordForm.patchValue({ email });
       this.cdr.markForCheck();
     }
   }
-  
+
   // Getters for form controls to avoid optional chaining in template
   get emailControl(): FormControl {
     return this.forgotPasswordForm.get('email') as FormControl;
   }
-  
+
   get hasEmailRequiredError(): boolean {
     const control = this.emailControl;
     return control.hasError('required') && control.touched;
   }
-  
+
   get hasEmailFormatError(): boolean {
     const control = this.emailControl;
     return control.hasError('email') && control.touched;
@@ -151,36 +143,40 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
     const formValue = this.forgotPasswordForm.value as ForgotPasswordFormValue;
     this.isLoading.set(true);
     this.store.dispatch(AuthActions.requestPasswordReset({ email: formValue.email }));
-    
+
     // Listen for the result
-    this.actions$.pipe(
-      ofType(AuthActions.requestPasswordResetSuccess, AuthActions.requestPasswordResetFailure),
-      take(1)
-    ).subscribe((action) => {
-      if (action.type === '[Auth] Request Password Reset Success') {
-        const successAction = action as ReturnType<typeof AuthActions.requestPasswordResetSuccess>;
-        // Only show success screen if we have a resetToken
-        if (successAction.resetToken && successAction.resetToken !== '') {
-          this.resetToken.set(successAction.resetToken);
-          this.isSuccess.set(true);
-          this.isLoading.set(false);
-          this.startCountdown();
-          this.cdr.markForCheck();
+    this.actions$
+      .pipe(
+        ofType(AuthActions.requestPasswordResetSuccess, AuthActions.requestPasswordResetFailure),
+        take(1),
+      )
+      .subscribe((action) => {
+        if (action.type === '[Auth] Request Password Reset Success') {
+          const successAction = action as ReturnType<
+            typeof AuthActions.requestPasswordResetSuccess
+          >;
+          // Only show success screen if we have a resetToken
+          if (successAction.resetToken && successAction.resetToken !== '') {
+            this.resetToken.set(successAction.resetToken);
+            this.isSuccess.set(true);
+            this.isLoading.set(false);
+            this.startCountdown();
+            this.cdr.markForCheck();
+          } else {
+            // No resetToken means email doesn't exist - treat as failure
+            this.isSuccess.set(false);
+            this.isLoading.set(false);
+            this.toastService.showError(MESSAGES.USER_NOT_FOUND);
+            this.cdr.markForCheck();
+          }
         } else {
-          // No resetToken means email doesn't exist - treat as failure
+          // Handle failure - keep form visible and show error
           this.isSuccess.set(false);
           this.isLoading.set(false);
-          this.toastService.showError(MESSAGES.USER_NOT_FOUND);
+          // Error toast is already shown by the effect
           this.cdr.markForCheck();
         }
-      } else {
-        // Handle failure - keep form visible and show error
-        this.isSuccess.set(false);
-        this.isLoading.set(false);
-        // Error toast is already shown by the effect
-        this.cdr.markForCheck();
-      }
-    });
+      });
   }
 
   startCountdown(): void {
@@ -218,7 +214,7 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
     if (token) {
       // Use Router to create proper URL with query params
       const urlTree = this.router.createUrlTree([Routes.RESET_PASSWORD], {
-        queryParams: { token }
+        queryParams: { token },
       });
       return this.router.serializeUrl(urlTree);
     }
@@ -229,27 +225,30 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
     const token = this.resetToken();
     if (token && navigator.clipboard) {
       const urlTree = this.router.createUrlTree([Routes.RESET_PASSWORD], {
-        queryParams: { token }
+        queryParams: { token },
       });
       const fullUrl = `${window.location.origin}${this.router.serializeUrl(urlTree)}`;
-      navigator.clipboard.writeText(fullUrl).then(() => {
-        this.toastService.showSuccess(MESSAGES.RESET_LINK_COPIED);
-      }).catch(() => {
-        // Fallback if clipboard API fails
-        const textArea = document.createElement('textarea');
-        textArea.value = fullUrl;
-        textArea.style.position = 'fixed';
-        textArea.style.opacity = '0';
-        document.body.appendChild(textArea);
-        textArea.select();
-        try {
-          document.execCommand('copy');
+      navigator.clipboard
+        .writeText(fullUrl)
+        .then(() => {
           this.toastService.showSuccess(MESSAGES.RESET_LINK_COPIED);
-        } catch {
-          // Ignore errors
-        }
-        document.body.removeChild(textArea);
-      });
+        })
+        .catch(() => {
+          // Fallback if clipboard API fails
+          const textArea = document.createElement('textarea');
+          textArea.value = fullUrl;
+          textArea.style.position = 'fixed';
+          textArea.style.opacity = '0';
+          document.body.appendChild(textArea);
+          textArea.select();
+          try {
+            document.execCommand('copy');
+            this.toastService.showSuccess(MESSAGES.RESET_LINK_COPIED);
+          } catch {
+            // Ignore errors
+          }
+          document.body.removeChild(textArea);
+        });
     }
   }
 
@@ -257,7 +256,7 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
     const token = this.resetToken();
     if (token) {
       this.router.navigate([Routes.RESET_PASSWORD], {
-        queryParams: { token }
+        queryParams: { token },
       });
     }
   }
