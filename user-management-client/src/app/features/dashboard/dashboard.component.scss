@@ -1,5 +1,6 @@
 @use '../../../assets/styles/functions/rem' as *;
 @use '../../../assets/styles/mixins/flexbox' as *;
+@use '../../../assets/styles/mixins/responsive' as *;
 
 .dashboard {
   min-height: 100vh;
@@ -17,11 +18,11 @@
     color: var(--color-text-primary);
     margin-bottom: 1.5rem;
      
-    @media (min-width: 480px) {
+    @include respond-to(sm) {
       font-size: rem(32);
     }
     
-    @media (min-width: 768px) {
+    @include respond-to(md) {
       font-size: rem(40);
       margin-bottom: 2rem;
     }
@@ -32,7 +33,7 @@
     grid-template-columns: 1fr;
     gap: 1.5rem;
 
-    @media (min-width: 48rem) {
+    @include respond-to(md) {
       grid-template-columns: repeat(2, 1fr);
     }
   }
@@ -42,7 +43,7 @@
     border-radius: 1rem;
     box-shadow: var(--shadow-elevation-2);
     
-    @media (min-width: 480px) {
+    @include respond-to(sm) {
       padding: 1.5rem;
     }
   }
@@ -81,7 +82,7 @@
     @include flex-column;
     gap: 0.25rem;
 
-    @media (min-width: 48rem) {
+    @include respond-to(md) {
       flex-direction: row;
       justify-content: space-between;
     }

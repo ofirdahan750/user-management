@@ -1,5 +1,6 @@
 @use '../../../../assets/styles/functions/rem' as *;
 @use '../../../../assets/styles/mixins/flexbox' as *;
+@use '../../../../assets/styles/mixins/responsive' as *;
 
 app-footer {
   .footer {
@@ -17,7 +18,7 @@ app-footer {
       align-items: center;
       gap: 1rem;
 
-      @media (min-width: 48rem) {
+      @include respond-to(md) {
         flex-direction: row;
         justify-content: space-between;
         padding: 0 2rem;
@@ -30,7 +31,7 @@ app-footer {
       color: var(--color-text-secondary);
       text-align: center;
 
-      @media (min-width: 48rem) {
+      @include respond-to(md) {
         text-align: left;
       }
     }

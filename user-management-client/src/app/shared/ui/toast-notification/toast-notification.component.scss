@@ -1,5 +1,6 @@
 @use '../../../../assets/styles/functions/rem' as *;
 @use '../../../../assets/styles/mixins/flexbox' as *;
+@use '../../../../assets/styles/mixins/responsive' as *;
 
 app-toast-notification {
   .toast-notification {
@@ -14,7 +15,7 @@ app-toast-notification {
       max-width: 25rem;
       margin-left: auto;
 
-      @media (min-width: 480px) {
+      @include respond-to(sm) {
         top: 1rem;
         right: 1rem;
         left: auto;
@@ -33,7 +34,7 @@ app-toast-notification {
       min-width: auto;
       width: 100%;
 
-      @media (min-width: 480px) {
+      @include respond-to(sm) {
         padding: 1rem 1.25rem;
         min-width: 20rem;
         width: auto;
@@ -73,7 +74,7 @@ app-toast-notification {
       word-wrap: break-word;
       overflow-wrap: break-word;
 
-      @media (min-width: 480px) {
+      @include respond-to(sm) {
         font-size: rem(14);
         line-height: 1.5;
       }
