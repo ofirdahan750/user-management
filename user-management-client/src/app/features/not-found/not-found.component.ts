@@ -35,11 +35,7 @@ export class NotFoundComponent {
   private router:Router = inject(Router); // router service
 
 
-  navigateToHome(): void { 
-    this.router.navigate([Routes.DASHBOARD]);
-  }
-
-  navigateToLogin(): void {
-    this.router.navigate([Routes.LOGIN]);
+  navigateTo(route: string): void {
+    this.router.navigate([route]);
   }
 }

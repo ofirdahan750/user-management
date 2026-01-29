@@ -13,7 +13,7 @@
         <button 
           mat-raised-button 
           [color]="MaterialColor.PRIMARY" 
-          (click)="navigateToHome()"
+          (click)="navigateTo(routes.DASHBOARD)"
           class="not-found__button">
           <mat-icon>{{ icons.ARROW_FORWARD }}</mat-icon>
           {{ labels.GO_TO_DASHBOARD }}
@@ -22,7 +22,7 @@
         <button 
           mat-raised-button 
           [color]="MaterialColor.ACCENT" 
-          (click)="navigateToLogin()"
+          (click)="navigateTo(routes.LOGIN)"
           class="not-found__button">
           <mat-icon>{{ icons.ARROW_BACK }}</mat-icon>
           {{ labels.BACK_TO_LOGIN }}
