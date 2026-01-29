@@ -24,13 +24,18 @@ export class ToastNotificationComponent {
   toastNotificationService: ToastNotificationService = inject(ToastNotificationService);
 
   getIconForType(type: ToastType): string {
+    // get icon for type
     switch (type) {
+      // success icon
       case ToastType.SUCCESS:
         return this.icons.CHECK_CIRCLE;
+      // error icon
       case ToastType.ERROR:
         return this.icons.ERROR;
+      // warning icon
       case ToastType.WARNING:
         return this.icons.WARNING;
+      // info icon
       case ToastType.INFO:
         return this.icons.INFO;
       default:

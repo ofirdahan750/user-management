@@ -21,18 +21,22 @@ export class ToastNotificationService {
   messages = signal<ToastMessage[]>([]); // messages to display
 
   showSuccess(message: string, duration?: number): void {
-    this.addMessage(message, ToastType.SUCCESS, duration); // add success message
+    // add success message
+    this.addMessage(message, ToastType.SUCCESS, duration);
   }
 
   showError(message: string, duration?: number): void {
-    this.addMessage(message, ToastType.ERROR, duration); // add error message
+    // add error message
+    this.addMessage(message, ToastType.ERROR, duration);
   }
 
   showInfo(message: string, duration?: number, actionUrl?: string, actionLabel?: string): void {
-    this.addMessage(message, ToastType.INFO, duration, actionUrl, actionLabel); // add info message
+    // add info message
+    this.addMessage(message, ToastType.INFO, duration, actionUrl, actionLabel);
   }
 
   showWarning(message: string, duration?: number): void {
+    // add warning message
     this.addMessage(message, ToastType.WARNING, duration);
   }
 
