@@ -11,16 +11,16 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
-      // Skip toast notification for auth endpoints - they are handled by effects
+      // Skip toast for auth endpoints (handled by effects) and change-password (handled by component)
       const url = req.url.toLowerCase();
-      const isAuthEndpoint = url.includes('/auth/login') || 
-                             url.includes('/auth/register') ||
-                             url.includes('/auth/verify') ||
-                             url.includes('/auth/reset-password') ||
-                             url.includes('/auth/forgot-password');
+      const skipToast = url.includes('/auth/login') || 
+                        url.includes('/auth/register') ||
+                        url.includes('/auth/verify') ||
+                        url.includes('/auth/reset-password') ||
+                        url.includes('/auth/forgot-password') ||
+                        url.includes('/user/change-password');
       
-      // Only show toast for non-auth errors or network errors
-      if (!isAuthEndpoint || error.error instanceof ErrorEvent) {
+      if (!skipToast || error.error instanceof ErrorEvent) {
         let errorMessage: string = MESSAGES.ERROR;
 
         if (error.error instanceof ErrorEvent) {
