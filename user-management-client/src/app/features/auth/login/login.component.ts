@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormGroup, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -46,53 +46,52 @@ import * as LoadingActions from '@core/store/loading/loading.actions';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent {
-  private formService = inject(FormService);
-  private store = inject(Store);
-  private router = inject(Router);
-  private route = inject(ActivatedRoute);
-  private localStorage = inject(LocalStorageService);
-  private emailHelper = inject(EmailHelperService);
-
-  loginForm: FormGroup;
-  combinedLoading$: Observable<boolean>;
-
   readonly labels = LABELS;
   readonly routes = Routes;
 
+  private formService: FormService = inject(FormService); // form service
+  private store: Store = inject(Store); // store for dispatching actions
+  private router: Router = inject(Router); // router for navigation
+  private route: ActivatedRoute = inject(ActivatedRoute); // route
+  private localStorage: LocalStorageService = inject(LocalStorageService); // local storage service
+  private emailHelper: EmailHelperService = inject(EmailHelperService); // email helper service
+
+  loginForm: FormGroup = this.formService.createLoginForm() || ({} as FormGroup); // login form
+  combinedLoading$: Observable<boolean> = this.formService.getCombinedLoading$() || of(false); // combined loading observable
+
   get loginIDControl(): FormControl {
-    return this.loginForm.get('loginID') as FormControl;
+    // get login ID control
+    return this.loginForm.get('loginID') as FormControl; // login ID control
   }
 
   get passwordControl(): FormControl {
-    return this.loginForm.get('password') as FormControl;
+    // get password control
+    return this.loginForm.get('password') as FormControl; // password control
   }
 
-  constructor() {
-    this.loginForm = this.formService.createLoginForm();
-    this.combinedLoading$ = this.formService.getCombinedLoading$();
-  }
-
+  // on submit form
   onSubmit(): void {
-    if (!this.formService.validateForm(this.loginForm)) {
-      return;
-    }
+    if (!this.formService.validateForm(this.loginForm)) return; // if form is invalid, return
 
-    const { loginID, password, rememberMe } = this.loginForm.value as LoginFormValue;
+    const { loginID, password, rememberMe } = this.loginForm.value as LoginFormValue; // get form values
 
-    if (rememberMe) {
-      this.localStorage.setItem(StorageKeys.REMEMBER_ME, loginID);
+    if (rememberMe) { // if remember me is checked, set remember me in local storage
+      this.localStorage.setItem(StorageKeys.REMEMBER_ME, loginID); // set remember me in local storage
     } else {
-      this.localStorage.removeItem(StorageKeys.REMEMBER_ME);
+      this.localStorage.removeItem(StorageKeys.REMEMBER_ME); // remove remember me from local storage
     }
 
-    this.store.dispatch(LoadingActions.showLoading());
-    this.store.dispatch(AuthActions.login({ 
-      credentials: { loginID, password },
-      rememberMe: rememberMe || false
-    }));
+    this.store.dispatch(LoadingActions.showLoading()); // show loading
+    this.store.dispatch(
+      AuthActions.login({
+        credentials: { loginID, password },
+        rememberMe: rememberMe || false,
+      }),
+    );
 
     const returnUrlParam = this.route.snapshot.queryParams['returnUrl'];
-    const returnUrl = (typeof returnUrlParam === 'string' && returnUrlParam) ? returnUrlParam : Routes.DASHBOARD;
+    const returnUrl =
+      typeof returnUrlParam === 'string' && returnUrlParam ? returnUrlParam : Routes.DASHBOARD;
     if (returnUrl !== Routes.DASHBOARD) {
       // Store return URL for navigation after login success
     }
