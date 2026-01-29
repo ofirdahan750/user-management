@@ -9,23 +9,18 @@ import { MaterialButtonColor, ButtonType } from '@core/types/button.types';
 @Component({
   selector: 'app-icon-button',
   standalone: true,
-  imports: [
-    CommonModule,
-    MatButtonModule,
-    MatIconModule,
-    MatTooltipModule
-  ],
+  imports: [CommonModule, MatButtonModule, MatIconModule, MatTooltipModule],
   templateUrl: './icon-button.component.html',
   styleUrl: './icon-button.component.scss',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IconButtonComponent {
-  @Input() icon: string = '';
-  @Input() tooltip: string = '';
-  @Input() ariaLabel: string = '';
-  @Input() disabled: boolean = false;
-  @Input() color: MaterialButtonColor = MaterialColor.PRIMARY;
-  @Input() type: ButtonType = 'button';
-  @Input() clickHandler?: () => void;
+  @Input() icon: string = ''; // icon of the button
+  @Input() tooltip: string = ''; // tooltip of the button
+  @Input() ariaLabel: string = ''; // aria label of the button
+  @Input() disabled: boolean = false; // disabled state of the button
+  @Input() color: MaterialButtonColor = MaterialColor.PRIMARY; // color of the button
+  @Input() type: ButtonType = 'button'; // type of the button
+  @Input() clickHandler?: () => void; // click handler of the button
 }
