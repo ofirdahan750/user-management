@@ -118,6 +118,7 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
     return (control?.hasError('required') && control?.touched) ?? false; // return true if email is required and touched
   }
 
+  // Getter for email format error to avoid optional chaining in template
   get hasEmailFormatError(): boolean {
     const control = this.forgotPasswordForm.get(FORGOT_PASSWORD_FORM_CONTROLS.EMAIL); // get email control from form
     return (control?.hasError('email') && control?.touched) ?? false; // return true if email is invalid and touched
@@ -127,8 +128,8 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
     this.countdownSubscription.unsubscribe(); // unsubscribe from countdown subscription
   }
 
+  // On submit forgot password form
   onSubmit(): void {
-    //On submit forgot password form
     if (!this.formService.validateForm(this.forgotPasswordForm)) return; // if form is invalid, return
     const formValue = this.forgotPasswordForm.value as ForgotPasswordFormValue; // get form values
     this.isLoading.set(true); // set is loading to true
