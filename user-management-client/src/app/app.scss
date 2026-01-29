@@ -1,6 +1,7 @@
+@use '../assets/styles/mixins/flexbox' as *;
+
 .app {
-  display: flex;
-  flex-direction: column;
+  @include flex-column;
   min-height: 100vh;
 
   &__main {

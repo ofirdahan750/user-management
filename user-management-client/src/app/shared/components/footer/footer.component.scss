@@ -1,4 +1,5 @@
 @use '../../../../assets/styles/functions/rem' as *;
+@use '../../../../assets/styles/mixins/flexbox' as *;
 
 app-footer {
   .footer {
@@ -12,8 +13,7 @@ app-footer {
       max-width: 75rem;
       margin: 0 auto;
       padding: 0 1rem;
-      display: flex;
-      flex-direction: column;
+      @include flex-column;
       align-items: center;
       gap: 1rem;
 

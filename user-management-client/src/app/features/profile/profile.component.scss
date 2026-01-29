@@ -1,4 +1,5 @@
 @use '../../../assets/styles/functions/rem' as *;
+@use '../../../assets/styles/mixins/flexbox' as *;
 
 .profile {
   min-height: 100vh;
@@ -56,8 +57,7 @@
   }
 
   &__form {
-    display: flex;
-    flex-direction: column;
+    @include flex-column;
     gap: 1rem;
     
     @media (min-width: 480px) {
@@ -95,8 +95,7 @@
   }
 
   &__info {
-    display: flex;
-    flex-direction: column;
+    @include flex-column;
     gap: 0.75rem;
     padding: 1rem;
     background-color: var(--color-background-secondary);
@@ -110,8 +109,7 @@
   }
 
   &__info-item {
-    display: flex;
-    flex-direction: column;
+    @include flex-column;
     gap: 0.5rem;
 
     @media (min-width: 768px) {
@@ -210,8 +208,7 @@
   }
 
   &__actions {
-    display: flex;
-    flex-direction: column;
+    @include flex-column;
     align-items: center;
     gap: 0.75rem;
     margin-top: 1.5rem;

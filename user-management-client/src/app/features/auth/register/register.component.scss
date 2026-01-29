@@ -1,10 +1,9 @@
 @use '../../../../assets/styles/functions/rem' as *;
+@use '../../../../assets/styles/mixins/flexbox' as *;
 
 .register {
   min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  @include flex-center;
   padding: 1rem;
   background: var(--color-background-gradient);
 
@@ -48,8 +47,7 @@
   }
 
   &__form {
-    display: flex;
-    flex-direction: column;
+    @include flex-column;
     gap: 1.5rem;
   }
 
@@ -93,8 +91,7 @@
 
   &__terms-wrapper {
     height: 3.5rem;
-    display: flex;
-    flex-direction: column;
+    @include flex-column;
     justify-content: flex-start;
   }
 

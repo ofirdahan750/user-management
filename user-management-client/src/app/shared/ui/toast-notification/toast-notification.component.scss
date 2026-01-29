@@ -1,4 +1,5 @@
 @use '../../../../assets/styles/functions/rem' as *;
+@use '../../../../assets/styles/mixins/flexbox' as *;
 
 app-toast-notification {
   .toast-notification {
@@ -8,8 +9,7 @@ app-toast-notification {
       right: 0.5rem;
       left: 0.5rem;
       z-index: var(--z-index-toast);
-      display: flex;
-      flex-direction: column;
+      @include flex-column;
       gap: 0.75rem;
       max-width: 25rem;
       margin-left: auto;
@@ -106,9 +106,7 @@ app-toast-notification {
       color: inherit;
       cursor: pointer;
       padding: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      @include flex-center;
       opacity: 0.8;
       transition: opacity 0.2s;
 

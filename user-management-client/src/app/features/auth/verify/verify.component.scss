@@ -1,10 +1,9 @@
 @use '../../../../assets/styles/functions/rem' as *;
+@use '../../../../assets/styles/mixins/flexbox' as *;
 
 .verify {
   min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  @include flex-center;
   padding: 1rem;
   background: var(--color-background-gradient);
 
@@ -20,8 +19,7 @@
   }
 
   &__content {
-    display: flex;
-    flex-direction: column;
+    @include flex-column;
     align-items: center;
     text-align: center;
     gap: 1.5rem;
@@ -130,9 +128,7 @@
     .verify__copy-button {
       flex: 1;
       min-width: 10rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      @include flex-center;
       gap: 0.5rem;
     }
   }
