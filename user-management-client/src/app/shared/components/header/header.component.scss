@@ -1,6 +1,5 @@
-app-header {
-  // Mobile-first approach
-  .header {
+// Mobile-first approach
+.header {
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -391,12 +390,11 @@ app-header {
       color: inherit;
     }
   }
-  }
+}
 
-  // Material Menu adjustments for mobile
-  ::ng-deep .mat-mdc-menu-panel {
-    @media (max-width: 767px) {
-      max-width: calc(100vw - 2rem);
-    }
+// Material Menu adjustments for mobile (encapsulation: None, so selector applies globally)
+.mat-mdc-menu-panel {
+  @media (max-width: 767px) {
+    max-width: calc(100vw - 2rem);
   }
 }

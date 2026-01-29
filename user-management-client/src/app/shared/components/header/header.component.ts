@@ -89,8 +89,8 @@ export class HeaderComponent {
     this.mobileMenuOpen.update((value) => !value);
   }
 
-  // close the mobile menu
   closeMobileMenu(): void {
+    // close the mobile menu
     this.mobileMenuOpen.set(false);
   }
 
