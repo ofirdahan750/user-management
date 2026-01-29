@@ -25,16 +25,17 @@ import { ICONS } from '@core/constants/icons.constants';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NotFoundComponent {
-  private router = inject(Router);
-  
+export class NotFoundComponent {  
   readonly labels = LABELS;
   readonly messages = MESSAGES;
   readonly icons = ICONS;
   readonly routes = Routes;
   readonly MaterialColor = MaterialColor;
 
-  navigateToHome(): void {
+  private router:Router = inject(Router); // router service
+
+
+  navigateToHome(): void { 
     this.router.navigate([Routes.DASHBOARD]);
   }
 
