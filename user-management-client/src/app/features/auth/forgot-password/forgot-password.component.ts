@@ -7,6 +7,7 @@ import {
   ChangeDetectorRef,
   OnDestroy,
   OnInit,
+  WritableSignal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, ReactiveFormsModule, FormControl } from '@angular/forms';
@@ -56,41 +57,29 @@ import * as AuthActions from '@core/store/auth/auth.actions';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ForgotPasswordComponent implements OnInit, OnDestroy {
-  private formService = inject(FormService);
-  private router = inject(Router);
-  private store = inject(Store);
-  private actions$ = inject(Actions);
-  private toastService = inject(ToastNotificationService);
-  private emailHelper = inject(EmailHelperService);
-  private cdr = inject(ChangeDetectorRef);
-
-  forgotPasswordForm: FormGroup;
-  isLoading = signal<boolean>(false);
-  isSuccess = signal<boolean>(false);
-  resetToken = signal<string>('');
-  countdown = signal<number>(0);
-  canResend = signal<boolean>(false);
-
-  private countdownSubscription: Subscription | '' = '';
-
   readonly labels = LABELS;
   readonly routes = Routes;
   readonly MESSAGES = MESSAGES;
   readonly icons = ICONS;
   readonly MaterialColor = MaterialColor;
 
-  // Getters for Material button colors (Material buttons require string literals)
-  get primaryColor(): string {
-    return MaterialColor.PRIMARY;
-  }
+  private formService: FormService = inject(FormService); // form service
+  private router: Router = inject(Router); // router service
+  private store: Store = inject(Store); // store service
+  private actions$: Actions = inject(Actions); // actions service
+  private toastService: ToastNotificationService = inject(ToastNotificationService); // toast notification service
+  private emailHelper: EmailHelperService = inject(EmailHelperService); // email helper service
+  private cdr: ChangeDetectorRef = inject(ChangeDetectorRef); // change detector service
 
-  get accentColor(): string {
-    return MaterialColor.ACCENT;
-  }
+  forgotPasswordForm: FormGroup = this.formService.createForgotPasswordForm() || ({} as FormGroup); // forgot password form
 
-  constructor() {
-    this.forgotPasswordForm = this.formService.createForgotPasswordForm();
-  }
+  isLoading: WritableSignal<boolean> = signal(false);
+  isSuccess = signal<boolean>(false);
+  resetToken = signal<string>('');
+  countdown = signal<number>(0);
+  canResend = signal<boolean>(false);
+
+  private countdownSubscription: Subscription = new Subscription(); // countdown subscription
 
   ngOnInit(): void {
     // Pre-fill email from temporary storage (one-time use, cleared automatically)
@@ -130,9 +119,7 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.countdownSubscription !== '') {
-      this.countdownSubscription.unsubscribe();
-    }
+    this.countdownSubscription.unsubscribe();
   }
 
   onSubmit(): void {
@@ -181,9 +168,7 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
 
   startCountdown(): void {
     // Stop existing countdown if any
-    if (this.countdownSubscription !== '') {
-      this.countdownSubscription.unsubscribe();
-    }
+    this.countdownSubscription.unsubscribe();
 
     this.canResend.set(false);
     this.countdown.set(Timeouts.RESEND_TIMEOUT_SECONDS);
@@ -195,9 +180,7 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       } else {
         this.canResend.set(true);
-        if (this.countdownSubscription !== '') {
-          this.countdownSubscription.unsubscribe();
-        }
+        this.countdownSubscription.unsubscribe();
         this.cdr.markForCheck();
       }
     });
