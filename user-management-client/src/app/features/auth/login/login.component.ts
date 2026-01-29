@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation, ChangeDetectionStrategy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, ReactiveFormsModule, FormControl } from '@angular/forms';
-import { Router, ActivatedRoute, RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
 import { MatCardModule } from '@angular/material/card';
@@ -52,7 +52,6 @@ export class LoginComponent {
   private formService: FormService = inject(FormService); // form service
   private store: Store = inject(Store); // store for dispatching actions
   private router: Router = inject(Router); // router for navigation
-  private route: ActivatedRoute = inject(ActivatedRoute); // route
   private localStorage: LocalStorageService = inject(LocalStorageService); // local storage service
   private emailHelper: EmailHelperService = inject(EmailHelperService); // email helper service
 
@@ -75,47 +74,28 @@ export class LoginComponent {
 
     const { loginID, password, rememberMe } = this.loginForm.value as LoginFormValue; // get form values
 
-    if (rememberMe) { // if remember me is checked, set remember me in local storage
+    if (rememberMe) {
+      // if remember me is checked, set remember me in local storage
       this.localStorage.setItem(StorageKeys.REMEMBER_ME, loginID); // set remember me in local storage
     } else {
       this.localStorage.removeItem(StorageKeys.REMEMBER_ME); // remove remember me from local storage
     }
 
     this.store.dispatch(LoadingActions.showLoading()); // show loading
+    const defaultRememberMe: boolean = false; // default remember me
     this.store.dispatch(
       AuthActions.login({
-        credentials: { loginID, password },
-        rememberMe: rememberMe || false,
+        credentials: { loginID, password }, // set credentials
+        rememberMe: rememberMe || defaultRememberMe, // set remember me
       }),
     );
-
-    const returnUrlParam = this.route.snapshot.queryParams['returnUrl'];
-    const returnUrl =
-      typeof returnUrlParam === 'string' && returnUrlParam ? returnUrlParam : Routes.DASHBOARD;
-    if (returnUrl !== Routes.DASHBOARD) {
-      // Store return URL for navigation after login success
-    }
   }
 
-  navigateToForgotPassword(event?: Event): void {
-    if (event) {
-      event.preventDefault();
-    }
-    const email = this.loginIDControl.value;
-    if (email && typeof email === 'string') {
-      this.emailHelper.setTemporaryEmail(email);
-    }
-    this.router.navigate([Routes.FORGOT_PASSWORD]);
-  }
-
-  navigateToRegister(event?: Event): void {
-    if (event) {
-      event.preventDefault();
-    }
-    const email = this.loginIDControl.value;
-    if (email && typeof email === 'string') {
-      this.emailHelper.setTemporaryEmail(email);
-    }
-    this.router.navigate([Routes.REGISTER]);
+  // navigate with email to forgot password or register page
+  navigateWithEmail(event: Event, route: string): void {
+    event.preventDefault(); // prevent default event of the link
+    const email: string = (this.loginIDControl.value as string) || ''; // get email from login ID control or empty string
+    if (email) this.emailHelper.setTemporaryEmail(email); // set temporary email if email is not empty
+    this.router.navigate([route]); // navigate to route
   }
 }

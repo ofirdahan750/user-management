@@ -27,7 +27,11 @@
             <mat-checkbox formControlName="rememberMe" class="login__remember">
               {{ labels.REMEMBER_ME }}
             </mat-checkbox>
-            <a (click)="navigateToForgotPassword($event)" class="login__forgot-link" style="cursor: pointer;">
+            <a
+              (click)="navigateWithEmail($event, routes.FORGOT_PASSWORD)"
+              class="login__forgot-link"
+              style="cursor: pointer"
+            >
               {{ labels.FORGOT_PASSWORD }}
             </a>
           </div>
@@ -46,7 +50,11 @@
       <mat-card-footer class="login__footer">
         <p class="login__footer-text">
           {{ labels.DONT_HAVE_ACCOUNT }}
-          <a (click)="navigateToRegister($event)" class="login__register-link" style="cursor: pointer;">
+          <a
+            (click)="navigateWithEmail($event, routes.REGISTER)"
+            class="login__register-link"
+            style="cursor: pointer"
+          >
             {{ labels.REGISTER_HERE }}
           </a>
         </p>
