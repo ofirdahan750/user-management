@@ -8,7 +8,7 @@ import {
   OnInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
@@ -100,7 +100,9 @@ export class RegisterComponent implements OnInit {
   }
 
   private setupPasswordStrengthListener(): void {
-    const passwordControl = this.registerForm.get(REGISTER_FORM_CONTROLS.PASSWORD);
+    const passwordControl: FormControl = this.registerForm.get(
+      REGISTER_FORM_CONTROLS.PASSWORD,
+    ) as FormControl;
     if (passwordControl) {
       passwordControl.valueChanges.subscribe((password) => {
         if (password) {
