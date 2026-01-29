@@ -1,8 +1,18 @@
-import { Component, ViewEncapsulation, ChangeDetectionStrategy, computed, inject, signal } from '@angular/core';
+import {
+  Component,
+  ViewEncapsulation,
+  ChangeDetectionStrategy,
+  computed,
+  inject,
+  signal,
+  WritableSignal,
+  Signal,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, of, EMPTY } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -18,7 +28,7 @@ import { UserProfile } from '@core/models/user.model';
 import { LABELS } from '@core/constants/labels.constants';
 import { ARIA_LABELS } from '@core/constants/aria-labels.constants';
 import { ICONS } from '@core/constants/icons.constants';
-import { selectIsAuthenticated, selectUser } from '@core/store/auth/auth.selectors';
+import { selectIsAuthenticated, selectUserProfileList } from '@core/store/auth/auth.selectors';
 import * as AuthActions from '@core/store/auth/auth.actions';
 import { IconButtonComponent } from '@shared/ui/buttons/icon-button/icon-button.component';
 import { LinkButtonComponent } from '@shared/ui/buttons/link-button/link-button.component';
@@ -38,22 +48,23 @@ import { AppState } from '@core/store';
     MatSidenavModule,
     MatDividerModule,
     IconButtonComponent,
-    LinkButtonComponent
+    LinkButtonComponent,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent {
-  private store:Store<AppState> = inject(Store);
-  private themeService:ThemeService = inject(ThemeService);
-  private router:Router = inject(Router);
+  private store: Store<AppState> = inject(Store);
+  private themeService: ThemeService = inject(ThemeService);
 
-  isAuthenticated$: Observable<boolean> = this.store.select(selectIsAuthenticated);
-  currentUser$: Observable<UserProfile | null> = this.store.select(selectUser);
-  currentTheme = computed(() => this.themeService.currentTheme());
-  mobileMenuOpen = signal(false);
+  isAuthenticated$: Observable<boolean> = this.store.select(selectIsAuthenticated); // isAuthenticated state
+  currentUser$: Observable<UserProfile> = this.store
+    .select(selectUserProfileList)
+    .pipe(switchMap((users) => (users.length > 0 ? of(users[0]) : EMPTY))); // current user state
+  currentTheme: Signal<Theme> = computed(() => this.themeService.currentTheme()); // current theme
+  mobileMenuOpen: WritableSignal<boolean> = signal(false); // mobile menu open state
 
   readonly routes = Routes;
   readonly labels = LABELS;
@@ -62,26 +73,30 @@ export class HeaderComponent {
   readonly Theme = Theme;
   readonly MaterialColor = MaterialColor;
 
+  // toggle the theme
   toggleTheme(): void {
-    this.themeService.toggleTheme();
+    this.themeService.toggleTheme(); // toggle the theme and save to local storage
   }
-
+  // get the theme tooltip
   getThemeTooltip(): string {
-    return this.currentTheme() === Theme.LIGHT 
-      ? this.labels.TOOLTIP_SWITCH_TO_DARK_MODE 
-      : this.labels.TOOLTIP_SWITCH_TO_LIGHT_MODE;
+    return this.currentTheme() === Theme.LIGHT
+      ? this.labels.TOOLTIP_SWITCH_TO_DARK_MODE // tooltip for dark mode
+      : this.labels.TOOLTIP_SWITCH_TO_LIGHT_MODE; // tooltip for light mode
   }
 
+  // toggle the mobile menu
   toggleMobileMenu(): void {
-    this.mobileMenuOpen.update(value => !value);
+    this.mobileMenuOpen.update((value) => !value);
   }
 
+  // close the mobile menu
   closeMobileMenu(): void {
     this.mobileMenuOpen.set(false);
   }
 
   logout(): void {
-    this.store.dispatch(AuthActions.logout());
-    this.closeMobileMenu();
+    // logout the user and close the mobile menu
+    this.store.dispatch(AuthActions.logout()); // dispatch the logout action
+    this.closeMobileMenu(); // close the mobile menu
   }
 }

@@ -1,13 +1,18 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { UserProfile } from '@core/models/user.model';
 import { AuthState } from './auth.reducer';
 
-// select the auth state
 export const selectAuthState = createFeatureSelector<AuthState>('auth');
 
-// select the user state
 export const selectUser = createSelector(
   selectAuthState,
   (state: AuthState) => state.user
+);
+
+/** Returns [user] when authenticated, [] otherwise. Use for streams that should emit only UserProfile. */
+export const selectUserProfileList = createSelector(
+  selectAuthState,
+  (state: AuthState): UserProfile[] => (state.user ? [state.user] : [])
 );
 
 // select the isAuthenticated state
