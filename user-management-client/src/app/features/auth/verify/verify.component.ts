@@ -1,4 +1,13 @@
-import { Component, ViewEncapsulation, ChangeDetectionStrategy, inject, signal, effect } from '@angular/core';
+import {
+  Component,
+  ViewEncapsulation,
+  ChangeDetectionStrategy,
+  inject,
+  signal,
+  effect,
+  WritableSignal,
+  OnInit,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -30,25 +39,14 @@ import { SubmitButtonComponent } from '@shared/ui/buttons/submit-button/submit-b
     MatProgressSpinnerModule,
     LinkButtonComponent,
     BackLinkComponent,
-    SubmitButtonComponent
+    SubmitButtonComponent,
   ],
   templateUrl: './verify.component.html',
   styleUrl: './verify.component.scss',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VerifyComponent {
-  private authService = inject(AuthService);
-  private router = inject(Router);
-  private route = inject(ActivatedRoute);
-  private toastService = inject(ToastNotificationService);
-
-  status = signal<VerificationStatus>(VerificationStatus.PENDING);
-  countdown = signal<number>(5);
-  email = signal<string>('');
-  token = signal<string>('');
-  isVerifying = signal<boolean>(false);
-
+export class VerifyComponent implements OnInit {
   readonly labels = LABELS;
   readonly routes = Routes;
   readonly MESSAGES = MESSAGES;
@@ -56,84 +54,109 @@ export class VerifyComponent {
   readonly VerificationStatus = VerificationStatus;
   readonly MaterialColor = MaterialColor;
 
-  readonly verifyClickHandler = () => this.onVerifyClick();
-  readonly resendClickHandler = () => this.resendVerification();
+  private authService: AuthService = inject(AuthService);
+  private router: Router = inject(Router);
+  private route: ActivatedRoute = inject(ActivatedRoute);
+  private toastService: ToastNotificationService = inject(ToastNotificationService);
+
+  status: WritableSignal<VerificationStatus> = signal<VerificationStatus>(
+    VerificationStatus.PENDING,
+  ); // status of verification
+  countdown: WritableSignal<number> = signal<number>(5); // countdown of the verification
+  email: WritableSignal<string> = signal<string>(''); // email of the user
+  token: WritableSignal<string> = signal<string>(''); // token of the user
+  isVerifying: WritableSignal<boolean> = signal<boolean>(false); // is verifying the email
+
+  readonly verifyClickHandler = () => this.onVerifyClick(); // verify click handler
+  readonly resendClickHandler = () => this.resendVerification(); // resend click handler
 
   constructor() {
+    // effect() must run in injection context (constructor). Start countdown only when status becomes SUCCESS.
     effect(() => {
-      if (this.status() === VerificationStatus.SUCCESS && this.countdown() > 0) {
-        const timer = setInterval(() => {
-          this.countdown.update(value => {
-            if (value <= 1) {
-              clearInterval(timer);
-              this.router.navigate([Routes.LOGIN]);
-              return 0;
-            }
-            return value - 1;
-          });
-        }, Timeouts.COUNTDOWN_INTERVAL);
-      }
+      if (this.status() !== VerificationStatus.SUCCESS) return; // if the status is not success, return
+      const timer = setInterval(() => {
+        this.countdown.update((value) => {
+          if (value <= 1) {
+            clearInterval(timer); // clear the interval
+            this.router.navigate([Routes.LOGIN]); // navigate to the login page
+            return 0; // return 0
+          }
+          return value - 1; // return the value - 1
+        });
+      }, Timeouts.COUNTDOWN_INTERVAL); // set the interval to the timeout (COUNTDOWN_INTERVAL)
+      return () => clearInterval(timer); // return the function to clear the interval (cleanup)
     });
+  }
 
-    const tokenParam = this.route.snapshot.queryParams['token'];
-    const emailParam = this.route.snapshot.queryParams['email'];
+  ngOnInit(): void {
+    this.initializeFromRoute(); // initialize the email, token and status from the route
+  }
 
+  // initialize from route function to initialize the email, token and status from the route
+  private initializeFromRoute(): void {
+    const tokenParam: string = this.route.snapshot.queryParams['token'] || '';
+    const emailParam: string = this.route.snapshot.queryParams['email'] || '';
+
+    // if the token and email are present, set the email and token and status to loading and verify the email
     if (tokenParam && emailParam) {
-      this.email.set(emailParam);
-      this.token.set(tokenParam);
-      this.status.set(VerificationStatus.LOADING);
-      this.verifyEmail(tokenParam, emailParam);
+      this.email.set(emailParam); // set the email
+      this.token.set(tokenParam); // set the token
+      this.status.set(VerificationStatus.LOADING); // set the status to loading
+      this.verifyEmail(tokenParam, emailParam); // verify the email
     } else if (emailParam) {
-      this.email.set(emailParam);
-      this.status.set(VerificationStatus.PENDING);
+      // if the email is present, set the email and status to pending
+      this.email.set(emailParam); // set the email
+      this.status.set(VerificationStatus.PENDING); // set the status to pending
     } else {
-      this.status.set(VerificationStatus.ERROR);
+      // if the token and email are not present, set the status to error
+      this.status.set(VerificationStatus.ERROR); // set the status to error
     }
   }
 
   verifyEmail(token: string, email: string): void {
-    this.isVerifying.set(true);
+    this.isVerifying.set(true); // set the is verifying to true
     this.authService.verifyEmail(token, email).subscribe({
       next: () => {
-        this.isVerifying.set(false);
-        this.status.set(VerificationStatus.SUCCESS);
-        this.toastService.showSuccess(MESSAGES.VERIFICATION_SUCCESS);
+        this.isVerifying.set(false); // set the is verifying to false
+        this.status.set(VerificationStatus.SUCCESS); // set the status to success
+        this.toastService.showSuccess(MESSAGES.VERIFICATION_SUCCESS); // show the success message
       },
       error: () => {
-        this.isVerifying.set(false);
-        this.status.set(VerificationStatus.ERROR);
-        this.toastService.showError(MESSAGES.VERIFICATION_ERROR);
-      }
+        this.isVerifying.set(false); // set the is verifying to false
+        this.status.set(VerificationStatus.ERROR); // set the status to error
+        this.toastService.showError(MESSAGES.VERIFICATION_ERROR); // show the error message
+      },
     });
   }
-
   onVerifyClick(): void {
-    const t = this.token();
-    const e = this.email();
-    if (t && e) this.verifyEmail(t, e);
+    const token = this.token();
+    const email = this.email();
+    if (token && email) this.verifyEmail(token, email);
   }
 
+  // on resend verification
   resendVerification(): void {
-    const email = this.email();
+    const email = this.email(); // get the email
     if (!email) {
-      return;
+      return; // if the email is not present, return
     }
 
     this.authService.resendVerificationEmail(email).subscribe({
       next: (response) => {
         if (response && response.verificationToken) {
-          this.token.set(response.verificationToken);
-          this.status.set(VerificationStatus.PENDING);
+          this.token.set(response.verificationToken); // set the token
+          this.status.set(VerificationStatus.PENDING); // set the status to pending
         } else {
-          this.toastService.showSuccess(MESSAGES.RESEND_VERIFICATION_SUCCESS);
+          this.toastService.showSuccess(MESSAGES.RESEND_VERIFICATION_SUCCESS); // show the success message
         }
       },
       error: () => {
-        this.toastService.showError(MESSAGES.ERROR);
-      }
+        this.toastService.showError(MESSAGES.ERROR); // show the error message
+      },
     });
   }
 
+  // get verification url function to get the verification url
   getVerificationUrl(): string {
     const token = this.token();
     const email = this.email();
@@ -143,12 +166,15 @@ export class VerifyComponent {
     return '';
   }
 
+  // copy verification link function to copy the verification link to the clipboard
   copyVerificationLink(): void {
-    const url = this.getVerificationUrl();
+    const url = this.getVerificationUrl(); // get the verification url
     if (url && navigator.clipboard) {
+      // if the url is present and the clipboard is present
       navigator.clipboard.writeText(`${window.location.origin}${url}`).then(() => {
-        this.toastService.showSuccess(MESSAGES.VERIFICATION_LINK_COPIED);
+        // write the url to the clipboard
+        this.toastService.showSuccess(MESSAGES.VERIFICATION_LINK_COPIED); // show the success message
       });
     }
-  }
+  } // copy verification link function to copy the verification link to the clipboard
 }
