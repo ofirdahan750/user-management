@@ -1,47 +1,76 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, inject } from '@angular/core';
 import { ToastType } from '@core/enums/toast-type.enum';
+import { Timeouts } from '@core/enums/timeouts.enum';
 import { ToastMessage } from '@core/models/toast.model';
+import { UtilService } from '@core/services/util.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ToastNotificationService {
-  messages = signal<ToastMessage[]>([]);
+  private readonly utilService = inject(UtilService);
 
-  showSuccess(message: string, duration: number = 3000): void {
-    this.addMessage(message, ToastType.SUCCESS, duration);
+  // default durations for each toast type
+  private static readonly DEFAULT_DURATIONS: Record<ToastType, number> = {
+    [ToastType.SUCCESS]: Timeouts.TOAST_SUCCESS_DURATION, // success duration
+    [ToastType.ERROR]: Timeouts.TOAST_ERROR_DURATION, // error duration
+    [ToastType.WARNING]: Timeouts.TOAST_WARNING_DURATION, // warning duration
+    [ToastType.INFO]: Timeouts.TOAST_INFO_DEFAULT_DURATION, // info duration
+  };
+
+  messages = signal<ToastMessage[]>([]); // messages to display
+
+  showSuccess(message: string, duration?: number): void {
+    this.addMessage(message, ToastType.SUCCESS, duration); // add success message
   }
 
-  showError(message: string, duration: number = 5000): void {
-    this.addMessage(message, ToastType.ERROR, duration);
+  showError(message: string, duration?: number): void {
+    this.addMessage(message, ToastType.ERROR, duration); // add error message
   }
 
-  showInfo(message: string, duration: number = 3000, actionUrl?: string, actionLabel?: string): void {
-    this.addMessage(message, ToastType.INFO, duration, actionUrl, actionLabel);
+  showInfo(message: string, duration?: number, actionUrl?: string, actionLabel?: string): void {
+    this.addMessage(message, ToastType.INFO, duration, actionUrl, actionLabel); // add info message
   }
 
-  showWarning(message: string, duration: number = 4000): void {
+  showWarning(message: string, duration?: number): void {
     this.addMessage(message, ToastType.WARNING, duration);
   }
 
-  private addMessage(message: string, type: ToastType, duration: number, actionUrl?: string, actionLabel?: string): void {
-    const id = Math.random().toString(36).substring(7);
-    const toast: ToastMessage = { id, message, type, duration, actionUrl, actionLabel };
-    
-    this.messages.update(messages => [...messages, toast]);
+  private addMessage(
+    message: string, // message to display
+    type: ToastType, // type of toast
+    duration?: number, // duration of toast
+    actionUrl?: string, // action url
+    actionLabel?: string, // action label
+  ): void {
+    const resolvedDuration = duration ?? ToastNotificationService.DEFAULT_DURATIONS[type];
+    const id: string = this.utilService.generateId(); // generate id
+    const toast: ToastMessage = {
+      id, // id of toast
+      message, // message to display
+      type, // type of toast
+      duration: resolvedDuration, // duration of toast
+      actionUrl, // action url
+      actionLabel,
+    };
 
-    if (duration > 0) {
-      setTimeout(() => {
-        this.removeMessage(id);
-      }, duration);
+    this.messages.update((messages: ToastMessage[]) => [...messages, toast]); // add toast to messages
+    const shouldAutoDismiss: boolean = resolvedDuration > 0;
+    if (shouldAutoDismiss) {
+      // if duration is greater than 0
+      setTimeout(() => this.removeMessage(id), resolvedDuration); // remove toast after duration
     }
   }
 
   removeMessage(id: string): void {
-    this.messages.update(messages => messages.filter(msg => msg.id !== id));
+    // remove toast from messages
+    this.messages.update((messages: ToastMessage[]) =>
+      messages.filter((msg: ToastMessage) => msg.id !== id),
+    );
   }
 
   clear(): void {
-    this.messages.set([]);
+    // clear all messages
+    this.messages.set([]); // set messages to empty array
   }
 }

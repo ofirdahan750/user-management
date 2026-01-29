@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ViewEncapsulation, ChangeDetectionStrategy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatIconModule } from '@angular/material/icon';
@@ -14,15 +14,15 @@ import { ToastType } from '@core/enums/toast-type.enum';
   templateUrl: './toast-notification.component.html',
   styleUrl: './toast-notification.component.scss',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ToastNotificationComponent {
   readonly ariaLabels = ARIA_LABELS;
   readonly icons = ICONS;
   readonly ToastType = ToastType;
-  
-  constructor(public toastService: ToastNotificationService) {}
-  
+
+  toastNotificationService: ToastNotificationService = inject(ToastNotificationService);
+
   getIconForType(type: ToastType): string {
     switch (type) {
       case ToastType.SUCCESS:

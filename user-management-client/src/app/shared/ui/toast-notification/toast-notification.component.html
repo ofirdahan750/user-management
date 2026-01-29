@@ -1,14 +1,14 @@
 <div class="toast-notification__container">
-  @for (message of toastService.messages(); track message.id) {
-    <div 
+  @for (message of toastNotificationService.messages(); track message.id) {
+    <div
       class="toast-notification__toast"
       [ngClass]="{
         'toast-notification__toast--success': message.type === ToastType.SUCCESS,
         'toast-notification__toast--error': message.type === ToastType.ERROR,
         'toast-notification__toast--warning': message.type === ToastType.WARNING,
-        'toast-notification__toast--info': message.type === ToastType.INFO
+        'toast-notification__toast--info': message.type === ToastType.INFO,
       }"
-      (click)="toastService.removeMessage(message.id); $event.stopPropagation()"
+      (click)="toastNotificationService.removeMessage(message.id); $event.stopPropagation()"
     >
       <mat-icon class="toast-notification__icon">
         {{ getIconForType(message.type) }}
@@ -23,9 +23,9 @@
           {{ message.actionLabel || 'Open' }}
         </a>
       }
-      <button 
+      <button
         class="toast-notification__close"
-        (click)="toastService.removeMessage(message.id); $event.stopPropagation()"
+        (click)="toastNotificationService.removeMessage(message.id); $event.stopPropagation()"
         [attr.aria-label]="ariaLabels.CLOSE"
       >
         <mat-icon>{{ icons.CLOSE }}</mat-icon>

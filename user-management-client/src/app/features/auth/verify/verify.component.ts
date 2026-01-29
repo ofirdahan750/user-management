@@ -8,6 +8,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '@core/services/auth.service';
 import { ToastNotificationService } from '@core/services/toast-notification.service';
 import { Routes } from '@core/enums/routes.enum';
+import { Timeouts } from '@core/enums/timeouts.enum';
 import { VerificationStatus } from '@core/enums/verification-status.enum';
 import { MaterialColor } from '@core/enums/material-color.enum';
 import { LABELS } from '@core/constants/labels.constants';
@@ -70,7 +71,7 @@ export class VerifyComponent {
             }
             return value - 1;
           });
-        }, 1000);
+        }, Timeouts.COUNTDOWN_INTERVAL);
       }
     });
 
