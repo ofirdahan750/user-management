@@ -10,24 +10,18 @@ import { MaterialButtonColor, MaterialButtonVariant } from '@core/types/button.t
 @Component({
   selector: 'app-link-button',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    MatButtonModule,
-    MatIconModule,
-    MatTooltipModule
-  ],
+  imports: [CommonModule, RouterModule, MatButtonModule, MatIconModule, MatTooltipModule],
   templateUrl: './link-button.component.html',
   styleUrl: './link-button.component.scss',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LinkButtonComponent {
-  @Input() route: string | string[] = '';
-  @Input() label: string = '';
-  @Input() icon: string = '';
-  @Input() tooltip: string = '';
-  @Input() variant: MaterialButtonVariant = 'flat';
+  @Input() route: string | string[] = ''; // route of the button
+  @Input() label: string = ''; // label of the button
+  @Input() icon: string = ''; // icon of the button
+  @Input() tooltip: string = ''; // tooltip of the button
+  @Input() variant: MaterialButtonVariant = 'flat'; // variant of the button
   @Input() color: MaterialButtonColor = MaterialColor.PRIMARY;
-  @Input() showIcon: boolean = true;
+  @Input() showIcon: boolean = true; // show icon of the button
 }
