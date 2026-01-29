@@ -98,3 +98,22 @@ input, textarea, select {
   white-space: nowrap;
   border-width: 0;
 }
+
+html[data-theme="light"] .header .header__menu-toggle,
+html[data-theme="light"] .header .header__menu-toggle .mat-icon {
+  color: #212121;
+}
+html[data-theme="light"] .mat-mdc-menu-panel .header__user-info .header__user-name-full {
+  color: #ffffff;
+}
+html[data-theme="light"] .mat-mdc-menu-panel .header__user-info .header__user-email {
+  color: #e0e0e0;
+}
+html[data-theme="light"] .header app-icon-button.header__theme-toggle--desktop button,
+html[data-theme="light"] .header app-icon-button.header__theme-toggle--desktop .mat-icon,
+html[data-theme="light"] .header app-icon-button.header__theme-toggle--desktop .mat-mdc-button-touch-target,
+html[data-theme="light"] .header app-icon-button.header__theme-toggle--mobile button,
+html[data-theme="light"] .header app-icon-button.header__theme-toggle--mobile .mat-icon,
+html[data-theme="light"] .header app-icon-button.header__theme-toggle--mobile .mat-mdc-button-touch-target {
+  color: #212121;
+}
