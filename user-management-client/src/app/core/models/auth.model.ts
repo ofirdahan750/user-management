@@ -1,12 +1,14 @@
+export interface RegisterProfile {
+  firstName: string;
+  lastName: string;
+  birthDate?: string;
+  phoneNumber?: string;
+}
+
 export interface RegisterRequest {
   email: string;
   password: string;
-  profile: {
-    firstName: string;
-    lastName: string;
-    birthDate?: string;
-    phoneNumber?: string;
-  };
+  profile: RegisterProfile;
 }
 
 export interface RegisterResponse {
