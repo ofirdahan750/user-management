@@ -1,4 +1,4 @@
-import { vi } from 'vitest';
+// npx ng test --include='**/header.component.spec.ts' --no-watch --browsers=ChromeHeadless
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
@@ -45,19 +45,20 @@ describe('HeaderComponent', () => {
 
   it('toggleTheme calls themeService.toggleTheme', () => {
     const { component } = createFixture();
-    const spy = vi.spyOn(mockThemeService, 'toggleTheme');
+    const spy = spyOn(mockThemeService, 'toggleTheme');
     component.toggleTheme();
     expect(spy).toHaveBeenCalled();
   });
 
   it('getThemeTooltip returns dark mode tooltip when theme is LIGHT', () => {
+    mockThemeService.currentTheme.set(Theme.LIGHT);
     const { component } = createFixture();
     expect(component.getThemeTooltip()).toBe(component.labels.TOOLTIP_SWITCH_TO_DARK_MODE);
   });
 
   it('getThemeTooltip returns light mode tooltip when theme is DARK', () => {
-    const { component } = createFixture();
     mockThemeService.currentTheme.set(Theme.DARK);
+    const { component } = createFixture();
     expect(component.getThemeTooltip()).toBe(component.labels.TOOLTIP_SWITCH_TO_LIGHT_MODE);
   });
 
@@ -81,7 +82,7 @@ describe('HeaderComponent', () => {
   it('logout dispatches logout and closes mobile menu', () => {
     const { component } = createFixture();
     const store = TestBed.inject(Store);
-    const dispatchSpy = vi.spyOn(store, 'dispatch');
+    const dispatchSpy = spyOn(store, 'dispatch');
     component.toggleMobileMenu();
     component.logout();
     expect(dispatchSpy).toHaveBeenCalledWith(AuthActions.logout());

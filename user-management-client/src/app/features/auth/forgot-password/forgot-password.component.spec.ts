@@ -1,4 +1,4 @@
-import { vi } from 'vitest';
+// npx ng test --include='**/forgot-password.component.spec.ts' --no-watch --browsers=ChromeHeadless
 import { TestBed } from '@angular/core/testing';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, provideRouter } from '@angular/router';
@@ -31,18 +31,22 @@ describe('ForgotPasswordComponent', () => {
   };
 
   const mockToastService = {
-    showError: vi.fn(),
-    showSuccess: vi.fn(),
+    showError: jasmine.createSpy('showError'),
+    showSuccess: jasmine.createSpy('showSuccess'),
   };
 
   const mockEmailHelper = {
-    getAndClearTemporaryEmail: vi.fn().mockReturnValue(''),
-    copyTextToClipboard: vi.fn(),
+    getAndClearTemporaryEmail: jasmine.createSpy('getAndClearTemporaryEmail').and.returnValue(''),
+    copyTextToClipboard: jasmine.createSpy('copyTextToClipboard'),
   };
 
   beforeEach(async () => {
     actionsSubject = new Subject();
-    vi.clearAllMocks();
+    mockToastService.showError.calls.reset();
+    mockToastService.showSuccess.calls.reset();
+    mockEmailHelper.getAndClearTemporaryEmail.calls.reset();
+    mockEmailHelper.getAndClearTemporaryEmail.and.returnValue('');
+    mockEmailHelper.copyTextToClipboard.calls.reset();
 
     await TestBed.configureTestingModule({
       imports: [ForgotPasswordComponent],
@@ -102,7 +106,7 @@ describe('ForgotPasswordComponent', () => {
   it('onSubmit should not dispatch when form is invalid', () => {
     const { component } = createFixture();
     const store = TestBed.inject(Store);
-    const dispatchSpy = vi.spyOn(store, 'dispatch');
+    const dispatchSpy = spyOn(store, 'dispatch');
     component.forgotPasswordForm.patchValue({ [FORGOT_PASSWORD_FORM_CONTROLS.EMAIL]: '' });
     component.onSubmit();
     expect(dispatchSpy).not.toHaveBeenCalled();
@@ -111,7 +115,7 @@ describe('ForgotPasswordComponent', () => {
   it('onSubmit should dispatch requestPasswordReset when form is valid', () => {
     const { component } = createFixture();
     const store = TestBed.inject(Store);
-    const dispatchSpy = vi.spyOn(store, 'dispatch');
+    const dispatchSpy = spyOn(store, 'dispatch');
     component.forgotPasswordForm.patchValue({
       [FORGOT_PASSWORD_FORM_CONTROLS.EMAIL]: 'user@test.com',
     });
@@ -124,7 +128,7 @@ describe('ForgotPasswordComponent', () => {
   it('onSubmit should set isSuccess and resetToken when success action has resetToken', async () => {
     const { component } = createFixture();
     const store = TestBed.inject(Store);
-    vi.spyOn(store, 'dispatch');
+    spyOn(store, 'dispatch');
     component.forgotPasswordForm.patchValue({
       [FORGOT_PASSWORD_FORM_CONTROLS.EMAIL]: 'user@test.com',
     });
@@ -141,7 +145,7 @@ describe('ForgotPasswordComponent', () => {
   it('onSubmit should show error toast when success action has no resetToken', async () => {
     const { component } = createFixture();
     const store = TestBed.inject(Store);
-    vi.spyOn(store, 'dispatch');
+    spyOn(store, 'dispatch');
     component.forgotPasswordForm.patchValue({
       [FORGOT_PASSWORD_FORM_CONTROLS.EMAIL]: 'user@test.com',
     });
@@ -172,7 +176,7 @@ describe('ForgotPasswordComponent', () => {
     component.resetToken.set('token123');
     component.copyResetLink();
     expect(mockEmailHelper.copyTextToClipboard).toHaveBeenCalledWith(
-      expect.stringContaining('token=token123'),
+      jasmine.stringMatching(/token=token123/),
       MESSAGES.RESET_LINK_COPIED
     );
   });
@@ -187,7 +191,7 @@ describe('ForgotPasswordComponent', () => {
   it('navigateToResetPassword should navigate with token when resetToken is set', () => {
     const { component } = createFixture();
     const router = TestBed.inject(Router) as Router;
-    const navigateSpy = vi.spyOn(router, 'navigate');
+    const navigateSpy = spyOn(router, 'navigate');
     component.resetToken.set('token123');
     component.navigateToResetPassword();
     expect(navigateSpy).toHaveBeenCalledWith([Routes.RESET_PASSWORD], {
@@ -198,7 +202,7 @@ describe('ForgotPasswordComponent', () => {
   it('navigateToResetPassword should not navigate when resetToken is empty', () => {
     const { component } = createFixture();
     const router = TestBed.inject(Router) as Router;
-    const navigateSpy = vi.spyOn(router, 'navigate');
+    const navigateSpy = spyOn(router, 'navigate');
     component.resetToken.set('');
     component.navigateToResetPassword();
     expect(navigateSpy).not.toHaveBeenCalled();
@@ -206,7 +210,7 @@ describe('ForgotPasswordComponent', () => {
 
   it('resendEmail should call onSubmit when canResend is true', () => {
     const { component } = createFixture();
-    const onSubmitSpy = vi.spyOn(component, 'onSubmit');
+    const onSubmitSpy = spyOn(component, 'onSubmit');
     component.canResend.set(true);
     component.forgotPasswordForm.patchValue({
       [FORGOT_PASSWORD_FORM_CONTROLS.EMAIL]: 'user@test.com',
@@ -217,7 +221,7 @@ describe('ForgotPasswordComponent', () => {
 
   it('resendEmail should not call onSubmit when canResend is false', () => {
     const { component } = createFixture();
-    const onSubmitSpy = vi.spyOn(component, 'onSubmit');
+    const onSubmitSpy = spyOn(component, 'onSubmit');
     component.canResend.set(false);
     component.resendEmail();
     expect(onSubmitSpy).not.toHaveBeenCalled();

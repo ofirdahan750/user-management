@@ -1,3 +1,4 @@
+// npx ng test --include='**/loading-spinner.component.spec.ts' --no-watch --browsers=ChromeHeadless
 import { TestBed } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { provideStore, Store } from '@ngrx/store';

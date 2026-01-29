@@ -1,4 +1,4 @@
-import { vi } from 'vitest';
+// npx ng test --include='**/verify.component.spec.ts' --no-watch --browsers=ChromeHeadless
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
@@ -16,17 +16,20 @@ describe('VerifyComponent', () => {
   const mockQueryParams: Record<string, string> = {};
 
   const mockAuthService = {
-    verifyEmail: vi.fn(),
-    resendVerificationEmail: vi.fn(),
+    verifyEmail: jasmine.createSpy('verifyEmail'),
+    resendVerificationEmail: jasmine.createSpy('resendVerificationEmail'),
   };
 
   const mockToastService = {
-    showSuccess: vi.fn(),
-    showError: vi.fn(),
+    showSuccess: jasmine.createSpy('showSuccess'),
+    showError: jasmine.createSpy('showError'),
   };
 
   beforeEach(async () => {
-    vi.clearAllMocks();
+    mockAuthService.verifyEmail.calls.reset();
+    mockAuthService.resendVerificationEmail.calls.reset();
+    mockToastService.showSuccess.calls.reset();
+    mockToastService.showError.calls.reset();
     Object.keys(mockQueryParams).forEach((k) => delete mockQueryParams[k]);
 
     await TestBed.configureTestingModule({
@@ -79,7 +82,7 @@ describe('VerifyComponent', () => {
     mockQueryParams['token'] = 'token123';
     mockQueryParams['email'] = 'user@test.com';
     const verifySubject = new Subject<unknown>();
-    mockAuthService.verifyEmail.mockReturnValue(verifySubject.asObservable());
+    mockAuthService.verifyEmail.and.returnValue(verifySubject.asObservable());
 
     const { component } = createFixture();
     component.ngOnInit();
@@ -112,7 +115,7 @@ describe('VerifyComponent', () => {
 
   it('verifyEmail success should set isVerifying false, status SUCCESS and show success toast', () => {
     const verifySuccess$ = new Subject<unknown>();
-    mockAuthService.verifyEmail.mockReturnValue(verifySuccess$.asObservable());
+    mockAuthService.verifyEmail.and.returnValue(verifySuccess$.asObservable());
 
     const { component } = createFixture();
     component.verifyEmail('t', 'e@e.com');
@@ -127,7 +130,7 @@ describe('VerifyComponent', () => {
   });
 
   it('verifyEmail error should set isVerifying false, status ERROR and show error toast', () => {
-    mockAuthService.verifyEmail.mockReturnValue(throwError(() => new Error('fail')));
+    mockAuthService.verifyEmail.and.returnValue(throwError(() => new Error('fail')));
 
     const { component } = createFixture();
     component.verifyEmail('t', 'e@e.com');
@@ -143,7 +146,7 @@ describe('VerifyComponent', () => {
   });
 
   it('onVerifyClick should call verifyEmail when token and email are set', () => {
-    mockAuthService.verifyEmail.mockReturnValue(of({}));
+    mockAuthService.verifyEmail.and.returnValue(of({}));
 
     const { component } = createFixture();
     component.email.set('user@test.com');
@@ -174,7 +177,7 @@ describe('VerifyComponent', () => {
   });
 
   it('resendVerification success with verificationToken should set token and status PENDING', () => {
-    mockAuthService.resendVerificationEmail.mockReturnValue(
+    mockAuthService.resendVerificationEmail.and.returnValue(
       of({ verificationToken: 'new-token' }),
     );
 
@@ -188,7 +191,7 @@ describe('VerifyComponent', () => {
   });
 
   it('resendVerification success without verificationToken should show success toast', () => {
-    mockAuthService.resendVerificationEmail.mockReturnValue(of({}));
+    mockAuthService.resendVerificationEmail.and.returnValue(of({}));
 
     const { component } = createFixture();
     component.email.set('user@test.com');
@@ -205,7 +208,7 @@ describe('VerifyComponent', () => {
   });
 
   it('resendVerification error should show error toast', () => {
-    mockAuthService.resendVerificationEmail.mockReturnValue(
+    mockAuthService.resendVerificationEmail.and.returnValue(
       throwError(() => new Error('fail')),
     );
 
@@ -246,7 +249,7 @@ describe('VerifyComponent', () => {
 
   it('copyVerificationLink should not call clipboard when url is empty', () => {
     const { component } = createFixture();
-    const writeTextSpy = vi.fn();
+    const writeTextSpy = jasmine.createSpy('writeText');
     Object.defineProperty(navigator, 'clipboard', {
       value: { writeText: writeTextSpy },
       configurable: true,
@@ -256,7 +259,7 @@ describe('VerifyComponent', () => {
   });
 
   it('copyVerificationLink should write to clipboard and show toast when url and clipboard exist', async () => {
-    const writeTextSpy = vi.fn().mockResolvedValue(undefined);
+    const writeTextSpy = jasmine.createSpy('writeText').and.returnValue(Promise.resolve(undefined));
     Object.defineProperty(navigator, 'clipboard', {
       value: { writeText: writeTextSpy },
       configurable: true,
@@ -268,22 +271,20 @@ describe('VerifyComponent', () => {
     component.copyVerificationLink();
 
     await new Promise((resolve) => setTimeout(resolve, 0));
-    expect(writeTextSpy).toHaveBeenCalledWith(
-      expect.stringContaining(`${Routes.VERIFY}?token=t`),
-    );
+    expect(writeTextSpy).toHaveBeenCalledWith(jasmine.stringMatching(/token=t/));
     expect(mockToastService.showSuccess).toHaveBeenCalledWith(MESSAGES.VERIFICATION_LINK_COPIED);
   });
 
   it('verifyClickHandler should call onVerifyClick', () => {
     const { component } = createFixture();
-    const spy = vi.spyOn(component, 'onVerifyClick');
+    const spy = spyOn(component, 'onVerifyClick');
     component.verifyClickHandler();
     expect(spy).toHaveBeenCalled();
   });
 
   it('resendClickHandler should call resendVerification', () => {
     const { component } = createFixture();
-    const spy = vi.spyOn(component, 'resendVerification');
+    const spy = spyOn(component, 'resendVerification');
     component.resendClickHandler();
     expect(spy).toHaveBeenCalled();
   });

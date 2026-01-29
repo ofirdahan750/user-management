@@ -1,4 +1,4 @@
-import { vi } from 'vitest';
+// npx ng test --include='**/register.component.spec.ts' --no-watch --browsers=ChromeHeadless
 import { TestBed } from '@angular/core/testing';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { provideRouter } from '@angular/router';
@@ -44,11 +44,12 @@ describe('RegisterComponent', () => {
   };
 
   const mockEmailHelper = {
-    getAndClearTemporaryEmail: vi.fn().mockReturnValue(''),
+    getAndClearTemporaryEmail: jasmine.createSpy('getAndClearTemporaryEmail').and.returnValue(''),
   };
 
   beforeEach(async () => {
-    vi.clearAllMocks();
+    mockEmailHelper.getAndClearTemporaryEmail.calls.reset();
+    mockEmailHelper.getAndClearTemporaryEmail.and.returnValue('');
 
     await TestBed.configureTestingModule({
       imports: [RegisterComponent],
@@ -109,14 +110,14 @@ describe('RegisterComponent', () => {
   });
 
   it('should prefill email when getAndClearTemporaryEmail returns a value', () => {
-    mockEmailHelper.getAndClearTemporaryEmail.mockReturnValue('prefill@test.com');
+    mockEmailHelper.getAndClearTemporaryEmail.and.returnValue('prefill@test.com');
     const { component } = createFixture();
     component.ngOnInit();
     expect(component.registerForm.get(REGISTER_FORM_CONTROLS.EMAIL)?.value).toBe('prefill@test.com');
   });
 
   it('should not patch email when getAndClearTemporaryEmail returns empty', () => {
-    mockEmailHelper.getAndClearTemporaryEmail.mockReturnValue('');
+    mockEmailHelper.getAndClearTemporaryEmail.and.returnValue('');
     const { component } = createFixture();
     component.ngOnInit();
     expect(component.registerForm.get(REGISTER_FORM_CONTROLS.EMAIL)?.value).toBe('');
@@ -140,7 +141,7 @@ describe('RegisterComponent', () => {
   it('onSubmit should not dispatch when form is invalid', () => {
     const { component } = createFixture();
     const store = TestBed.inject(Store);
-    const dispatchSpy = vi.spyOn(store, 'dispatch');
+    const dispatchSpy = spyOn(store, 'dispatch');
     component.registerForm.patchValue({ [REGISTER_FORM_CONTROLS.EMAIL]: '' });
     component.onSubmit();
     expect(dispatchSpy).not.toHaveBeenCalled();
@@ -149,7 +150,7 @@ describe('RegisterComponent', () => {
   it('onSubmit should dispatch showLoading and register when form is valid', () => {
     const { component } = createFixture();
     const store = TestBed.inject(Store);
-    const dispatchSpy = vi.spyOn(store, 'dispatch');
+    const dispatchSpy = spyOn(store, 'dispatch');
     component.registerForm.patchValue(validFormValue);
     component.onSubmit();
     expect(dispatchSpy).toHaveBeenCalledWith(LoadingActions.showLoading());
@@ -170,7 +171,7 @@ describe('RegisterComponent', () => {
   it('onSubmit should include birthDate and phoneNumber in profile when set', () => {
     const { component } = createFixture();
     const store = TestBed.inject(Store);
-    const dispatchSpy = vi.spyOn(store, 'dispatch');
+    const dispatchSpy = spyOn(store, 'dispatch');
     const birthDate = '1990-05-15';
     component.registerForm.patchValue({
       ...validFormValue,

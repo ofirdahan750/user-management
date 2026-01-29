@@ -1,4 +1,4 @@
-import { vi } from 'vitest';
+// npx ng test --include='**/login.component.spec.ts' --no-watch --browsers=ChromeHeadless
 import { TestBed } from '@angular/core/testing';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, provideRouter } from '@angular/router';
@@ -33,17 +33,20 @@ describe('LoginComponent', () => {
   };
 
   const mockLocalStorage = {
-    setItem: vi.fn(),
-    removeItem: vi.fn(),
-    getItem: vi.fn(),
+    setItem: jasmine.createSpy('setItem'),
+    removeItem: jasmine.createSpy('removeItem'),
+    getItem: jasmine.createSpy('getItem'),
   };
 
   const mockEmailHelper = {
-    setTemporaryEmail: vi.fn(),
+    setTemporaryEmail: jasmine.createSpy('setTemporaryEmail'),
   };
 
   beforeEach(async () => {
-    vi.clearAllMocks();
+    mockLocalStorage.setItem.calls.reset();
+    mockLocalStorage.removeItem.calls.reset();
+    mockLocalStorage.getItem.calls.reset();
+    mockEmailHelper.setTemporaryEmail.calls.reset();
     await TestBed.configureTestingModule({
       imports: [LoginComponent],
       providers: [
@@ -83,7 +86,7 @@ describe('LoginComponent', () => {
   it('onSubmit should not dispatch when form is invalid', () => {
     const { component } = createFixture();
     const store = TestBed.inject(Store);
-    const dispatchSpy = vi.spyOn(store, 'dispatch');
+    const dispatchSpy = spyOn(store, 'dispatch');
     component.loginForm.patchValue({
       [LOGIN_FORM_CONTROLS.LOGIN_ID]: '',
       [LOGIN_FORM_CONTROLS.PASSWORD]: '',
@@ -95,7 +98,7 @@ describe('LoginComponent', () => {
   it('onSubmit should dispatch showLoading and login when form is valid', () => {
     const { component } = createFixture();
     const store = TestBed.inject(Store);
-    const dispatchSpy = vi.spyOn(store, 'dispatch');
+    const dispatchSpy = spyOn(store, 'dispatch');
     component.loginForm.patchValue({
       [LOGIN_FORM_CONTROLS.LOGIN_ID]: 'user@test.com',
       [LOGIN_FORM_CONTROLS.PASSWORD]: 'Pass1234',
@@ -139,9 +142,9 @@ describe('LoginComponent', () => {
   it('navigateWithEmail should preventDefault, set temporary email and navigate', () => {
     const { component } = createFixture();
     const router = TestBed.inject(Router) as Router;
-    const navigateSpy = vi.spyOn(router, 'navigate');
+    const navigateSpy = spyOn(router, 'navigate');
     const event = new Event('click');
-    vi.spyOn(event, 'preventDefault');
+    spyOn(event, 'preventDefault');
     component.loginForm.patchValue({ [LOGIN_FORM_CONTROLS.LOGIN_ID]: 'user@test.com' });
     component.navigateWithEmail(event, Routes.FORGOT_PASSWORD);
     expect(event.preventDefault).toHaveBeenCalled();
@@ -152,9 +155,9 @@ describe('LoginComponent', () => {
   it('navigateWithEmail should navigate without setting email when loginID is empty', () => {
     const { component } = createFixture();
     const router = TestBed.inject(Router) as Router;
-    const navigateSpy = vi.spyOn(router, 'navigate');
+    const navigateSpy = spyOn(router, 'navigate');
     const event = new Event('click');
-    vi.spyOn(event, 'preventDefault');
+    spyOn(event, 'preventDefault');
     component.loginForm.patchValue({ [LOGIN_FORM_CONTROLS.LOGIN_ID]: '' });
     component.navigateWithEmail(event, Routes.REGISTER);
     expect(mockEmailHelper.setTemporaryEmail).not.toHaveBeenCalled();

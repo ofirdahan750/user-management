@@ -1,4 +1,4 @@
-import { vi } from 'vitest';
+// npx ng test --include='**/not-found.component.spec.ts' --no-watch --browsers=ChromeHeadless
 import { TestBed } from '@angular/core/testing';
 import { Router, provideRouter } from '@angular/router';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
@@ -39,7 +39,7 @@ describe('NotFoundComponent', () => {
   it('navigateTo should call router.navigate with the given route', () => {
     const { component } = createFixture();
     const router = TestBed.inject(Router) as Router;
-    const navigateSpy = vi.spyOn(router, 'navigate');
+    const navigateSpy = spyOn(router, 'navigate');
     component.navigateTo(Routes.DASHBOARD);
     expect(navigateSpy).toHaveBeenCalledWith([Routes.DASHBOARD]);
   });
@@ -47,7 +47,7 @@ describe('NotFoundComponent', () => {
   it('navigateTo should navigate to login when given Routes.LOGIN', () => {
     const { component } = createFixture();
     const router = TestBed.inject(Router) as Router;
-    const navigateSpy = vi.spyOn(router, 'navigate');
+    const navigateSpy = spyOn(router, 'navigate');
     component.navigateTo(Routes.LOGIN);
     expect(navigateSpy).toHaveBeenCalledWith([Routes.LOGIN]);
   });

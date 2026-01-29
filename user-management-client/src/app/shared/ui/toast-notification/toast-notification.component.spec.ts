@@ -1,4 +1,4 @@
-import { vi } from 'vitest';
+// npx ng test --include='**/toast-notification.component.spec.ts' --no-watch --browsers=ChromeHeadless
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
@@ -102,7 +102,7 @@ describe('ToastNotificationComponent', () => {
   });
 
   it('should call removeMessage when toast is clicked', () => {
-    const removeSpy = vi.fn();
+    const removeSpy = jasmine.createSpy('removeMessage');
     TestBed.overrideProvider(ToastNotificationService, {
       useValue: {
         messages: mockMessages,
