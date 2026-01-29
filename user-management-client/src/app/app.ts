@@ -24,9 +24,10 @@ import { routeAnimations } from '@core/animations/route.animations';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
-  private router = inject(Router);
+  private router:Router = inject(Router); //  Router service 
 
-  getRouteAnimationData() {
+  getRouteAnimationData(): string {
+    // return the current url for setting the animation
     return this.router.url;
   }
 }
