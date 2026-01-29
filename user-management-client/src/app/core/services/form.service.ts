@@ -9,6 +9,7 @@ import { israeliPhoneValidator } from '@shared/validators/israeli-phone.validato
 import { defaultDateAgeValidator } from '@shared/validators/date-age.validator';
 import { LocalStorageService } from '@core/services/local-storage.service';
 import { StorageKeys } from '@core/enums/storage-keys.enum';
+import { REGISTER_FORM_CONTROLS } from '@core/constants/form-controls.constants';
 import { selectIsLoading } from '@core/store/loading/loading.selectors';
 import { selectAuthLoading } from '@core/store/auth/auth.selectors';
 
@@ -25,14 +26,14 @@ export class FormService {
    */
   createRegisterForm(): FormGroup {
     return this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, passwordStrengthValidator()]],
-      confirmPassword: ['', [Validators.required]],
-      firstName: ['', [Validators.required]],
-      lastName: ['', [Validators.required]],
-      birthDate: ['', [defaultDateAgeValidator()]],
-      phoneNumber: ['', [israeliPhoneValidator()]],
-      terms: [false, [Validators.requiredTrue]]
+      [REGISTER_FORM_CONTROLS.EMAIL]: ['', [Validators.required, Validators.email]],
+      [REGISTER_FORM_CONTROLS.PASSWORD]: ['', [Validators.required, passwordStrengthValidator()]],
+      [REGISTER_FORM_CONTROLS.CONFIRM_PASSWORD]: ['', [Validators.required]],
+      [REGISTER_FORM_CONTROLS.FIRST_NAME]: ['', [Validators.required]],
+      [REGISTER_FORM_CONTROLS.LAST_NAME]: ['', [Validators.required]],
+      [REGISTER_FORM_CONTROLS.BIRTH_DATE]: ['', [defaultDateAgeValidator()]],
+      [REGISTER_FORM_CONTROLS.PHONE_NUMBER]: ['', [israeliPhoneValidator()]],
+      [REGISTER_FORM_CONTROLS.TERMS]: [false, [Validators.requiredTrue]]
     }, { validators: passwordMatchValidator() });
   }
 

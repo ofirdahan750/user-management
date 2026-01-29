@@ -12,7 +12,7 @@
               <mat-label>{{ labels.FIRST_NAME }}</mat-label>
               <input 
                 matInput 
-                formControlName="firstName"
+                [formControlName]="formControls.FIRST_NAME"
                 [attr.aria-label]="labels.FIRST_NAME"
                 autocomplete="given-name"
               />
@@ -26,7 +26,7 @@
               <mat-label>{{ labels.LAST_NAME }}</mat-label>
               <input 
                 matInput 
-                formControlName="lastName"
+                [formControlName]="formControls.LAST_NAME"
                 [attr.aria-label]="labels.LAST_NAME"
                 autocomplete="family-name"
               />
@@ -42,7 +42,7 @@
             <input 
               matInput 
               type="email"
-              formControlName="email"
+              [formControlName]="formControls.EMAIL"
               [attr.aria-label]="labels.EMAIL"
               autocomplete="email"
             />
@@ -60,7 +60,7 @@
             <input 
               matInput 
               [attr.type]="hidePassword() ? 'password' : 'text'"
-              formControlName="password"
+              [formControlName]="formControls.PASSWORD"
               [attr.aria-label]="labels.PASSWORD"
               [attr.autocomplete]="'new-password'"
             />
@@ -100,7 +100,7 @@
             <input 
               matInput 
               [attr.type]="hideConfirmPassword() ? 'password' : 'text'"
-              formControlName="confirmPassword"
+              [formControlName]="formControls.CONFIRM_PASSWORD"
               [attr.aria-label]="labels.CONFIRM_PASSWORD"
               [attr.autocomplete]="'new-password'"
             />
@@ -129,7 +129,7 @@
               <input 
                 matInput 
                 [matDatepicker]="picker"
-                formControlName="birthDate"
+                [formControlName]="formControls.BIRTH_DATE"
                 [attr.aria-label]="labels.BIRTH_DATE"
               />
               <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
@@ -144,7 +144,7 @@
               <input 
                 matInput 
                 type="tel"
-                formControlName="phoneNumber"
+                [formControlName]="formControls.PHONE_NUMBER"
                 [attr.aria-label]="labels.PHONE_NUMBER"
                 autocomplete="tel"
                 [attr.placeholder]="placeholders.PHONE_NUMBER"
@@ -157,7 +157,7 @@
           </div>
 
           <div class="register__terms-wrapper">
-            <mat-checkbox formControlName="terms" class="register__terms">
+            <mat-checkbox [formControlName]="formControls.TERMS" class="register__terms">
               {{ labels.TERMS_AND_CONDITIONS }}
             </mat-checkbox>
             <div class="register__error" [ngClass]="{'register__error--hidden': !hasTermsRequiredError}">
