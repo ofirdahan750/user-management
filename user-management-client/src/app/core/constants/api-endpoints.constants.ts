@@ -1,5 +1,7 @@
+import { environment } from '../../../environments/environment';
+
 export const API_ENDPOINTS = {
-  BASE_URL: 'https://cheerful-rois-organizationnametwo-fc78dba0.koyeb.app/api',
+  BASE_URL: environment.apiUrl,
   AUTH: {
     REGISTER: '/auth/register',
     LOGIN: '/auth/login',

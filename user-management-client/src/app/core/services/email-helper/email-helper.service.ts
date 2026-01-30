@@ -17,10 +17,6 @@ export class EmailHelperService {
   showVerificationLink(token: string, email: string): void {
     const verificationUrl = `${window.location.origin}${Routes.VERIFY}?token=${token}&email=${encodeURIComponent(email)}`;
 
-    console.log(`${MESSAGES.VERIFICATION_LINK_FOR} ${email}:`);
-    console.log(`${MESSAGES.TOKEN_LABEL} ${token}`);
-    console.log(`${MESSAGES.FULL_URL_LABEL} ${verificationUrl}`);
-
     this.toastService.showInfo(
       MESSAGES.VERIFICATION_EMAIL_SENT,
       Timeouts.TOAST_INFO_DURATION,
@@ -33,10 +29,6 @@ export class EmailHelperService {
 
   showResetPasswordLink(token: string): void {
     const resetUrl = `${window.location.origin}${Routes.RESET_PASSWORD}?token=${token}`;
-
-    console.log(MESSAGES.PASSWORD_RESET_LINK);
-    console.log(`${MESSAGES.TOKEN_LABEL} ${token}`);
-    console.log(`${MESSAGES.FULL_URL_LABEL} ${resetUrl}`);
 
     this.toastService.showInfo(
       MESSAGES.PASSWORD_RESET_EMAIL_SENT,
@@ -80,9 +72,8 @@ export class EmailHelperService {
     try {
       document.execCommand('copy');
       this.toastService.showSuccess(successMessage, Timeouts.TOAST_SUCCESS_DURATION);
-    } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : MESSAGES.UNKNOWN_ERROR_OCCURRED;
-      console.error(MESSAGES.FAILED_TO_COPY_TEXT, errorMessage, err);
+    } catch {
+      this.toastService.showError(MESSAGES.UNKNOWN_ERROR_OCCURRED);
     }
 
     document.body.removeChild(textArea);

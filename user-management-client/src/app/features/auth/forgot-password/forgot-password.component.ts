@@ -119,6 +119,16 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
   }
 
   // Getter for email format error to avoid optional chaining in template
+  get hasEmailTypoError(): boolean {
+    const control = this.forgotPasswordForm.get(FORGOT_PASSWORD_FORM_CONTROLS.EMAIL);
+    return control ? !!control.getError('emailTypo')?.suggested && control.touched : false;
+  }
+
+  get emailTypoSuggestion(): string {
+    const control = this.forgotPasswordForm.get(FORGOT_PASSWORD_FORM_CONTROLS.EMAIL);
+    return control?.getError('emailTypo')?.suggested ?? '';
+  }
+
   get hasEmailFormatError(): boolean {
     const control = this.forgotPasswordForm.get(FORGOT_PASSWORD_FORM_CONTROLS.EMAIL); // get email control from form
     return (control?.hasError('email') && control?.touched) ?? false; // return true if email is invalid and touched

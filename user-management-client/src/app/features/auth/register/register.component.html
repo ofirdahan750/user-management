@@ -50,6 +50,9 @@
             @if (hasEmailRequiredError) {
               <mat-error>{{ MESSAGES.REQUIRED_FIELD }}</mat-error>
             }
+            @if (hasEmailTypoError && emailTypoSuggestion) {
+              <mat-error>{{ MESSAGES.EMAIL_TYPO_DID_YOU_MEAN }} {{ emailTypoSuggestion }}?</mat-error>
+            }
             @if (hasEmailFormatError) {
               <mat-error>{{ MESSAGES.INVALID_EMAIL }}</mat-error>
             }

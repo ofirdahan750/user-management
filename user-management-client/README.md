@@ -75,23 +75,13 @@ The build artifacts will be stored in the `dist/` directory.
 
 ### Environment Configuration
 
-Update the API endpoints in `src/app/core/constants/api-endpoints.constants.ts`:
+API base URL is configured via environment files:
 
-**For local development:**
-```typescript
-export const API_ENDPOINTS = {
-  BASE_URL: 'http://localhost:3000/api',
-  // ... other endpoints
-};
-```
+- **Development** (`src/environments/environment.ts`): `http://localhost:3000/api`
+- **Production** (`src/environments/environment.prod.ts`): Update `apiUrl` for your production backend
 
-**For production (after deploying backend to Koyeb):**
-```typescript
-export const API_ENDPOINTS = {
-  BASE_URL: 'https://your-koyeb-app.koyeb.app/api',
-  // ... other endpoints
-};
-```
+When running `ng serve` (development), the app uses `api-endpoints.dev.constants.ts`.  
+When running `ng build` (production), the app uses `environment.prod.ts` via file replacement.
 
 ### Email Verification (Mock)
 
@@ -198,15 +188,18 @@ All component styles follow BEM (Block Element Modifier) naming:
 
 ## 🧪 Testing
 
-**Note**: Tests are not included in this build as per requirements. To add testing:
-
 ```bash
-# Unit tests
+# Run all unit tests (Jasmine/Karma)
 ng test
 
-# E2E tests
-ng e2e
+# Run tests in headless mode (no watch)
+ng test --no-watch --browsers=ChromeHeadless
+
+# Run specific test file (example)
+ng test --include='**/profile.component.spec.ts' --no-watch --browsers=ChromeHeadless
 ```
+
+**353 unit tests** cover services, components, pipes, validators, and guards.
 
 ## 📦 Dependencies
 

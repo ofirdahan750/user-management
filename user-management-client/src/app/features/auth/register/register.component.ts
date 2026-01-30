@@ -225,6 +225,17 @@ export class RegisterComponent implements OnInit {
     return control ? control.hasError('email') && control.touched : false; // return email format error
   }
 
+  // Get email typo error (common typos like gmial.com -> gmail.com)
+  get hasEmailTypoError(): boolean {
+    const control = this.registerForm.get(REGISTER_FORM_CONTROLS.EMAIL);
+    return control ? !!control.getError('emailTypo')?.suggested && control.touched : false;
+  }
+
+  get emailTypoSuggestion(): string {
+    const control = this.registerForm.get(REGISTER_FORM_CONTROLS.EMAIL);
+    return control?.getError('emailTypo')?.suggested ?? '';
+  }
+
   // Get password required error
   get hasPasswordRequiredError(): boolean {
     const control = this.registerForm.get(REGISTER_FORM_CONTROLS.PASSWORD);

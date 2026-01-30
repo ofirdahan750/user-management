@@ -7,6 +7,7 @@ import { passwordStrengthValidator } from '@shared/validators/password-strength.
 import { passwordMatchValidator } from '@shared/validators/password-match.validator';
 import { israeliPhoneValidator } from '@shared/validators/israeli-phone.validator';
 import { defaultDateAgeValidator } from '@shared/validators/date-age.validator';
+import { emailTypoValidator } from '@shared/validators/email-typo.validator';
 import { LocalStorageService } from '@core/services/local-storage/local-storage.service';
 import { StorageKeys } from '@core/enums/storage-keys.enum';
 import {
@@ -29,7 +30,7 @@ export class FormService {
 
   createRegisterForm(): FormGroup {
     return this.fb.group({
-      [REGISTER_FORM_CONTROLS.EMAIL]: ['', [Validators.required, Validators.email]],
+      [REGISTER_FORM_CONTROLS.EMAIL]: ['', [Validators.required, Validators.email, emailTypoValidator()]],
       [REGISTER_FORM_CONTROLS.PASSWORD]: ['', [Validators.required, passwordStrengthValidator()]],
       [REGISTER_FORM_CONTROLS.CONFIRM_PASSWORD]: ['', [Validators.required]],
       [REGISTER_FORM_CONTROLS.FIRST_NAME]: ['', [Validators.required]],
@@ -42,7 +43,7 @@ export class FormService {
 
   createLoginForm(): FormGroup {
     const form = this.fb.group({
-      [LOGIN_FORM_CONTROLS.LOGIN_ID]: ['', [Validators.required, Validators.email]],
+      [LOGIN_FORM_CONTROLS.LOGIN_ID]: ['', [Validators.required, Validators.email, emailTypoValidator()]],
       [LOGIN_FORM_CONTROLS.PASSWORD]: ['', [Validators.required]],
       [LOGIN_FORM_CONTROLS.REMEMBER_ME]: [false],
     });
@@ -60,7 +61,7 @@ export class FormService {
 
   createForgotPasswordForm(): FormGroup {
     return this.fb.group({
-      email: ['', [Validators.required, Validators.email]]
+      email: ['', [Validators.required, Validators.email, emailTypoValidator()]]
     });
   }
 

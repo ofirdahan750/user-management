@@ -41,6 +41,7 @@ export const MESSAGES = {
   // Form Validation
   REQUIRED_FIELD: 'This field is required.',
   INVALID_EMAIL: 'Please enter a valid email address.',
+  EMAIL_TYPO_DID_YOU_MEAN: 'Did you mean',
   INVALID_PASSWORD: 'Password must be at least 8 characters with uppercase, lowercase, and digit.',
   PASSWORD_MISMATCH: 'Passwords do not match.',
   INVALID_PHONE: 'Please enter a valid phone number.',

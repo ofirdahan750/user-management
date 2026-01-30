@@ -85,6 +85,10 @@ export class EmailInputComponent implements ControlValueAccessor {
     if (this.control.hasError('required')) {
       return this.MESSAGES.REQUIRED_FIELD;
     }
+    const typoError = this.control.getError('emailTypo');
+    if (typoError?.suggested) {
+      return `${this.MESSAGES.EMAIL_TYPO_DID_YOU_MEAN} ${typoError.suggested}?`;
+    }
     if (this.control.hasError('email')) {
       return this.MESSAGES.INVALID_EMAIL;
     }

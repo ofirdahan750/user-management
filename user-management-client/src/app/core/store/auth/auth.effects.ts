@@ -75,7 +75,10 @@ export class AuthEffects {
       ofType(AuthActions.loginSuccess),
       tap(() => {
         this.toastService.showSuccess(MESSAGES.LOGIN_SUCCESS);
-        this.router.navigate([Routes.DASHBOARD]);
+        const returnUrl = this.router.routerState.snapshot.root.queryParams['returnUrl'];
+        const isInternalPath = typeof returnUrl === 'string' && returnUrl.startsWith('/') && !returnUrl.startsWith('//');
+        const target = isInternalPath ? returnUrl : Routes.DASHBOARD;
+        this.router.navigateByUrl(target);
       })
     ),
     { dispatch: false }
