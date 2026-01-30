@@ -1,8 +1,10 @@
-.date-input {
-  width: 100%;
-  min-width: 0;
-  
-  mat-form-field {
+app-date-input {
+  .date-input {
     width: 100%;
+    min-width: 0;
+
+    mat-form-field {
+      width: 100%;
+    }
   }
 }

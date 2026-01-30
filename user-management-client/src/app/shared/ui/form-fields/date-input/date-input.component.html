@@ -1,13 +1,14 @@
 <mat-form-field appearance="outline" class="date-input">
   <mat-label>{{ label }}</mat-label>
-  <input 
-    matInput 
+  <input
+    matInput
     [matDatepicker]="picker"
-    [formControl]="control!"
+    [formControl]="control"
     [attr.aria-label]="ariaLabel || label"
-    (dateChange)="onDateChange($event)"
-    (blur)="onBlur()"
   />
   <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
   <mat-datepicker #picker></mat-datepicker>
+  @if (showError) {
+    <mat-error>{{ errorMessage }}</mat-error>
+  }
 </mat-form-field>
