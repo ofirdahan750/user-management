@@ -7,9 +7,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { IconButtonComponent } from '@shared/ui/buttons/icon-button/icon-button.component';
 import { ARIA_LABELS } from '@core/constants/aria-labels.constants';
+import { AUTOCOMPLETE } from '@core/constants/autocomplete.constants';
 import { ICONS } from '@core/constants/icons.constants';
-import { MESSAGES } from '@core/constants/messages.constants';
 import { LABELS } from '@core/constants/labels.constants';
+import { MESSAGES } from '@core/constants/messages.constants';
 
 @Component({
   selector: 'app-password-input',
@@ -40,7 +41,7 @@ export class PasswordInputComponent implements ControlValueAccessor {
   @Input() placeholder: string = '';
   @Input() formControlName: string = '';
   @Input() control?: FormControl;
-  @Input() autocomplete: string = 'new-password';
+  @Input() autocomplete: string = AUTOCOMPLETE.NEW_PASSWORD;
   @Input() showStrengthIndicator: boolean = false;
   @Input() ariaLabel: string = '';
 
