@@ -2,6 +2,7 @@ import {
   Component,
   ViewEncapsulation,
   ChangeDetectionStrategy,
+  OnInit,
   computed,
   inject,
   signal,
@@ -33,8 +34,8 @@ import { selectIsAuthenticated, selectUserProfileList } from '@core/store/auth/a
 import * as AuthActions from '@core/store/auth/auth.actions';
 import { IconButtonComponent } from '@shared/ui/buttons/icon-button/icon-button.component';
 import { LinkButtonComponent } from '@shared/ui/buttons/link-button/link-button.component';
+import { NameCapitalizePipe } from '@shared/pipes/name-capitalize/name-capitalize.pipe';
 import { AppState } from '@core/store/root-state.model';
-import { UtilService } from '@core/services/util/util.service';
 
 @Component({
   selector: 'app-header',
@@ -51,42 +52,44 @@ import { UtilService } from '@core/services/util/util.service';
     MatDividerModule,
     IconButtonComponent,
     LinkButtonComponent,
+    NameCapitalizePipe,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HeaderComponent {
-  private store: Store<AppState> = inject(Store);
-  private themeService: ThemeService = inject(ThemeService);
-  private router = inject(Router);
-  readonly utilService = inject(UtilService);
-
-  isAuthenticated$: Observable<boolean> = this.store.select(selectIsAuthenticated);
-  isOnLoginPage: WritableSignal<boolean> = signal(
-    this.router.url.startsWith(Routes.LOGIN)
-  );
-
-  constructor() {
-    this.router.events
-      .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
-      .subscribe(() =>
-        this.isOnLoginPage.set(this.router.url.startsWith(Routes.LOGIN))
-      );
-  } // isAuthenticated state
-  currentUser$: Observable<UserProfile> = this.store
-    .select(selectUserProfileList)
-    .pipe(switchMap((users) => (users.length > 0 ? of(users[0]) : EMPTY))); // current user state
-  currentTheme: Signal<Theme> = computed(() => this.themeService.currentTheme()); // current theme
-  mobileMenuOpen: WritableSignal<boolean> = signal(false); // mobile menu open state
-
+export class HeaderComponent implements OnInit {
   readonly routes = Routes;
   readonly labels = LABELS;
   readonly ariaLabels = ARIA_LABELS;
   readonly icons = ICONS;
   readonly Theme = Theme;
   readonly MaterialColor = MaterialColor;
+  private store: Store<AppState> = inject(Store);
+  private themeService: ThemeService = inject(ThemeService);
+  private router = inject(Router);
+
+  isAuthenticated$: Observable<boolean> = this.store.select(selectIsAuthenticated);
+  isOnLoginPage: WritableSignal<boolean> = signal(this.router.url.startsWith(Routes.LOGIN));
+
+  currentUser$: Observable<UserProfile> = this.store
+    .select(selectUserProfileList)
+    .pipe(switchMap((users) => (users.length > 0 ? of(users[0]) : EMPTY))); // current user state
+  currentTheme: Signal<Theme> = computed(() => this.themeService.currentTheme()); // current theme
+  mobileMenuOpen: WritableSignal<boolean> = signal(false); // mobile menu open state
+
+  ngOnInit(): void {
+    this.subscribeToLoginPageRoute(); // subscribe to the login page route for the wobble effect (register button animation)
+  }
+
+  // subscribe to the login page route for the wobble effect (register button animation)
+  private subscribeToLoginPageRoute(): void {
+    this.router.events
+      .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
+      .subscribe(() => this.isOnLoginPage.set(this.router.url.startsWith(Routes.LOGIN)));
+    // subscribe to the login page route for the wobble effect (register button animation)
+  }
 
   // toggle the theme
   toggleTheme(): void {
@@ -105,8 +108,11 @@ export class HeaderComponent {
   }
 
   closeMobileMenu(): void {
-    // close the mobile menu
     this.mobileMenuOpen.set(false);
+  }
+
+  getFullName(user: UserProfile): string {
+    return `${user.firstName} ${user.lastName}`;
   }
 
   logout(): void {

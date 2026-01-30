@@ -127,4 +127,30 @@ describe('HeaderComponent', () => {
     const registerBtn = fixture.nativeElement.querySelector('.header__register-btn--wobble');
     expect(registerBtn).toBeTruthy();
   });
+
+  it('getFullName returns first and last name concatenated', () => {
+    const { component } = createFixture();
+    const user: UserProfile = {
+      UID: '1',
+      email: 'test@test.com',
+      firstName: 'john',
+      lastName: 'doe',
+      isVerified: true,
+      registrationDate: '2024-01-01',
+      lastLoginDate: '2024-01-15',
+    };
+    expect(component.getFullName(user)).toBe('john doe');
+  });
+
+  it('subscribeToLoginPageRoute updates isOnLoginPage when navigating', async () => {
+    const router = TestBed.inject(Router);
+    const { fixture, component } = createFixture();
+    fixture.detectChanges();
+    await router.navigate(['/']);
+    fixture.detectChanges();
+    expect(component.isOnLoginPage()).toBe(false);
+    await router.navigate([Routes.LOGIN]);
+    fixture.detectChanges();
+    expect(component.isOnLoginPage()).toBe(true);
+  });
 });

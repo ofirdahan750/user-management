@@ -4,14 +4,6 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class UtilService {
-  /**
-   * Capitalizes the first letter of a string and lowercases the rest.
-   * e.g. "john" -> "John", "JOHN" -> "John"
-   */
-  capitalizeFirst(value: string): string {
-    if (!value) return '';
-    return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
-  }
 
   /**
    * Generates a short random string suitable for use as a unique ID.

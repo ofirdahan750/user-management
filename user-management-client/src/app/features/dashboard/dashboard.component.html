@@ -1,7 +1,10 @@
 <div class="dashboard">
   <div class="dashboard__container">
-        <h1 class="dashboard__title">{{ welcomeMessage$ | async }}</h1>
-
+    @if (currentUser$ | async; as user) {
+      @if (user.UID) {
+        <h1 class="dashboard__title">{{ labels.WELCOME }}, {{ user.firstName | nameCapitalize }}!</h1>
+      }
+    }
     <div class="dashboard__grid">
       <mat-card class="dashboard__card">
         <mat-card-header class="dashboard__card-header">
