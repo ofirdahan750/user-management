@@ -79,11 +79,43 @@ export class ResetPasswordComponent implements OnInit {
     this.token.set(tokenParam); // set token to token signal
   }
 
+  // on submit reset password form
+  onSubmit(): void {
+    const token: string = this.token(); // get token from token signal
+    if (!this.formService.validateForm(this.resetPasswordForm) || !token) return;
+    this.isLoading.set(true); // set is loading to true
+    // get password from form value
+    const password: string = this.resetPasswordForm.value[RESET_PASSWORD_FORM_CONTROLS.PASSWORD];
+    // reset password with token and password using auth service
+    this.authService.resetPassword(token, password).subscribe({
+      next: () => {
+        this.toastService.showSuccess(MESSAGES.PASSWORD_RESET_SUCCESS); // show success toast of password reset success
+        this.router.navigate([Routes.LOGIN]); // navigate to login page
+      },
+      error: () => {
+        this.toastService.showError(MESSAGES.PASSWORD_RESET_ERROR); // show error toast of password reset error
+        this.isLoading.set(false); // set is loading to false
+      },
+    });
+  }
+
+  // toggle password visibility (show/hide)
+  togglePasswordVisibility(): void {
+    this.hidePassword.update((value) => !value);
+  }
+
+  // toggle confirm password visibility (show/hide)
+  toggleConfirmPasswordVisibility(): void {
+    this.hideConfirmPassword.update((value) => !value);
+  }
+
+  // get has password required error (true when password is required and touched)
   get hasPasswordRequiredError(): boolean {
     const control = this.resetPasswordForm.get(RESET_PASSWORD_FORM_CONTROLS.PASSWORD);
     return control ? control.hasError('required') && control.touched : false;
   }
 
+  // get has password validation error (true when password is invalid)
   get hasPasswordValidationError(): boolean {
     const control = this.resetPasswordForm.get(RESET_PASSWORD_FORM_CONTROLS.PASSWORD);
     return control
@@ -94,48 +126,17 @@ export class ResetPasswordComponent implements OnInit {
       : false;
   }
 
+  // get has confirm password required error (true when confirm password is required and touched)
   get hasConfirmPasswordRequiredError(): boolean {
     const control = this.resetPasswordForm.get(RESET_PASSWORD_FORM_CONTROLS.CONFIRM_PASSWORD);
     return control ? control.hasError('required') && control.touched : false;
   }
 
+  // get has password mismatch error (true when password and confirm password do not match)
   get hasPasswordMismatchError(): boolean {
     const control = this.resetPasswordForm.get(RESET_PASSWORD_FORM_CONTROLS.CONFIRM_PASSWORD);
     return (
       this.resetPasswordForm.hasError('passwordMismatch') && (control ? control.touched : false)
     );
-  }
-
-  onSubmit(): void {
-    if (!this.formService.validateForm(this.resetPasswordForm)) {
-      return;
-    }
-
-    const token = this.token();
-    if (!token || token === '') {
-      return;
-    }
-
-    this.isLoading.set(true);
-    const password = this.resetPasswordForm.value[RESET_PASSWORD_FORM_CONTROLS.PASSWORD];
-
-    this.authService.resetPassword(token, password).subscribe({
-      next: () => {
-        this.toastService.showSuccess(MESSAGES.PASSWORD_RESET_SUCCESS);
-        this.router.navigate([Routes.LOGIN]);
-      },
-      error: () => {
-        this.toastService.showError(MESSAGES.PASSWORD_RESET_ERROR);
-        this.isLoading.set(false);
-      },
-    });
-  }
-
-  togglePasswordVisibility(): void {
-    this.hidePassword.update((value) => !value);
-  }
-
-  toggleConfirmPasswordVisibility(): void {
-    this.hideConfirmPassword.update((value) => !value);
   }
 }
