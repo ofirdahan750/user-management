@@ -8,7 +8,7 @@
           <div class="profile__row">
             <app-text-input
               [label]="labels.FIRST_NAME"
-              [control]="firstNameControl"
+              [control]="profileForm.get(formControls.FIRST_NAME)!"
               [ariaLabel]="labels.FIRST_NAME"
               autocomplete="given-name"
               class="profile__field"
@@ -16,7 +16,7 @@
 
             <app-text-input
               [label]="labels.LAST_NAME"
-              [control]="lastNameControl"
+              [control]="profileForm.get(formControls.LAST_NAME)!"
               [ariaLabel]="labels.LAST_NAME"
               autocomplete="family-name"
               class="profile__field"
@@ -25,7 +25,7 @@
 
           <app-email-input
             [label]="labels.EMAIL"
-            [control]="emailControl"
+            [control]="profileForm.get(formControls.EMAIL)!"
             [ariaLabel]="labels.EMAIL"
             [attr.readonly]="''"
             [hint]="labels.EMAIL_CANNOT_BE_CHANGED"
@@ -35,20 +35,21 @@
           <div class="profile__row">
             <app-date-input
               [label]="labels.BIRTH_DATE"
-              [control]="birthDateControl"
+              [control]="profileForm.get(formControls.BIRTH_DATE)!"
               [ariaLabel]="labels.BIRTH_DATE"
               class="profile__field"
             ></app-date-input>
 
             <app-phone-input
               [label]="labels.PHONE_NUMBER"
-              [control]="phoneNumberControl"
+              [control]="profileForm.get(formControls.PHONE_NUMBER)!"
               [ariaLabel]="labels.PHONE_NUMBER"
               class="profile__field"
             ></app-phone-input>
           </div>
 
           @if (currentUser$ | async; as user) {
+            @if (user.UID) {
             <div class="profile__info">
               <div class="profile__info-item">
                 <span class="profile__info-label">{{ labels.ACCOUNT_STATUS }}:</span>
@@ -96,6 +97,7 @@
                 {{ labels.CHANGE_PASSWORD }}
               </a>
             </div>
+            }
           }
 
           <div class="profile__actions">

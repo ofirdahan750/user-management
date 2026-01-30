@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation, ChangeDetectionStrategy, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -25,8 +25,12 @@ import { MESSAGES } from '@core/constants/messages.constants';
 })
 export class DateInputComponent {
   @Input() label = '';
-  @Input({ required: true }) control!: FormControl<Date | null>;
+  @Input({ required: true }) control!: AbstractControl;
   @Input() ariaLabel = '';
+
+  get formControl(): FormControl {
+    return this.control as FormControl;
+  }
 
   get errorMessage(): string {
     if (!this.control?.errors) return ''; // if there are no errors, return an empty string

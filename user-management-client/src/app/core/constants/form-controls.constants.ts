@@ -29,3 +29,11 @@ export const CHANGE_PASSWORD_FORM_CONTROLS = {
   PASSWORD: 'password',
   CONFIRM_PASSWORD: 'confirmPassword',
 } as const;
+
+export const PROFILE_FORM_CONTROLS = {
+  FIRST_NAME: 'firstName',
+  LAST_NAME: 'lastName',
+  EMAIL: 'email',
+  PHONE_NUMBER: 'phoneNumber',
+  BIRTH_DATE: 'birthDate',
+} as const;

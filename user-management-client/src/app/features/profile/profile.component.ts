@@ -1,9 +1,18 @@
-import { Component, ViewEncapsulation, ChangeDetectionStrategy, inject, signal, effect } from '@angular/core';
+import {
+  Component,
+  ViewEncapsulation,
+  ChangeDetectionStrategy,
+  OnInit,
+  inject,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormGroup, ReactiveFormsModule, FormControl } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Observable, take } from 'rxjs';
+import { Observable, of, take } from 'rxjs';
+import { filter, map, startWith } from 'rxjs/operators';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -20,7 +29,8 @@ import { PhoneInputComponent } from '@shared/ui/form-fields/phone-input/phone-in
 import { DateInputComponent } from '@shared/ui/form-fields/date-input/date-input.component';
 import { SubmitButtonComponent } from '@shared/ui/buttons/submit-button/submit-button.component';
 import { Routes } from '@core/enums/routes.enum';
-import { UserProfile, ProfileUpdate } from '@core/models/user.model';
+import { UserProfile, ProfileUpdate, DEFAULT_USER_PROFILE } from '@core/models/user.model';
+import { ProfileOriginalValues } from '@core/types/profile.types';
 import { LABELS } from '@core/constants/labels.constants';
 import { MESSAGES } from '@core/constants/messages.constants';
 import { ICONS } from '@core/constants/icons.constants';
@@ -28,6 +38,8 @@ import { PLACEHOLDERS } from '@core/constants/placeholders.constants';
 import { selectUser, selectAuthLoading } from '@core/store/auth/auth.selectors';
 import * as AuthActions from '@core/store/auth/auth.actions';
 import * as LoadingActions from '@core/store/loading/loading.actions';
+import { AppState } from '@core/store/root-state.model';
+import { PROFILE_FORM_CONTROLS } from '@core/constants/form-controls.constants';
 
 @Component({
   selector: 'app-profile',
@@ -49,89 +61,77 @@ import * as LoadingActions from '@core/store/loading/loading.actions';
     EmailInputComponent,
     PhoneInputComponent,
     DateInputComponent,
-    SubmitButtonComponent
+    SubmitButtonComponent,
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProfileComponent {
-  private formService = inject(FormService);
-  private store = inject(Store);
-  private router = inject(Router);
-
-  profileForm: FormGroup;
-  hasUnsavedChanges = signal<boolean>(false);
-  originalValues: { firstName: string; lastName: string; birthDate: Date | ''; phoneNumber: string } = {
-    firstName: '',
-    lastName: '',
-    birthDate: '',
-    phoneNumber: ''
-  };
-  combinedLoading$: Observable<boolean>;
-  currentUser$: Observable<UserProfile | null>;
-
+export class ProfileComponent implements OnInit {
   readonly labels = LABELS;
   readonly routes = Routes;
   readonly MESSAGES = MESSAGES;
   readonly icons = ICONS;
   readonly placeholders = PLACEHOLDERS;
+  readonly formControls = PROFILE_FORM_CONTROLS;
 
-  get firstNameControl(): FormControl {
-    return this.profileForm.get('firstName') as FormControl;
+  private formService: FormService = inject(FormService);
+  private store: Store<AppState> = inject(Store);
+
+  profileForm: FormGroup = this.formService.createProfileForm() || ({} as FormGroup); // profile form
+
+  hasUnsavedChanges: WritableSignal<boolean> = signal<boolean>(false); // has unsaved changes signal (true when there are unsaved changes, false when there are no unsaved changes)
+  combinedLoading$: Observable<boolean> = this.formService.getCombinedLoading$() || of(false); // combined loading observable (true when there is a loading state, false when there is no loading state)
+  currentUser$: Observable<UserProfile> = this.store.select(selectUser).pipe(
+    map((user) => user ?? DEFAULT_USER_PROFILE),
+    startWith(DEFAULT_USER_PROFILE),
+  );
+
+  originalValues: ProfileOriginalValues = {
+    firstName: '',
+    lastName: '',
+    birthDate: '',
+    phoneNumber: '',
+  };
+
+  ngOnInit(): void {
+    this.disableEmailControl();
+    this.subscribeToUserAndFormChanges();
   }
 
-  get lastNameControl(): FormControl {
-    return this.profileForm.get('lastName') as FormControl;
-  }
-
-  get emailControl(): FormControl {
-    return this.profileForm.get('email') as FormControl;
-  }
-
-  get phoneNumberControl(): FormControl {
-    return this.profileForm.get('phoneNumber') as FormControl;
-  }
-
-  get birthDateControl(): FormControl {
-    return this.profileForm.get('birthDate') as FormControl;
-  }
-
-  constructor() {
-    this.profileForm = this.formService.createProfileForm();
-    // Disable email field as it shouldn't be editable
-    const emailControl = this.profileForm.get('email');
+  private disableEmailControl(): void {
+    const emailControl = this.profileForm.get(PROFILE_FORM_CONTROLS.EMAIL);
     if (emailControl) {
       emailControl.disable();
     }
-    
-    this.combinedLoading$ = this.formService.getCombinedLoading$();
-    this.currentUser$ = this.store.select(selectUser);
+  }
 
-    // Subscribe to user changes - using take(1) since we only need initial value
-    // The template will use async pipe for reactive updates
-    // This will auto-unsubscribe after 1 emission
-    this.currentUser$.pipe(take(1)).subscribe({
-      next: (user) => {
-        if (user) {
+  private subscribeToUserAndFormChanges(): void {
+    // Wait for first real user (skip DEFAULT_USER_PROFILE from startWith), then patch form
+    this.currentUser$
+      .pipe(
+        filter((user) => !!user.UID),
+        take(1),
+      )
+      .subscribe({
+        next: (user) => {
           this.originalValues = {
             firstName: user.firstName,
             lastName: user.lastName,
             birthDate: user.birthDate ? new Date(user.birthDate) : '',
-            phoneNumber: user.phoneNumber || ''
+            phoneNumber: user.phoneNumber || '',
           };
 
           this.profileForm.patchValue({
-            firstName: user.firstName,
-            lastName: user.lastName,
-            email: user.email,
-            birthDate: user.birthDate ? new Date(user.birthDate) : '',
-            phoneNumber: user.phoneNumber || ''
+            [PROFILE_FORM_CONTROLS.FIRST_NAME]: user.firstName,
+            [PROFILE_FORM_CONTROLS.LAST_NAME]: user.lastName,
+            [PROFILE_FORM_CONTROLS.EMAIL]: user.email,
+            [PROFILE_FORM_CONTROLS.BIRTH_DATE]: user.birthDate ? new Date(user.birthDate) : '',
+            [PROFILE_FORM_CONTROLS.PHONE_NUMBER]: user.phoneNumber || '',
           });
-        }
-      }
-    });
+        },
+      });
 
     this.profileForm.valueChanges.subscribe(() => {
       this.checkForChanges();
@@ -144,33 +144,43 @@ export class ProfileComponent {
     }
 
     const formValue = this.profileForm.value;
+    const c = PROFILE_FORM_CONTROLS;
 
     const updateData: ProfileUpdate = {
-      firstName: formValue.firstName,
-      lastName: formValue.lastName
+      firstName: formValue[c.FIRST_NAME],
+      lastName: formValue[c.LAST_NAME],
     };
-    
-    if (formValue.birthDate) {
-      updateData.birthDate = new Date(formValue.birthDate).toISOString();
+
+    if (formValue[c.BIRTH_DATE]) {
+      updateData.birthDate = new Date(formValue[c.BIRTH_DATE]).toISOString();
     }
-    
-    if (formValue.phoneNumber) {
-      updateData.phoneNumber = formValue.phoneNumber;
+
+    if (formValue[c.PHONE_NUMBER]) {
+      updateData.phoneNumber = formValue[c.PHONE_NUMBER];
     }
 
     this.store.dispatch(LoadingActions.showLoading());
     this.store.dispatch(AuthActions.updateProfile({ data: updateData }));
-    
+
     // Subscribe to success to update local state - using take(2) to get initial and final state
     // This will auto-unsubscribe after 2 emissions (initial state and final state)
-    this.store.select(selectAuthLoading).pipe(take(2)).subscribe({
-      next: (isLoading) => {
-        if (!isLoading) {
-          this.originalValues = { ...formValue };
-          this.hasUnsavedChanges.set(false);
-        }
-      }
-    });
+    this.store
+      .select(selectAuthLoading)
+      .pipe(take(2))
+      .subscribe({
+        next: (isLoading) => {
+          if (!isLoading) {
+            const c = PROFILE_FORM_CONTROLS;
+            this.originalValues = {
+              firstName: formValue[c.FIRST_NAME],
+              lastName: formValue[c.LAST_NAME],
+              birthDate: formValue[c.BIRTH_DATE] ?? '',
+              phoneNumber: formValue[c.PHONE_NUMBER] ?? '',
+            };
+            this.hasUnsavedChanges.set(false);
+          }
+        },
+      });
   }
 
   cancel(): void {
@@ -180,14 +190,16 @@ export class ProfileComponent {
 
   private checkForChanges(): void {
     const currentValues = this.profileForm.value;
-    const hasChanges = (Object.keys(this.originalValues) as Array<keyof typeof this.originalValues>).some(key => {
+    const hasChanges = (
+      Object.keys(this.originalValues) as Array<keyof ProfileOriginalValues>
+    ).some((key) => {
       const original = this.originalValues[key];
       const current = currentValues[key];
-      
+
       if (original instanceof Date && current instanceof Date) {
         return original.getTime() !== current.getTime();
       }
-      
+
       return original !== current;
     });
 

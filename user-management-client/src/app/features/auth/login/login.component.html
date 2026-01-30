@@ -9,7 +9,7 @@
         <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login__form">
           <app-email-input
             [label]="labels.EMAIL"
-            [control]="$any(loginForm.get(formControls.LOGIN_ID))"
+            [control]="loginForm.get(formControls.LOGIN_ID)!"
             [ariaLabel]="labels.EMAIL"
             [autofocus]="true"
             class="login__field"
@@ -17,7 +17,7 @@
 
           <app-password-input
             [label]="labels.PASSWORD"
-            [control]="$any(loginForm.get(formControls.PASSWORD))"
+            [control]="loginForm.get(formControls.PASSWORD)!"
             [ariaLabel]="labels.PASSWORD"
             [autocomplete]="'current-password'"
             class="login__field"

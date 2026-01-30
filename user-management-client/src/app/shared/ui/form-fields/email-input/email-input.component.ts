@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation, ChangeDetectionStrategy, Input, forwardRef, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl, ReactiveFormsModule } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, AbstractControl, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
@@ -33,7 +33,7 @@ export class EmailInputComponent implements ControlValueAccessor {
   @Input() label: string = '';
   @Input() placeholder: string = '';
   @Input() formControlName: string = '';
-  @Input() control?: FormControl;
+  @Input() control?: AbstractControl;
   @Input() autocomplete: string = 'email';
   @Input() readonly: boolean = false;
   @Input() hint: string = '';
@@ -69,6 +69,10 @@ export class EmailInputComponent implements ControlValueAccessor {
 
   setDisabledState(isDisabled: boolean): void {
     // Handle disabled state if needed
+  }
+
+  get formControl(): FormControl {
+    return this.control as FormControl;
   }
 
   get hasError(): boolean {

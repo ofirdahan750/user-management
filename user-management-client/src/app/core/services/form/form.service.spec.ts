@@ -2,6 +2,7 @@
 import { TestBed } from '@angular/core/testing';
 import { provideStore } from '@ngrx/store';
 import { FormService } from './form.service';
+import { PROFILE_FORM_CONTROLS } from '@core/constants/form-controls.constants';
 import { loadingReducer } from '@core/store/loading/loading.reducer';
 import { authReducer } from '@core/store/auth/auth.reducer';
 
@@ -37,6 +38,15 @@ describe('FormService', () => {
     const form = service.createLoginForm();
     expect(form.get('loginID')).toBeTruthy();
     expect(form.get('password')).toBeTruthy();
+  });
+
+  it('createProfileForm should return form with PROFILE_FORM_CONTROLS', () => {
+    const form = service.createProfileForm();
+    expect(form.get(PROFILE_FORM_CONTROLS.FIRST_NAME)).toBeTruthy();
+    expect(form.get(PROFILE_FORM_CONTROLS.LAST_NAME)).toBeTruthy();
+    expect(form.get(PROFILE_FORM_CONTROLS.EMAIL)).toBeTruthy();
+    expect(form.get(PROFILE_FORM_CONTROLS.PHONE_NUMBER)).toBeTruthy();
+    expect(form.get(PROFILE_FORM_CONTROLS.BIRTH_DATE)).toBeTruthy();
   });
 
   it('validateForm should return false for invalid form', () => {
