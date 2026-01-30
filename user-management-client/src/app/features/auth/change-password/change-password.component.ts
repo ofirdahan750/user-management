@@ -82,7 +82,6 @@ export class ChangePasswordComponent {
         this.router.navigate([Routes.PROFILE]); // navigate to profile page
       },
       error: (error) => {
-        console.error('Change password error:', error); // log error
         const errorMessage: string = this.apiErrorService.getMessageFromHttpError(
           error,
           MESSAGES.PASSWORD_CHANGE_ERROR,
