@@ -2,10 +2,9 @@ import { Injectable } from '@angular/core';
 import { StorageKeys } from '@core/enums/storage-keys.enum';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SessionStorageService {
-
   setItem(key: StorageKeys, value: string): void {
     try {
       sessionStorage.setItem(key, value);
