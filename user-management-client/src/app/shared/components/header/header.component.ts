@@ -12,7 +12,8 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable, of, EMPTY } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, filter } from 'rxjs/operators';
+import { NavigationEnd } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -58,8 +59,20 @@ import { AppState } from '@core/store/root-state.model';
 export class HeaderComponent {
   private store: Store<AppState> = inject(Store);
   private themeService: ThemeService = inject(ThemeService);
+  private router = inject(Router);
 
-  isAuthenticated$: Observable<boolean> = this.store.select(selectIsAuthenticated); // isAuthenticated state
+  isAuthenticated$: Observable<boolean> = this.store.select(selectIsAuthenticated);
+  isOnLoginPage: WritableSignal<boolean> = signal(
+    this.router.url.startsWith(Routes.LOGIN)
+  );
+
+  constructor() {
+    this.router.events
+      .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
+      .subscribe(() =>
+        this.isOnLoginPage.set(this.router.url.startsWith(Routes.LOGIN))
+      );
+  } // isAuthenticated state
   currentUser$: Observable<UserProfile> = this.store
     .select(selectUserProfileList)
     .pipe(switchMap((users) => (users.length > 0 ? of(users[0]) : EMPTY))); // current user state

@@ -1,6 +1,7 @@
 // npx ng test --include='**/header.component.spec.ts' --no-watch --browsers=ChromeHeadless
+import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { provideStore, Store } from '@ngrx/store';
 import { signal } from '@angular/core';
@@ -11,6 +12,10 @@ import { authReducer } from '@core/store/auth/auth.reducer';
 import * as AuthActions from '@core/store/auth/auth.actions';
 import { HeaderComponent } from './header.component';
 import { UserProfile } from '@core/models/user.model';
+import { Routes } from '@core/enums/routes.enum';
+
+@Component({ standalone: true, template: '' })
+class StubComponent {}
 
 describe('HeaderComponent', () => {
   const mockThemeService = {
@@ -22,7 +27,10 @@ describe('HeaderComponent', () => {
     await TestBed.configureTestingModule({
       imports: [HeaderComponent],
       providers: [
-        provideRouter([]),
+        provideRouter([
+          { path: 'login', component: StubComponent },
+          { path: '', component: StubComponent },
+        ]),
         provideNoopAnimations(),
         provideStore({
           loading: loadingReducer,
@@ -95,5 +103,28 @@ describe('HeaderComponent', () => {
     const el = fixture.nativeElement as HTMLElement;
     const logo = el.querySelector('.header__logo');
     expect(logo?.textContent?.trim()).toBe(component.labels.APP_NAME);
+  });
+
+  it('isOnLoginPage returns false when not on login route', async () => {
+    const router = TestBed.inject(Router);
+    await router.navigate(['/']);
+    const { component } = createFixture();
+    expect(component.isOnLoginPage()).toBe(false);
+  });
+
+  it('isOnLoginPage returns true when on login route', async () => {
+    const router = TestBed.inject(Router);
+    await router.navigate([Routes.LOGIN]);
+    const { component } = createFixture();
+    expect(component.isOnLoginPage()).toBe(true);
+  });
+
+  it('applies wobble class to register button when on login page', async () => {
+    const router = TestBed.inject(Router);
+    await router.navigate([Routes.LOGIN]);
+    const { fixture } = createFixture();
+    fixture.detectChanges();
+    const registerBtn = fixture.nativeElement.querySelector('.header__register-btn--wobble');
+    expect(registerBtn).toBeTruthy();
   });
 });

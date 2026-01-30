@@ -107,6 +107,7 @@
           [showIcon]="false"
           [tooltip]="labels.TOOLTIP_NAVIGATE_REGISTER"
           class="header__register-btn"
+          [ngClass]="{'header__register-btn--wobble': isOnLoginPage()}"
         ></app-link-button>
       }
     </div>

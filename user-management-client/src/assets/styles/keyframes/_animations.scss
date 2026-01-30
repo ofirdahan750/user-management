@@ -17,3 +17,27 @@
     opacity: 1;
   }
 }
+
+// Runs every 3s: wobble plays in first 20% (~0.6s), then rests
+@keyframes wobble-attention {
+  0%,
+  20%,
+  100% {
+    transform: translateX(0) rotate(0) scale(1);
+  }
+  3% {
+    transform: translateX(-8px) rotate(-4deg) scale(1.06);
+  }
+  6% {
+    transform: translateX(6px) rotate(3deg) scale(1.06);
+  }
+  9% {
+    transform: translateX(-4px) rotate(-2deg) scale(1.04);
+  }
+  12% {
+    transform: translateX(2px) rotate(1deg) scale(1.02);
+  }
+  15% {
+    transform: translateX(-1px) rotate(-0.5deg) scale(1.01);
+  }
+}

@@ -1,6 +1,7 @@
 @use '../../../../assets/styles/functions/rem' as *;
 @use '../../../../assets/styles/mixins/flexbox' as *;
 @use '../../../../assets/styles/mixins/responsive' as *;
+@use '../../../../assets/styles/keyframes/animations' as *;
 
 app-header {
   .header {
@@ -208,6 +209,10 @@ app-header {
       @include respond-to(sm) {
         display: inline-flex;
       }
+    }
+
+    &__register-btn--wobble {
+      animation: wobble-attention 4.5s ease-in-out infinite;
     }
 
     // Mobile Menu Overlay
