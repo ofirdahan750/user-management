@@ -88,7 +88,6 @@ export class HeaderComponent implements OnInit {
     this.router.events
       .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
       .subscribe(() => this.isOnLoginPage.set(this.router.url.startsWith(Routes.LOGIN)));
-    // subscribe to the login page route for the wobble effect (register button animation)
   }
 
   // toggle the theme
@@ -107,7 +106,9 @@ export class HeaderComponent implements OnInit {
     this.mobileMenuOpen.update((value) => !value);
   }
 
+  // close the mobile menu
   closeMobileMenu(): void {
+    this.mobileMenuOpen.set(false); // set the mobile menu open state to false
     this.mobileMenuOpen.set(false);
   }
 
