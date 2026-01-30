@@ -1,12 +1,14 @@
-.email-input {
-  width: 100%;
-  min-width: 0;
-
-  mat-form-field {
+app-email-input {
+  .email-input {
     width: 100%;
-  }
+    min-width: 0;
 
-  mat-hint {
-    color: var(--color-text-secondary);
+    mat-form-field {
+      width: 100%;
+    }
+
+    mat-hint {
+      color: var(--color-text-secondary);
+    }
   }
 }
