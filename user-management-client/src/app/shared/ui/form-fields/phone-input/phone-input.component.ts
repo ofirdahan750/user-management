@@ -32,7 +32,7 @@ import { MESSAGES } from '@core/constants/messages.constants';
 })
 export class PhoneInputComponent implements ControlValueAccessor {
   @Input() label: string = '';
-  @Input() placeholder: string = '';
+  @Input() placeholder: string = PLACEHOLDERS.PHONE_NUMBER;
   @Input() formControlName: string = '';
   @Input() control?: FormControl;
   @Input() autocomplete: string = 'tel';
@@ -41,12 +41,6 @@ export class PhoneInputComponent implements ControlValueAccessor {
   readonly icons = ICONS;
   readonly placeholders = PLACEHOLDERS;
   readonly MESSAGES = MESSAGES;
-
-  constructor() {
-    if (!this.placeholder) {
-      this.placeholder = PLACEHOLDERS.PHONE_NUMBER;
-    }
-  }
 
   private onChange = (value: string) => {};
   private onTouched = () => {};

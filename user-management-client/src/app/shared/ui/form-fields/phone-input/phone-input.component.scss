@@ -1,8 +1,10 @@
-.phone-input {
-  width: 100%;
-  min-width: 0;
-  
-  mat-form-field {
+app-phone-input {
+  .phone-input {
     width: 100%;
+    min-width: 0;
+
+    mat-form-field {
+      width: 100%;
+    }
   }
 }
