@@ -274,11 +274,7 @@ None at this time.
 
 MIT License.
 
-## 🙏 Acknowledgments
 
-- Angular Team
-- Angular Material Team
-- Roboto Font (Google Fonts)
 
 ---
 
