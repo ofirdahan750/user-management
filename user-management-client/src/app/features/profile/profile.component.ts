@@ -13,7 +13,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormService } from '@core/services/form/form.service';
-import { DateFormatPipe } from '@shared/pipes/date-format.pipe';
+import { DateFormatPipe } from '@shared/pipes/date-format/date-format.pipe';
 import { TextInputComponent } from '@shared/ui/form-fields/text-input/text-input.component';
 import { EmailInputComponent } from '@shared/ui/form-fields/email-input/email-input.component';
 import { PhoneInputComponent } from '@shared/ui/form-fields/phone-input/phone-input.component';
