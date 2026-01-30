@@ -10,6 +10,7 @@
         </mat-card-header>
         <mat-card-content class="dashboard__card-content">
           @if (currentUser$ | async; as user) {
+            @if (user.UID) {
             <div class="dashboard__info">
               <div class="dashboard__info-item">
                 <span class="dashboard__info-label">{{ labels.FIRST_NAME }}:</span>
@@ -30,6 +31,7 @@
                 </div>
               }
             </div>
+            }
           }
         </mat-card-content>
         <mat-card-actions class="dashboard__card-actions">
@@ -52,6 +54,7 @@
         </mat-card-header>
         <mat-card-content class="dashboard__card-content">
           @if (currentUser$ | async; as user) {
+            @if (user.UID) {
             <div class="dashboard__status">
               <span 
                 class="dashboard__status-badge"
@@ -75,6 +78,7 @@
                 <span class="dashboard__info-value">{{ user.lastLoginDate | dateFormat }}</span>
               </div>
             </div>
+            }
           }
         </mat-card-content>
       </mat-card>

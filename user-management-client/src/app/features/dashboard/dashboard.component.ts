@@ -1,9 +1,15 @@
-import { Component, ViewEncapsulation, ChangeDetectionStrategy, computed, inject } from '@angular/core';
+import {
+  Component,
+  ViewEncapsulation,
+  ChangeDetectionStrategy,
+  computed,
+  inject,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -12,10 +18,11 @@ import { DateFormatPipe } from '@shared/pipes/date-format/date-format.pipe';
 import { NameCapitalizePipe } from '@shared/pipes/name-capitalize/name-capitalize.pipe';
 import { Routes } from '@core/enums/routes.enum';
 import { MaterialColor } from '@core/enums/material-color.enum';
-import { UserProfile } from '@core/models/user.model';
+import { UserProfile, DEFAULT_USER_PROFILE } from '@core/models/user.model';
 import { LABELS } from '@core/constants/labels.constants';
 import { ICONS } from '@core/constants/icons.constants';
 import { selectUser } from '@core/store/auth/auth.selectors';
+import { AppState } from '@core/store/root-state.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -28,23 +35,26 @@ import { selectUser } from '@core/store/auth/auth.selectors';
     MatIconModule,
     MatTooltipModule,
     DateFormatPipe,
-    NameCapitalizePipe
+    NameCapitalizePipe,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardComponent {
-  private store = inject(Store);
-
-  currentUser$: Observable<UserProfile | null> = this.store.select(selectUser);
-  welcomeMessage$: Observable<string> = this.currentUser$.pipe(
-    map(user => user ? `${LABELS.WELCOME}, ${user.firstName}!` : '')
-  );
-  
   readonly routes = Routes;
   readonly labels = LABELS;
   readonly icons = ICONS;
   readonly MaterialColor = MaterialColor;
+
+  private store: Store<AppState> = inject(Store);
+
+  currentUser$: Observable<UserProfile> = this.store.select(selectUser).pipe(
+    map((user) => user ?? DEFAULT_USER_PROFILE),
+    startWith(DEFAULT_USER_PROFILE),
+  );
+  welcomeMessage$: Observable<string> = this.currentUser$.pipe(
+    map((user) => (user.firstName ? `${LABELS.WELCOME}, ${user.firstName}!` : '')),
+  );
 }
