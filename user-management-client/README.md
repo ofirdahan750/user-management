@@ -272,11 +272,7 @@ None at this time.
 
 ## 📄 License
 
-This project is created for demonstration purposes.
-
-## 👤 Author
-
-Created as part of Angular Developer Home Task.
+MIT License.
 
 ## 🙏 Acknowledgments
 
