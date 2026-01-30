@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, ChangeDetectionStrategy, inject, signal } from '@angular/core';
+import { Component, ViewEncapsulation, ChangeDetectionStrategy, inject, signal, WritableSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -48,11 +48,11 @@ export class ResetPasswordComponent {
   private route: ActivatedRoute = inject(ActivatedRoute);
   private toastService: ToastNotificationService = inject(ToastNotificationService);
 
-  resetPasswordForm!: FormGroup;
-  isLoading = signal<boolean>(false);
-  hidePassword = signal<boolean>(true);
-  hideConfirmPassword = signal<boolean>(true);
-  token = signal<string>('');
+  resetPasswordForm: FormGroup = this.formService.createResetPasswordForm() || ({} as FormGroup); // reset password form  
+  isLoading: WritableSignal<boolean> = signal(false); // is loading signal (true when loading, false when not loading)
+  hidePassword: WritableSignal<boolean> = signal(true); // hide password signal (true when hiding, false when showing)
+  hideConfirmPassword: WritableSignal<boolean> = signal(true); // hide confirm password signal (true when hiding, false when showing)
+  token: WritableSignal<string> = signal(''); // token signal (empty string when no token)
 
 
   constructor() {
@@ -64,7 +64,6 @@ export class ResetPasswordComponent {
     }
 
     this.token.set(tokenParam);
-    this.resetPasswordForm = this.formService.createResetPasswordForm();
   }
   
   // Getters for form controls to avoid optional chaining in template
