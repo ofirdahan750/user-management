@@ -1,10 +1,4 @@
-import {
-  Component,
-  ViewEncapsulation,
-  ChangeDetectionStrategy,
-  computed,
-  inject,
-} from '@angular/core';
+import { Component, ViewEncapsulation, ChangeDetectionStrategy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -62,7 +56,7 @@ export class DashboardComponent {
     map((user) =>
       user.firstName
         ? `${LABELS.WELCOME}, ${this.utilService.capitalizeFirst(user.firstName)}!`
-        : ''
+        : '',
     ),
   );
 }
