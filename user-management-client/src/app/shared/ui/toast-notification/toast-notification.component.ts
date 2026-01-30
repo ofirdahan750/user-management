@@ -2,7 +2,7 @@ import { Component, ViewEncapsulation, ChangeDetectionStrategy, inject } from '@
 import { CommonModule } from '@angular/common';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatIconModule } from '@angular/material/icon';
-import { ToastNotificationService } from '@core/services/toast-notification.service';
+import { ToastNotificationService } from '@core/services/toast-notification/toast-notification.service';
 import { ARIA_LABELS } from '@core/constants/aria-labels.constants';
 import { ICONS } from '@core/constants/icons.constants';
 import { ToastType } from '@core/enums/toast-type.enum';

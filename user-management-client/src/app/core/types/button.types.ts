@@ -13,7 +13,7 @@ export type MaterialButtonVariant = 'raised' | 'flat' | 'stroked';
  */
 export type ButtonType = 'button' | 'submit' | 'reset';
 
-/** Default type for submit button */
+/** Default type for submit button */ 
 export const DEFAULT_SUBMIT_BUTTON_TYPE: ButtonType = 'submit';
 
 /** Default variant for submit button */

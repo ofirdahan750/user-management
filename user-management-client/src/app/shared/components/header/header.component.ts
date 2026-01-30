@@ -20,7 +20,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatDividerModule } from '@angular/material/divider';
-import { ThemeService } from '@core/services/theme.service';
+import { ThemeService } from '@core/services/theme/theme.service';
 import { Routes } from '@core/enums/routes.enum';
 import { Theme } from '@core/enums/theme.enum';
 import { MaterialColor } from '@core/enums/material-color.enum';

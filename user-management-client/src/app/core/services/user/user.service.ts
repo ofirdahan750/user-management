@@ -10,7 +10,7 @@ import { ERROR_MESSAGES } from '@core/constants/error-messages.constants';
   providedIn: 'root',
 })
 export class UserService {
-  private http: HttpClient = inject(HttpClient); // http client service
+  private http: HttpClient = inject(HttpClient);
 
   getCurrentUser(): Observable<UserProfile> {
     return this.http

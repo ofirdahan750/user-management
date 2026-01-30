@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class UtilService {
-  
+
   /**
    * Generates a short random string suitable for use as a unique ID.
    */

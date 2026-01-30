@@ -7,8 +7,8 @@ import { LoginRequest, LoginResponse } from '@core/models/auth.model';
 import { VerificationResponse, TokenResponse } from '@core/models/auth.model';
 import { PasswordResetRequest, PasswordResetResponse } from '@core/models/auth.model';
 import { UserProfile } from '@core/models/user.model';
-import { TokenStorageService } from '@core/services/token-storage.service';
-import { LocalStorageService } from '@core/services/local-storage.service';
+import { TokenStorageService } from '@core/services/token-storage/token-storage.service';
+import { LocalStorageService } from '@core/services/local-storage/local-storage.service';
 import { StorageKeys } from '@core/enums/storage-keys.enum';
 import { API_ENDPOINTS } from '@core/constants/api-endpoints.constants';
 import { ERROR_MESSAGES } from '@core/constants/error-messages.constants';
@@ -19,7 +19,7 @@ import { ERROR_MESSAGES } from '@core/constants/error-messages.constants';
 export class AuthService {
   private currentUserSubject = new BehaviorSubject<UserProfile | null>(null);
   currentUser$ = this.currentUserSubject.asObservable();
-  
+
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
@@ -37,7 +37,7 @@ export class AuthService {
   private initializeAuth(): void {
     const token = this.tokenStorage.getToken();
     const userData = this.localStorage.getItem(StorageKeys.USER);
-    
+
     if (token && userData) {
       try {
         const user = JSON.parse(userData) as UserProfile;
@@ -65,8 +65,7 @@ export class AuthService {
         switchMap(response => {
           this.tokenStorage.saveToken(response.token, rememberMe);
           this.tokenStorage.saveRefreshToken(response.refreshToken, rememberMe);
-          
-          // Get full user profile after login
+
           return this.getAccountInfo().pipe(
             map(user => {
               this.localStorage.setItem(StorageKeys.USER, JSON.stringify(user));
@@ -76,7 +75,6 @@ export class AuthService {
               return response;
             }),
             catchError(() => {
-              // Fallback if getAccountInfo fails
               const user: UserProfile = {
                 UID: response.user.UID,
                 email: response.user.email,
@@ -86,7 +84,7 @@ export class AuthService {
                 registrationDate: new Date().toISOString(),
                 lastLoginDate: new Date().toISOString()
               };
-              
+
               this.localStorage.setItem(StorageKeys.USER, JSON.stringify(user));
               this.currentUser.set(user);
               this.currentUserSubject.next(user);
@@ -211,7 +209,6 @@ export class AuthService {
   }
 
   private handleError = (error: HttpErrorResponse | Error | unknown): Observable<never> => {
-    // Pass through HttpErrorResponse as-is so effects can access error.error
     if (error instanceof HttpErrorResponse) {
       return throwError(() => error);
     }

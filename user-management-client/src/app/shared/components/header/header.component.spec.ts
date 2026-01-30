@@ -5,7 +5,7 @@ import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { provideStore, Store } from '@ngrx/store';
 import { signal } from '@angular/core';
 import { Theme } from '@core/enums/theme.enum';
-import { ThemeService } from '@core/services/theme.service';
+import { ThemeService } from '@core/services/theme/theme.service';
 import { loadingReducer } from '@core/store/loading/loading.reducer';
 import { authReducer } from '@core/store/auth/auth.reducer';
 import * as AuthActions from '@core/store/auth/auth.actions';

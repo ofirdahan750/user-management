@@ -2,8 +2,8 @@ import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, switchMap, throwError } from 'rxjs';
-import { TokenStorageService } from '@core/services/token-storage.service';
-import { AuthService } from '@core/services/auth.service';
+import { TokenStorageService } from '@core/services/token-storage/token-storage.service';
+import { AuthService } from '@core/services/auth/auth.service';
 import { Routes } from '@core/enums/routes.enum';
 import { API_ENDPOINTS } from '@core/constants/api-endpoints.constants';
 

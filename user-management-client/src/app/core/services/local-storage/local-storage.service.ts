@@ -5,8 +5,8 @@ import { StorageKeys } from '@core/enums/storage-keys.enum';
   providedIn: 'root'
 })
 export class LocalStorageService {
-  
-  setItem(key: StorageKeys, value: string): void {
+
+  setItem(key: StorageKeys | string, value: string): void {
     try {
       localStorage.setItem(key, value);
     } catch (error) {
@@ -14,7 +14,7 @@ export class LocalStorageService {
     }
   }
 
-  getItem(key: StorageKeys): string | null {
+  getItem(key: StorageKeys | string): string | null {
     try {
       return localStorage.getItem(key);
     } catch (error) {
@@ -23,7 +23,7 @@ export class LocalStorageService {
     }
   }
 
-  removeItem(key: StorageKeys): void {
+  removeItem(key: StorageKeys | string): void {
     try {
       localStorage.removeItem(key);
     } catch (error) {
@@ -39,7 +39,7 @@ export class LocalStorageService {
     }
   }
 
-  exists(key: StorageKeys): boolean {
+  exists(key: StorageKeys | string): boolean {
     return this.getItem(key) !== null;
   }
 }

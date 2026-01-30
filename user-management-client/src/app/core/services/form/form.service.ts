@@ -7,7 +7,7 @@ import { passwordStrengthValidator } from '@shared/validators/password-strength.
 import { passwordMatchValidator } from '@shared/validators/password-match.validator';
 import { israeliPhoneValidator } from '@shared/validators/israeli-phone.validator';
 import { defaultDateAgeValidator } from '@shared/validators/date-age.validator';
-import { LocalStorageService } from '@core/services/local-storage.service';
+import { LocalStorageService } from '@core/services/local-storage/local-storage.service';
 import { StorageKeys } from '@core/enums/storage-keys.enum';
 import {
   LOGIN_FORM_CONTROLS,
@@ -24,9 +24,6 @@ export class FormService {
   private store = inject(Store);
   private localStorage = inject(LocalStorageService);
 
-  /**
-   * Creates a registration form with all required validators
-   */
   createRegisterForm(): FormGroup {
     return this.fb.group({
       [REGISTER_FORM_CONTROLS.EMAIL]: ['', [Validators.required, Validators.email]],
@@ -40,9 +37,6 @@ export class FormService {
     }, { validators: passwordMatchValidator() });
   }
 
-  /**
-   * Creates a login form with email and password fields
-   */
   createLoginForm(): FormGroup {
     const form = this.fb.group({
       [LOGIN_FORM_CONTROLS.LOGIN_ID]: ['', [Validators.required, Validators.email]],
@@ -61,18 +55,12 @@ export class FormService {
     return form;
   }
 
-  /**
-   * Creates a forgot password form with email field
-   */
   createForgotPasswordForm(): FormGroup {
     return this.fb.group({
       email: ['', [Validators.required, Validators.email]]
     });
   }
 
-  /**
-   * Creates a reset password form with password and confirm password fields
-   */
   createResetPasswordForm(): FormGroup {
     return this.fb.group({
       password: ['', [Validators.required, passwordStrengthValidator()]],
@@ -88,9 +76,6 @@ export class FormService {
     }, { validators: passwordMatchValidator() });
   }
 
-  /**
-   * Creates a profile update form with user information fields
-   */
   createProfileForm(): FormGroup {
     return this.fb.group({
       firstName: ['', [Validators.required]],
@@ -101,11 +86,6 @@ export class FormService {
     });
   }
 
-  /**
-   * Validates a form and marks all fields as touched if invalid
-   * @param form The form group to validate
-   * @returns true if form is valid, false otherwise
-   */
   validateForm(form: FormGroup): boolean {
     if (form.invalid) {
       this.markFormGroupTouched(form);
@@ -114,10 +94,6 @@ export class FormService {
     return true;
   }
 
-  /**
-   * Marks all form controls as touched recursively
-   * @param formGroup The form group to mark as touched
-   */
   markFormGroupTouched(formGroup: FormGroup): void {
     Object.keys(formGroup.controls).forEach(key => {
       const control = formGroup.get(key);
@@ -128,11 +104,6 @@ export class FormService {
     });
   }
 
-  /**
-   * Resets a form to its initial state
-   * @param form The form group to reset
-   * @param values Optional values to set after reset
-   */
   resetForm(form: FormGroup, values?: Record<string, unknown>): void {
     form.reset();
     if (values) {
@@ -140,31 +111,19 @@ export class FormService {
     }
   }
 
-  /**
-   * Gets combined loading state from both global loading and auth loading
-   * @returns Observable of combined loading state
-   */
   getCombinedLoading$(): Observable<boolean> {
     const isLoading$ = this.store.select(selectIsLoading);
     const authLoading$ = this.store.select(selectAuthLoading);
-    
+
     return combineLatest([isLoading$, authLoading$]).pipe(
       map(([isLoading, authLoading]) => isLoading || authLoading)
     );
   }
 
-  /**
-   * Gets global loading state
-   * @returns Observable of loading state
-   */
   getLoading$(): Observable<boolean> {
     return this.store.select(selectIsLoading);
   }
 
-  /**
-   * Gets auth loading state
-   * @returns Observable of auth loading state
-   */
   getAuthLoading$(): Observable<boolean> {
     return this.store.select(selectAuthLoading);
   }

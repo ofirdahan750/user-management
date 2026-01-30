@@ -5,7 +5,7 @@ import { StorageKeys } from '@core/enums/storage-keys.enum';
   providedIn: 'root'
 })
 export class SessionStorageService {
-  
+
   setItem(key: StorageKeys, value: string): void {
     try {
       sessionStorage.setItem(key, value);

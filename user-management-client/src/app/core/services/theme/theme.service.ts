@@ -1,7 +1,7 @@
 import { Injectable, inject, signal, effect } from '@angular/core';
 import { Theme } from '@core/enums/theme.enum';
 import { StorageKeys } from '@core/enums/storage-keys.enum';
-import { LocalStorageService } from '@core/services/local-storage.service';
+import { LocalStorageService } from '@core/services/local-storage/local-storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -33,12 +33,12 @@ export class ThemeService {
     } catch (error) {
       console.warn('Error reading theme from localStorage:', error);
     }
-    
+
     if (typeof window !== 'undefined' && window.matchMedia) {
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       return prefersDark ? Theme.DARK : Theme.LIGHT;
     }
-    
+
     return this.defaultTheme;
   }
 

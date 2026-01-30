@@ -10,8 +10,8 @@ import { REGISTER_FORM_CONTROLS } from '@core/constants/form-controls.constants'
 import { Routes } from '@core/enums/routes.enum';
 import { MESSAGES } from '@core/constants/messages.constants';
 import { RegisterComponent } from './register.component';
-import { FormService } from '@core/services/form.service';
-import { EmailHelperService } from '@core/services/email-helper.service';
+import { FormService } from '@core/services/form/form.service';
+import { EmailHelperService } from '@core/services/email-helper/email-helper.service';
 import { authReducer } from '@core/store/auth/auth.reducer';
 import { passwordMatchValidator } from '@shared/validators/password-match.validator';
 import { passwordStrengthValidator } from '@shared/validators/password-strength.validator';

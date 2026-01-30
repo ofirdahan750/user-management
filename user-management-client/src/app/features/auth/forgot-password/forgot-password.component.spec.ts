@@ -11,9 +11,9 @@ import { FORGOT_PASSWORD_FORM_CONTROLS } from '@core/constants/form-controls.con
 import { Routes } from '@core/enums/routes.enum';
 import { MESSAGES } from '@core/constants/messages.constants';
 import { ForgotPasswordComponent } from './forgot-password.component';
-import { FormService } from '@core/services/form.service';
-import { ToastNotificationService } from '@core/services/toast-notification.service';
-import { EmailHelperService } from '@core/services/email-helper.service';
+import { FormService } from '@core/services/form/form.service';
+import { ToastNotificationService } from '@core/services/toast-notification/toast-notification.service';
+import { EmailHelperService } from '@core/services/email-helper/email-helper.service';
 import { authReducer } from '@core/store/auth/auth.reducer';
 import * as AuthActions from '@core/store/auth/auth.actions';
 

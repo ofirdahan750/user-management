@@ -2,7 +2,7 @@
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
-import { ToastNotificationService } from '@core/services/toast-notification.service';
+import { ToastNotificationService } from '@core/services/toast-notification/toast-notification.service';
 import { ToastMessage } from '@core/models/toast.model';
 import { ToastType } from '@core/enums/toast-type.enum';
 import { ICONS } from '@core/constants/icons.constants';

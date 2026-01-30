@@ -9,8 +9,8 @@ import { MESSAGES } from '@core/constants/messages.constants';
 import { Routes } from '@core/enums/routes.enum';
 import { VerificationStatus } from '@core/enums/verification-status.enum';
 import { VerifyComponent } from './verify.component';
-import { AuthService } from '@core/services/auth.service';
-import { ToastNotificationService } from '@core/services/toast-notification.service';
+import { AuthService } from '@core/services/auth/auth.service';
+import { ToastNotificationService } from '@core/services/toast-notification/toast-notification.service';
 
 describe('VerifyComponent', () => {
   const mockQueryParams: Record<string, string> = {};

@@ -25,8 +25,8 @@ import {
   getPasswordStrength,
   PasswordStrength,
 } from '@shared/validators/password-strength.validator';
-import { FormService } from '@core/services/form.service';
-import { EmailHelperService } from '@core/services/email-helper.service';
+import { FormService } from '@core/services/form/form.service';
+import { EmailHelperService } from '@core/services/email-helper/email-helper.service';
 import { Routes } from '@core/enums/routes.enum';
 import { RegisterFormValue } from '@core/types/form.types';
 import { RegisterProfile, RegisterRequest } from '@core/models/auth.model';
