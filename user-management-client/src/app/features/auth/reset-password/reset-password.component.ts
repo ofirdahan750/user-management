@@ -36,11 +36,17 @@ import { SubmitButtonComponent } from '@shared/ui/buttons/submit-button/submit-b
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ResetPasswordComponent {
-  private formService = inject(FormService);
-  private authService = inject(AuthService);
-  private router = inject(Router);
-  private route = inject(ActivatedRoute);
-  private toastService = inject(ToastNotificationService);
+  readonly labels = LABELS;
+  readonly routes = Routes;
+  readonly MESSAGES = MESSAGES;
+  readonly ariaLabels = ARIA_LABELS;
+  readonly icons = ICONS;
+
+  private formService: FormService = inject(FormService);
+  private authService: AuthService = inject(AuthService);
+  private router: Router = inject(Router);
+  private route: ActivatedRoute = inject(ActivatedRoute);
+  private toastService: ToastNotificationService = inject(ToastNotificationService);
 
   resetPasswordForm!: FormGroup;
   isLoading = signal<boolean>(false);
@@ -48,11 +54,6 @@ export class ResetPasswordComponent {
   hideConfirmPassword = signal<boolean>(true);
   token = signal<string>('');
 
-  readonly labels = LABELS;
-  readonly routes = Routes;
-  readonly MESSAGES = MESSAGES;
-  readonly ariaLabels = ARIA_LABELS;
-  readonly icons = ICONS;
 
   constructor() {
     const tokenParam = this.route.snapshot.queryParams['token'];
