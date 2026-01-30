@@ -47,6 +47,7 @@ export class AuthEffects {
                   email: loginResponse.user.email,
                   firstName: loginResponse.user.firstName,
                   lastName: loginResponse.user.lastName,
+                  phoneNumber: '',
                   isVerified: false,
                   registrationDate: new Date().toISOString(),
                   lastLoginDate: new Date().toISOString()

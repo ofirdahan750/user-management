@@ -18,6 +18,7 @@ describe('DashboardComponent', () => {
     email: 'john@test.com',
     firstName: 'john',
     lastName: 'doe',
+    phoneNumber: '',
     isVerified: true,
     registrationDate: '2024-01-15T10:00:00Z',
     lastLoginDate: '2024-01-20T14:30:00Z',

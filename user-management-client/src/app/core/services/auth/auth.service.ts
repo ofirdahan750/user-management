@@ -80,6 +80,7 @@ export class AuthService {
                 email: response.user.email,
                 firstName: response.user.firstName,
                 lastName: response.user.lastName,
+                phoneNumber: (response.user as { phoneNumber?: string }).phoneNumber ?? '',
                 isVerified: false,
                 registrationDate: new Date().toISOString(),
                 lastLoginDate: new Date().toISOString()

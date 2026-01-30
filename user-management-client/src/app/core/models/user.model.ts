@@ -4,7 +4,7 @@ export interface UserProfile {
   firstName: string;
   lastName: string;
   birthDate?: string;
-  phoneNumber?: string;
+  phoneNumber: string;
   isVerified: boolean;
   registrationDate: string;
   lastLoginDate: string;
@@ -19,6 +19,7 @@ export const DEFAULT_USER_PROFILE: UserProfile = {
   isVerified: false,
   registrationDate: '',
   lastLoginDate: '',
+  phoneNumber: '',
 };
 
 export interface ProfileUpdate {

@@ -8,7 +8,7 @@ import {
   WritableSignal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable, of, take } from 'rxjs';
@@ -40,6 +40,7 @@ import * as AuthActions from '@core/store/auth/auth.actions';
 import * as LoadingActions from '@core/store/loading/loading.actions';
 import { AppState } from '@core/store/root-state.model';
 import { PROFILE_FORM_CONTROLS } from '@core/constants/form-controls.constants';
+import { ProfileFormValue } from '@core/types/form.types';
 
 @Component({
   selector: 'app-profile',
@@ -84,43 +85,45 @@ export class ProfileComponent implements OnInit {
   hasUnsavedChanges: WritableSignal<boolean> = signal<boolean>(false); // has unsaved changes signal (true when there are unsaved changes, false when there are no unsaved changes)
   combinedLoading$: Observable<boolean> = this.formService.getCombinedLoading$() || of(false); // combined loading observable (true when there is a loading state, false when there is no loading state)
   currentUser$: Observable<UserProfile> = this.store.select(selectUser).pipe(
-    map((user) => user ?? DEFAULT_USER_PROFILE),
-    startWith(DEFAULT_USER_PROFILE),
+    // select user from store
+    map((user) => user ?? DEFAULT_USER_PROFILE), // if user is null, return default user profile
+    startWith(DEFAULT_USER_PROFILE), // start with default user profile if user is null
   );
 
   originalValues: ProfileOriginalValues = {
-    firstName: '',
-    lastName: '',
-    birthDate: '',
-    phoneNumber: '',
+    // original values for the form
+    firstName: '', // first name
+    lastName: '', // last name
+    birthDate: '', // birth date
+    phoneNumber: '', // phone number
   };
 
   ngOnInit(): void {
-    this.disableEmailControl();
-    this.subscribeToUserAndFormChanges();
+    this.disableEmailControl(); // disable email control when component is initialized (cannot be changed)
+    this.subscribeToUserAndFormChanges(); // subscribe to user and form changes when component is initialized
   }
 
+  // disable email control when component is initialized (cannot be changed)
   private disableEmailControl(): void {
-    const emailControl = this.profileForm.get(PROFILE_FORM_CONTROLS.EMAIL);
-    if (emailControl) {
-      emailControl.disable();
-    }
+    this.profileForm.get(PROFILE_FORM_CONTROLS.EMAIL)?.disable(); // disable email control when component is initialized (cannot be changed)
   }
 
+  // subscribe to user and form changes when component is initialized
   private subscribeToUserAndFormChanges(): void {
-    // Wait for first real user (skip DEFAULT_USER_PROFILE from startWith), then patch form
+    // Wait for first real user (skip default user profile from startWith), then patch form
     this.currentUser$
       .pipe(
-        filter((user) => !!user.UID),
+        filter((user) => !!user.UID), // filter out users with no UID
         take(1),
       )
       .subscribe({
         next: (user) => {
           this.originalValues = {
-            firstName: user.firstName,
-            lastName: user.lastName,
-            birthDate: user.birthDate ? new Date(user.birthDate) : '',
-            phoneNumber: user.phoneNumber || '',
+            // set original values for the form
+            firstName: user.firstName, // first name
+            lastName: user.lastName, // last name
+            birthDate: user.birthDate ? new Date(user.birthDate) : '', // birth date if it exists, otherwise empty string
+            phoneNumber: user.phoneNumber, // phone number
           };
 
           this.profileForm.patchValue({
@@ -128,39 +131,39 @@ export class ProfileComponent implements OnInit {
             [PROFILE_FORM_CONTROLS.LAST_NAME]: user.lastName,
             [PROFILE_FORM_CONTROLS.EMAIL]: user.email,
             [PROFILE_FORM_CONTROLS.BIRTH_DATE]: user.birthDate ? new Date(user.birthDate) : '',
-            [PROFILE_FORM_CONTROLS.PHONE_NUMBER]: user.phoneNumber || '',
+            [PROFILE_FORM_CONTROLS.PHONE_NUMBER]: user.phoneNumber,
           });
         },
       });
 
     this.profileForm.valueChanges.subscribe(() => {
-      this.checkForChanges();
+      this.checkForChanges(); // check for changes in the form
     });
   }
-
+  // on submit profile form
   onSubmit(): void {
-    if (!this.formService.validateForm(this.profileForm)) {
-      return;
-    }
-
-    const formValue = this.profileForm.value;
-    const c = PROFILE_FORM_CONTROLS;
+    if (!this.formService.validateForm(this.profileForm)) return; // if form is not valid, return
+    const formValue = this.profileForm.value; // form value for the form
+    const profileControls = PROFILE_FORM_CONTROLS; // profile controls for the form
 
     const updateData: ProfileUpdate = {
-      firstName: formValue[c.FIRST_NAME],
-      lastName: formValue[c.LAST_NAME],
+      // update data for the form
+      firstName: formValue[profileControls.FIRST_NAME], // first name
+      lastName: formValue[profileControls.LAST_NAME], // last name
     };
 
-    if (formValue[c.BIRTH_DATE]) {
-      updateData.birthDate = new Date(formValue[c.BIRTH_DATE]).toISOString();
+    if (formValue[profileControls.BIRTH_DATE]) {
+      // if birth date is not empty, add it to the update data
+      updateData.birthDate = new Date(formValue[profileControls.BIRTH_DATE]).toISOString(); // convert birth date to ISO string
     }
 
-    if (formValue[c.PHONE_NUMBER]) {
-      updateData.phoneNumber = formValue[c.PHONE_NUMBER];
+    if (formValue[profileControls.PHONE_NUMBER]) {
+      // if phone number is not empty, add it to the update data
+      updateData.phoneNumber = formValue[profileControls.PHONE_NUMBER]; // phone number
     }
 
-    this.store.dispatch(LoadingActions.showLoading());
-    this.store.dispatch(AuthActions.updateProfile({ data: updateData }));
+    this.store.dispatch(LoadingActions.showLoading()); // show loading state
+    this.store.dispatch(AuthActions.updateProfile({ data: updateData })); // update profile
 
     // Subscribe to success to update local state - using take(2) to get initial and final state
     // This will auto-unsubscribe after 2 emissions (initial state and final state)
@@ -170,12 +173,11 @@ export class ProfileComponent implements OnInit {
       .subscribe({
         next: (isLoading) => {
           if (!isLoading) {
-            const c = PROFILE_FORM_CONTROLS;
             this.originalValues = {
-              firstName: formValue[c.FIRST_NAME],
-              lastName: formValue[c.LAST_NAME],
-              birthDate: formValue[c.BIRTH_DATE] ?? '',
-              phoneNumber: formValue[c.PHONE_NUMBER] ?? '',
+              firstName: formValue[profileControls.FIRST_NAME],
+              lastName: formValue[profileControls.LAST_NAME],
+              birthDate: formValue[profileControls.BIRTH_DATE] || '',
+              phoneNumber: formValue[profileControls.PHONE_NUMBER] || '',
             };
             this.hasUnsavedChanges.set(false);
           }
@@ -183,26 +185,31 @@ export class ProfileComponent implements OnInit {
       });
   }
 
+  // cancel profile form (reset form to original values)
   cancel(): void {
-    this.profileForm.patchValue(this.originalValues);
-    this.hasUnsavedChanges.set(false);
+    this.profileForm.patchValue(this.originalValues); // reset form to original values
+    this.hasUnsavedChanges.set(false); // set has unsaved changes to false
   }
 
+  // check for changes in the form
   private checkForChanges(): void {
-    const currentValues = this.profileForm.value;
-    const hasChanges = (
-      Object.keys(this.originalValues) as Array<keyof ProfileOriginalValues>
-    ).some((key) => {
-      const original = this.originalValues[key];
-      const current = currentValues[key];
+    const currentValues: ProfileFormValue = this.profileForm.value; // current values for the form
+    const isDate = (v: string | Date): v is Date => v instanceof Date; // check if value is a date
 
-      if (original instanceof Date && current instanceof Date) {
-        return original.getTime() !== current.getTime();
+    const keys = Object.keys(this.originalValues) as Array<keyof ProfileOriginalValues>; // keys for the original values
+    const hasChanges = keys.some((key) => {
+      // check if there are changes in the form
+      const original: ProfileOriginalValues[keyof ProfileOriginalValues] = this.originalValues[key]; // original value for the key
+      const raw: string | Date = currentValues[key] || ''; // raw value for the key
+      const current: string | Date = raw == null ? '' : raw; // current value for the key
+
+      if (isDate(original) && isDate(current)) {
+        return original.getTime() !== current.getTime(); // check if original time is not equal to current time
       }
 
-      return original !== current;
+      return original !== current; // check if original is not equal to current
     });
 
-    this.hasUnsavedChanges.set(hasChanges);
+    this.hasUnsavedChanges.set(hasChanges); // set has unsaved changes to true if there are changes in the form
   }
 }

@@ -135,6 +135,7 @@ describe('HeaderComponent', () => {
       email: 'test@test.com',
       firstName: 'john',
       lastName: 'doe',
+      phoneNumber: '',
       isVerified: true,
       registrationDate: '2024-01-01',
       lastLoginDate: '2024-01-15',
