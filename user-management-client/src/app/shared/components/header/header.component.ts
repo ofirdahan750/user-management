@@ -112,12 +112,13 @@ export class HeaderComponent implements OnInit {
     this.mobileMenuOpen.set(false);
   }
 
+  // get the full name of the user "firstName lastName"
   getFullName(user: UserProfile): string {
     return `${user.firstName} ${user.lastName}`;
   }
 
+  // logout the user and close the mobile menu
   logout(): void {
-    // logout the user and close the mobile menu
     this.store.dispatch(AuthActions.logout()); // dispatch the logout action
     this.closeMobileMenu(); // close the mobile menu
   }
