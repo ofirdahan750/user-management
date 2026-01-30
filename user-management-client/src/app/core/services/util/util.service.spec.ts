@@ -27,4 +27,19 @@ describe('UtilService', () => {
     }
     expect(ids.size).toBe(100);
   });
+
+  describe('capitalizeFirst', () => {
+    it('should capitalize first letter and lowercase rest', () => {
+      expect(service.capitalizeFirst('john')).toBe('John');
+      expect(service.capitalizeFirst('JOHN')).toBe('John');
+    });
+
+    it('should return empty string for empty input', () => {
+      expect(service.capitalizeFirst('')).toBe('');
+    });
+
+    it('should handle single character', () => {
+      expect(service.capitalizeFirst('a')).toBe('A');
+    });
+  });
 });

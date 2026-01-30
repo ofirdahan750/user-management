@@ -23,6 +23,7 @@ import { LABELS } from '@core/constants/labels.constants';
 import { ICONS } from '@core/constants/icons.constants';
 import { selectUser } from '@core/store/auth/auth.selectors';
 import { AppState } from '@core/store/root-state.model';
+import { UtilService } from '@core/services/util/util.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -49,12 +50,19 @@ export class DashboardComponent {
   readonly MaterialColor = MaterialColor;
 
   private store: Store<AppState> = inject(Store);
+  private utilService = inject(UtilService);
 
   currentUser$: Observable<UserProfile> = this.store.select(selectUser).pipe(
+    // user state
     map((user) => user ?? DEFAULT_USER_PROFILE),
     startWith(DEFAULT_USER_PROFILE),
   );
+
   welcomeMessage$: Observable<string> = this.currentUser$.pipe(
-    map((user) => (user.firstName ? `${LABELS.WELCOME}, ${user.firstName}!` : '')),
+    map((user) =>
+      user.firstName
+        ? `${LABELS.WELCOME}, ${this.utilService.capitalizeFirst(user.firstName)}!`
+        : ''
+    ),
   );
 }

@@ -34,6 +34,7 @@ import * as AuthActions from '@core/store/auth/auth.actions';
 import { IconButtonComponent } from '@shared/ui/buttons/icon-button/icon-button.component';
 import { LinkButtonComponent } from '@shared/ui/buttons/link-button/link-button.component';
 import { AppState } from '@core/store/root-state.model';
+import { UtilService } from '@core/services/util/util.service';
 
 @Component({
   selector: 'app-header',
@@ -60,6 +61,7 @@ export class HeaderComponent {
   private store: Store<AppState> = inject(Store);
   private themeService: ThemeService = inject(ThemeService);
   private router = inject(Router);
+  readonly utilService = inject(UtilService);
 
   isAuthenticated$: Observable<boolean> = this.store.select(selectIsAuthenticated);
   isOnLoginPage: WritableSignal<boolean> = signal(
