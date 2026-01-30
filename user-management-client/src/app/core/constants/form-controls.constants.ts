@@ -18,3 +18,9 @@ export const REGISTER_FORM_CONTROLS = {
   PHONE_NUMBER: 'phoneNumber',
   TERMS: 'terms',
 } as const;
+
+export const CHANGE_PASSWORD_FORM_CONTROLS = {
+  CURRENT_PASSWORD: 'currentPassword',
+  PASSWORD: 'password',
+  CONFIRM_PASSWORD: 'confirmPassword',
+} as const;

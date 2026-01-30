@@ -12,7 +12,8 @@ import { EmailHelperService } from '@core/services/email-helper/email-helper.ser
 import { Routes } from '@core/enums/routes.enum';
 import { StorageKeys } from '@core/enums/storage-keys.enum';
 import { MESSAGES } from '@core/constants/messages.constants';
-import { ApiError, isApiError, getErrorMessage } from '@core/types/api-error.types';
+import { ApiError } from '@core/types/api-error.types';
+import { ApiErrorService } from '@core/services/api-error/api-error.service';
 import * as AuthActions from './auth.actions';
 import * as LoadingActions from '@core/store/loading/loading.actions';
 
@@ -25,6 +26,7 @@ export class AuthEffects {
   private router = inject(Router);
   private toastService = inject(ToastNotificationService);
   private emailHelper = inject(EmailHelperService);
+  private apiErrorService = inject(ApiErrorService);
 
   login$ = createEffect(() =>
     this.actions$.pipe(
@@ -58,8 +60,8 @@ export class AuthEffects {
           ),
           catchError((error) => {
             this.store.dispatch(LoadingActions.hideLoading());
-            const apiError: ApiError | null = isApiError(error.error) ? error.error : null;
-            const errorMessage = getErrorMessage(apiError, MESSAGES.LOGIN_ERROR);
+            const apiError: ApiError | null = this.apiErrorService.isApiError(error.error) ? error.error : null;
+            const errorMessage = this.apiErrorService.getErrorMessage(apiError, MESSAGES.LOGIN_ERROR);
             return of(AuthActions.loginFailure({ error: errorMessage }));
           })
         )
@@ -105,12 +107,12 @@ export class AuthEffects {
             let errorMessage: string;
             
             if (error instanceof HttpErrorResponse) {
-              const apiError: ApiError | null = isApiError(error.error) ? error.error : null;
+              const apiError: ApiError | null = this.apiErrorService.isApiError(error.error) ? error.error : null;
               // Check if it's a duplicate email error (409)
               if (error.status === 409 || (apiError && apiError.errorMessage?.toLowerCase().includes('already registered'))) {
                 errorMessage = MESSAGES.DUPLICATE_EMAIL;
               } else {
-                errorMessage = getErrorMessage(apiError, MESSAGES.REGISTRATION_ERROR);
+                errorMessage = this.apiErrorService.getErrorMessage(apiError, MESSAGES.REGISTRATION_ERROR);
               }
             } else {
               errorMessage = MESSAGES.REGISTRATION_ERROR;
@@ -179,8 +181,8 @@ export class AuthEffects {
           }),
           catchError((error) => {
             this.store.dispatch(LoadingActions.hideLoading());
-            const apiError: ApiError | null = isApiError(error.error) ? error.error : null;
-            const errorMessage = getErrorMessage(apiError, MESSAGES.PROFILE_UPDATE_ERROR);
+            const apiError: ApiError | null = this.apiErrorService.isApiError(error.error) ? error.error : null;
+            const errorMessage = this.apiErrorService.getErrorMessage(apiError, MESSAGES.PROFILE_UPDATE_ERROR);
             return of(AuthActions.updateProfileFailure({ error: errorMessage }));
           })
         )
@@ -219,8 +221,8 @@ export class AuthEffects {
           }),
           catchError((error) => {
             this.store.dispatch(LoadingActions.hideLoading());
-            const apiError: ApiError | null = isApiError(error.error) ? error.error : null;
-            const errorMessage = getErrorMessage(apiError, MESSAGES.VERIFICATION_ERROR);
+            const apiError: ApiError | null = this.apiErrorService.isApiError(error.error) ? error.error : null;
+            const errorMessage = this.apiErrorService.getErrorMessage(apiError, MESSAGES.VERIFICATION_ERROR);
             return of(AuthActions.verifyEmailFailure({ error: errorMessage }));
           })
         )
@@ -261,8 +263,8 @@ export class AuthEffects {
           }),
           catchError((error) => {
             this.store.dispatch(LoadingActions.hideLoading());
-            const apiError: ApiError | null = isApiError(error.error) ? error.error : null;
-            const errorMessage = getErrorMessage(apiError, MESSAGES.ERROR);
+            const apiError: ApiError | null = this.apiErrorService.isApiError(error.error) ? error.error : null;
+            const errorMessage = this.apiErrorService.getErrorMessage(apiError, MESSAGES.ERROR);
             return of(AuthActions.requestPasswordResetFailure({ error: errorMessage }));
           })
         )
@@ -302,8 +304,8 @@ export class AuthEffects {
           }),
           catchError((error) => {
             this.store.dispatch(LoadingActions.hideLoading());
-            const apiError: ApiError | null = isApiError(error.error) ? error.error : null;
-            const errorMessage = getErrorMessage(apiError, MESSAGES.PASSWORD_RESET_ERROR);
+            const apiError: ApiError | null = this.apiErrorService.isApiError(error.error) ? error.error : null;
+            const errorMessage = this.apiErrorService.getErrorMessage(apiError, MESSAGES.PASSWORD_RESET_ERROR);
             return of(AuthActions.resetPasswordFailure({ error: errorMessage }));
           })
         )
