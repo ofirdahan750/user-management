@@ -1,8 +1,10 @@
-.text-input {
-  width: 100%;
-  min-width: 0;
-  
-  mat-form-field {
+app-text-input {
+  .text-input {
     width: 100%;
+    min-width: 0;
+
+    mat-form-field {
+      width: 100%;
+    }
   }
 }
