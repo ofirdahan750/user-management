@@ -1,14 +1,16 @@
-.submit-button {
-  display: block;
-  width: 100%;
-  
-  &__spinner {
-    animation: spin 1s linear infinite;
-  }
-
-  &--raised,
-  &--flat,
-  &--stroked {
+app-submit-button {
+  .submit-button {
+    display: block;
     width: 100%;
+
+    &__spinner {
+      animation: spin 1s linear infinite;
+    }
+
+    &--raised,
+    &--flat,
+    &--stroked {
+      width: 100%;
+    }
   }
 }
