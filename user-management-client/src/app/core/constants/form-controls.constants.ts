@@ -19,6 +19,11 @@ export const REGISTER_FORM_CONTROLS = {
   TERMS: 'terms',
 } as const;
 
+export const RESET_PASSWORD_FORM_CONTROLS = {
+  PASSWORD: 'password',
+  CONFIRM_PASSWORD: 'confirmPassword',
+} as const;
+
 export const CHANGE_PASSWORD_FORM_CONTROLS = {
   CURRENT_PASSWORD: 'currentPassword',
   PASSWORD: 'password',

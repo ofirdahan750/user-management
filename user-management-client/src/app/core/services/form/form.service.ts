@@ -12,6 +12,7 @@ import { StorageKeys } from '@core/enums/storage-keys.enum';
 import {
   LOGIN_FORM_CONTROLS,
   REGISTER_FORM_CONTROLS,
+  RESET_PASSWORD_FORM_CONTROLS,
   CHANGE_PASSWORD_FORM_CONTROLS,
 } from '@core/constants/form-controls.constants';
 import { selectIsLoading } from '@core/store/loading/loading.selectors';
@@ -64,8 +65,8 @@ export class FormService {
 
   createResetPasswordForm(): FormGroup {
     return this.fb.group({
-      password: ['', [Validators.required, passwordStrengthValidator()]],
-      confirmPassword: ['', [Validators.required]]
+      [RESET_PASSWORD_FORM_CONTROLS.PASSWORD]: ['', [Validators.required, passwordStrengthValidator()]],
+      [RESET_PASSWORD_FORM_CONTROLS.CONFIRM_PASSWORD]: ['', [Validators.required]],
     }, { validators: passwordMatchValidator() });
   }
 
