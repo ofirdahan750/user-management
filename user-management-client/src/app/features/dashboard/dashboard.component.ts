@@ -51,7 +51,8 @@ export class DashboardComponent {
   private store: Store<AppState> = inject(Store);
 
   currentUser$: Observable<UserProfile> = this.store.select(selectUser).pipe(
-    map((user) => user ?? DEFAULT_USER_PROFILE),
-    startWith(DEFAULT_USER_PROFILE),
+    // user state
+    map((user) => user ?? DEFAULT_USER_PROFILE), // if user is null, return default user profile
+    startWith(DEFAULT_USER_PROFILE), // start with default user profile if user is null
   );
 }
