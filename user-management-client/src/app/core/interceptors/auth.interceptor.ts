@@ -5,6 +5,7 @@ import { catchError, switchMap, throwError } from 'rxjs';
 import { TokenStorageService } from '@core/services/token-storage.service';
 import { AuthService } from '@core/services/auth.service';
 import { Routes } from '@core/enums/routes.enum';
+import { API_ENDPOINTS } from '@core/constants/api-endpoints.constants';
 
 // create the auth interceptor - intercept the request and add the token to the request headers
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
@@ -24,7 +25,9 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
-      if (error.status === 401) {
+      // 401 from change-password means wrong current password - let component handle it, don't logout
+      const isChangePasswordRequest = req.url.includes(API_ENDPOINTS.USER.CHANGE_PASSWORD);
+      if (error.status === 401 && !isChangePasswordRequest) {
         const refreshToken = tokenStorage.getRefreshToken();
         
         if (refreshToken) {
@@ -50,6 +53,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         } else {
           authService.logout();
           router.navigate([Routes.LOGIN]);
+          return throwError(() => error);
         }
       }
       
