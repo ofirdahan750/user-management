@@ -14,7 +14,7 @@ export const MESSAGES = {
   VERIFICATION_SUCCESS: 'Email verified successfully!',
   VERIFICATION_ERROR: 'Verification failed. Token expired or invalid.',
   VERIFICATION_LOADING: 'Verifying your email...',
-  VERIFICATION_REDIRECT: 'Redirecting to login in',
+  VERIFICATION_REDIRECT: 'Redirecting in',
   RESEND_VERIFICATION_SUCCESS: 'Verification email sent successfully!',
   
   // Password Reset

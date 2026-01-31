@@ -113,8 +113,26 @@ export class AuthService {
       { token, email }
     ).pipe(
       map(response => response.data || { success: true, message: response.statusMessage || ERROR_MESSAGES.EMAIL_VERIFIED_SUCCESS }),
+      tap((data) => {
+        if (data.token && data.refreshToken && data.user) {
+          const user: UserProfile = {
+            ...data.user,
+            phoneNumber: data.user.phoneNumber ?? '',
+          };
+          this.loginAfterVerify(data.token, data.refreshToken, user);
+        }
+      }),
       catchError(this.handleError)
     );
+  }
+
+  loginAfterVerify(token: string, refreshToken: string, user: UserProfile): void {
+    this.tokenStorage.saveToken(token, false);
+    this.tokenStorage.saveRefreshToken(refreshToken, false);
+    this.localStorage.setItem(StorageKeys.USER, JSON.stringify(user));
+    this.currentUser.set(user);
+    this.currentUserSubject.next(user);
+    this.isAuthenticatedSubject.next(true);
   }
 
   resendVerificationEmail(email: string): Observable<{ verificationToken: string }> {

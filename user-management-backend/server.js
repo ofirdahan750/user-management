@@ -262,14 +262,31 @@ app.post('/api/auth/verify-email', (req, res) => {
     }
 
     user.isVerified = true;
+    user.lastLoginDate = new Date().toISOString();
     verificationTokens.delete(token);
+
+    const accessToken = generateToken(user);
+    const refreshToken = generateRefreshToken(user);
 
     res.json({
       statusCode: 200,
       statusMessage: 'Email verified successfully',
       data: {
         success: true,
-        message: 'Email verified successfully'
+        message: 'Email verified successfully',
+        token: accessToken,
+        refreshToken,
+        user: {
+          UID: user.UID,
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          birthDate: user.birthDate,
+          phoneNumber: user.phoneNumber || '',
+          isVerified: user.isVerified,
+          registrationDate: user.registrationDate,
+          lastLoginDate: user.lastLoginDate
+        }
       }
     });
   } catch (error) {

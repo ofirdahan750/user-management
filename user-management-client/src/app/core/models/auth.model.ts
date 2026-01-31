@@ -37,6 +37,19 @@ export interface LoginResponse {
 export interface VerificationResponse {
   success: boolean;
   message: string;
+  token?: string;
+  refreshToken?: string;
+  user?: {
+    UID: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    birthDate?: string;
+    phoneNumber?: string;
+    isVerified: boolean;
+    registrationDate: string;
+    lastLoginDate: string;
+  };
 }
 
 export interface TokenResponse {

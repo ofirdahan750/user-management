@@ -10,12 +10,16 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '@core/services/auth/auth.service';
 import { ToastNotificationService } from '@core/services/toast-notification/toast-notification.service';
+import { UserProfile } from '@core/models/user.model';
+import * as AuthActions from '@core/store/auth/auth.actions';
+import { AppState } from '@core/store/root-state.model';
 import { Routes } from '@core/enums/routes.enum';
 import { Timeouts } from '@core/enums/timeouts.enum';
 import { VerificationStatus } from '@core/enums/verification-status.enum';
@@ -58,6 +62,7 @@ export class VerifyComponent implements OnInit {
   private router: Router = inject(Router);
   private route: ActivatedRoute = inject(ActivatedRoute);
   private toastService: ToastNotificationService = inject(ToastNotificationService);
+  private store: Store<AppState> = inject(Store);
 
   status: WritableSignal<VerificationStatus> = signal<VerificationStatus>(
     VerificationStatus.PENDING,
@@ -78,7 +83,7 @@ export class VerifyComponent implements OnInit {
         this.countdown.update((value) => {
           if (value <= 1) {
             clearInterval(timer); // clear the interval
-            this.router.navigate([Routes.LOGIN]); // navigate to the login page
+            this.router.navigate([Routes.DASHBOARD]); // navigate to dashboard (user is already logged in)
             return 0; // return 0
           }
           return value - 1; // return the value - 1
@@ -116,10 +121,17 @@ export class VerifyComponent implements OnInit {
   verifyEmail(token: string, email: string): void {
     this.isVerifying.set(true); // set the is verifying to true
     this.authService.verifyEmail(token, email).subscribe({
-      next: () => {
+      next: (response) => {
         this.isVerifying.set(false); // set the is verifying to false
         this.status.set(VerificationStatus.SUCCESS); // set the status to success
         this.toastService.showSuccess(MESSAGES.VERIFICATION_SUCCESS); // show the success message
+        if (response.user) {
+          const user: UserProfile = {
+            ...response.user,
+            phoneNumber: response.user.phoneNumber ?? '',
+          };
+          this.store.dispatch(AuthActions.loadUserSuccess({ user }));
+        }
       },
       error: () => {
         this.isVerifying.set(false); // set the is verifying to false

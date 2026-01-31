@@ -1,9 +1,12 @@
 // npx ng test --include='**/verify.component.spec.ts' --no-watch --browsers=ChromeHeadless
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
+import { provideRouter } from '@angular/router';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { ActivatedRoute } from '@angular/router';
+import { provideStore } from '@ngrx/store';
 import { of, throwError, Subject } from 'rxjs';
+import { authReducer } from '@core/store/auth/auth.reducer';
+import { loadingReducer } from '@core/store/loading/loading.reducer';
 import { LABELS } from '@core/constants/labels.constants';
 import { MESSAGES } from '@core/constants/messages.constants';
 import { Routes } from '@core/enums/routes.enum';
@@ -37,6 +40,7 @@ describe('VerifyComponent', () => {
       providers: [
         provideRouter([]),
         provideNoopAnimations(),
+        provideStore({ auth: authReducer, loading: loadingReducer }),
         {
           provide: ActivatedRoute,
           useValue: {

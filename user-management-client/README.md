@@ -260,8 +260,6 @@ None at this time.
 
 ## 🔮 Future Improvements
 
-- [ ] Add unit tests
-- [ ] Add E2E tests
 - [ ] Implement social login
 - [ ] Add profile picture upload
 - [ ] Implement two-factor authentication
