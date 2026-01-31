@@ -57,6 +57,7 @@ export const LABELS = {
   DASHBOARD: 'Dashboard',
   PROFILE: 'Profile',
   BACK_TO_DASHBOARD:'Back to Dashboard',
+  GO_TO_DASHBOARD_AFTER_VERIFICATION:'Go to Dashboard →',
   LOGOUT: 'Logout',
   
   // Hints
