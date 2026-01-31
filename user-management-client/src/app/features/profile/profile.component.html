@@ -1,8 +1,15 @@
 <div class="profile">
   <div class="profile__container">
     <h1 class="profile__title">{{ labels.EDIT_PROFILE }}</h1>
-
     <mat-card class="profile__card">
+      <span>
+        <app-back-to-link
+          [route]="routes.DASHBOARD"
+          [label]="labels.BACK_TO_DASHBOARD"
+          [tooltip]="labels.TOOLTIP_NAVIGATE_DASHBOARD"
+          class="profile__back-link"
+        ></app-back-to-link>
+      </span>
       <mat-card-content class="profile__content">
         <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="profile__form">
           <div class="profile__row">
@@ -50,64 +57,72 @@
 
           @if (currentUser$ | async; as user) {
             @if (user.UID) {
-            <div class="profile__info">
-              <div class="profile__info-item">
-                <span class="profile__info-label">{{ labels.ACCOUNT_STATUS }}:</span>
-                <span 
-                  class="profile__info-badge"
-                  [ngClass]="{
-                    'profile__info-badge--verified': user.isVerified,
-                    'profile__info-badge--unverified': !user.isVerified
-                  }"
-                  [matTooltip]="user.isVerified ? labels.TOOLTIP_ACCOUNT_VERIFIED : labels.TOOLTIP_ACCOUNT_NOT_VERIFIED"
-                >
-                  <mat-icon>{{ user.isVerified ? icons.CHECK_CIRCLE : icons.CANCEL }}</mat-icon>
-                  {{ user.isVerified ? labels.VERIFIED : labels.NOT_VERIFIED }}
-                </span>
+              <div class="profile__info">
+                <div class="profile__info-item">
+                  <span class="profile__info-label">{{ labels.ACCOUNT_STATUS }}:</span>
+                  <span
+                    class="profile__info-badge"
+                    [ngClass]="{
+                      'profile__info-badge--verified': user.isVerified,
+                      'profile__info-badge--unverified': !user.isVerified,
+                    }"
+                    [matTooltip]="
+                      user.isVerified
+                        ? labels.TOOLTIP_ACCOUNT_VERIFIED
+                        : labels.TOOLTIP_ACCOUNT_NOT_VERIFIED
+                    "
+                  >
+                    <mat-icon>{{ user.isVerified ? icons.CHECK_CIRCLE : icons.CANCEL }}</mat-icon>
+                    {{ user.isVerified ? labels.VERIFIED : labels.NOT_VERIFIED }}
+                  </span>
+                </div>
+                <div class="profile__info-item">
+                  <span class="profile__info-label">{{ labels.REGISTRATION_DATE }}:</span>
+                  <span class="profile__info-value">{{ user.registrationDate | dateFormat }}</span>
+                </div>
+                <div class="profile__info-item">
+                  <span class="profile__info-label">{{ labels.LAST_LOGIN }}:</span>
+                  <span class="profile__info-value">{{ user.lastLoginDate | dateFormat }}</span>
+                </div>
               </div>
-              <div class="profile__info-item">
-                <span class="profile__info-label">{{ labels.REGISTRATION_DATE }}:</span>
-                <span class="profile__info-value">{{ user.registrationDate | dateFormat }}</span>
-              </div>
-              <div class="profile__info-item">
-                <span class="profile__info-label">{{ labels.LAST_LOGIN }}:</span>
-                <span class="profile__info-value">{{ user.lastLoginDate | dateFormat }}</span>
-              </div>
-            </div>
-            @if (!user.isVerified) {
-              <div class="profile__verify-section">
+              @if (!user.isVerified) {
+                <div class="profile__verify-section">
+                  <a
+                    [routerLink]="routes.VERIFY"
+                    [queryParams]="{ email: user.email }"
+                    [matTooltip]="labels.TOOLTIP_VERIFY_EMAIL"
+                    class="profile__verify-link"
+                  >
+                    <mat-icon>{{ icons.EMAIL }}</mat-icon>
+                    {{ labels.VERIFY_EMAIL_LINK }}
+                  </a>
+                </div>
+              }
+              <div class="profile__change-password-section">
                 <a
-                  [routerLink]="routes.VERIFY"
-                  [queryParams]="{ email: user.email }"
-                  [matTooltip]="labels.TOOLTIP_VERIFY_EMAIL"
-                  class="profile__verify-link"
+                  [routerLink]="routes.CHANGE_PASSWORD"
+                  [matTooltip]="labels.TOOLTIP_CHANGE_PASSWORD"
+                  class="profile__change-password-link"
                 >
-                  <mat-icon>{{ icons.EMAIL }}</mat-icon>
-                  {{ labels.VERIFY_EMAIL_LINK }}
+                  <mat-icon>{{ icons.LOCK }}</mat-icon>
+                  {{ labels.CHANGE_PASSWORD }}
                 </a>
               </div>
-            }
-            <div class="profile__change-password-section">
-              <a
-                [routerLink]="routes.CHANGE_PASSWORD"
-                [matTooltip]="labels.TOOLTIP_CHANGE_PASSWORD"
-                class="profile__change-password-link"
-              >
-                <mat-icon>{{ icons.LOCK }}</mat-icon>
-                {{ labels.CHANGE_PASSWORD }}
-              </a>
-            </div>
             }
           }
 
           <div class="profile__actions">
-            <button 
-              mat-button 
+            <button
+              mat-button
               type="button"
               (click)="cancel()"
-              [disabled]="!hasUnsavedChanges() || ((combinedLoading$ | async) || false)"
+              [disabled]="!hasUnsavedChanges() || (combinedLoading$ | async) || false"
               class="profile__cancel-btn"
-              [matTooltip]="!hasUnsavedChanges() ? labels.TOOLTIP_NO_UNSAVED_CHANGES : labels.TOOLTIP_CANCEL_CHANGES"
+              [matTooltip]="
+                !hasUnsavedChanges()
+                  ? labels.TOOLTIP_NO_UNSAVED_CHANGES
+                  : labels.TOOLTIP_CANCEL_CHANGES
+              "
               [matTooltipDisabled]="!hasUnsavedChanges()"
             >
               {{ labels.CANCEL }}
@@ -116,7 +131,11 @@
               [label]="labels.SAVE_CHANGES"
               [isLoading]="(combinedLoading$ | async) || false"
               [disabled]="profileForm.invalid || !hasUnsavedChanges()"
-              [tooltip]="!hasUnsavedChanges() ? labels.TOOLTIP_NO_UNSAVED_CHANGES : labels.TOOLTIP_SAVE_CHANGES"
+              [tooltip]="
+                !hasUnsavedChanges()
+                  ? labels.TOOLTIP_NO_UNSAVED_CHANGES
+                  : labels.TOOLTIP_SAVE_CHANGES
+              "
               type="submit"
               class="profile__submit-btn"
             ></app-submit-button>

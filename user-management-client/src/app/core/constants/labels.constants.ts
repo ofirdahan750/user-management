@@ -56,6 +56,7 @@ export const LABELS = {
   REGISTER: 'Register',
   DASHBOARD: 'Dashboard',
   PROFILE: 'Profile',
+  BACK_TO_DASHBOARD:'Back to Dashboard',
   LOGOUT: 'Logout',
   
   // Hints

@@ -28,6 +28,7 @@ import { EmailInputComponent } from '@shared/ui/form-fields/email-input/email-in
 import { PhoneInputComponent } from '@shared/ui/form-fields/phone-input/phone-input.component';
 import { DateInputComponent } from '@shared/ui/form-fields/date-input/date-input.component';
 import { SubmitButtonComponent } from '@shared/ui/buttons/submit-button/submit-button.component';
+import { BackToLinkComponent } from '@shared/ui/links/back-to-link/back-to-link.component';
 import { Routes } from '@core/enums/routes.enum';
 import { UserProfile, ProfileUpdate, DEFAULT_USER_PROFILE } from '@core/models/user.model';
 import { ProfileOriginalValues } from '@core/types/profile.types';
@@ -63,6 +64,7 @@ import { ProfileFormValue } from '@core/types/form.types';
     PhoneInputComponent,
     DateInputComponent,
     SubmitButtonComponent,
+    BackToLinkComponent,
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',
